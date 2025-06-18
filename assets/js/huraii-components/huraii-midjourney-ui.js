@@ -395,7 +395,8 @@
           
         case 'describe':
           if (this.state.selectedImages.length === 0) {
-            this._showError('Please select an image to describe');
+            // Open visual descriptor modal for new image upload
+            this._openVisualDescriptor();
             return;
           }
           this._describeImage(params);
@@ -741,6 +742,21 @@
      */
     _generateJobId: function() {
       return `job_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    },
+    
+    /**
+     * Open visual descriptor for image analysis
+     * @private
+     */
+    _openVisualDescriptor: function() {
+      // Check if visual descriptor component is available
+      const visualDescriptor = this.core.getComponent('visualDescriptor');
+      
+      if (visualDescriptor) {
+        visualDescriptor.openAnalysisModal();
+      } else {
+        this._showError('Visual descriptor component not available');
+      }
     },
     
     /**
