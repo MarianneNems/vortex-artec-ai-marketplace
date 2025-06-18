@@ -1,0 +1,585 @@
+/**
+ * VortexArtec.com Sacred Geometry CSS
+ * 
+ * Applies Marianne Nems' Seed-Art Technique principles to all UI elements
+ * Maintains golden ratio proportions and Fibonacci sequences throughout
+ * 
+ * @package VortexArtec_Integration
+ * @version 1.0.0
+ */
+
+/* Sacred Geometry Constants */
+:root {
+    /* Golden Ratio and Fibonacci Values */
+    --golden-ratio: 1.618033988749895;
+    --golden-ratio-inverse: 0.618033988749895;
+    --golden-angle: 137.5deg;
+    
+    /* Fibonacci Sequence for Spacing */
+    --fib-1: 1px;
+    --fib-2: 1px;
+    --fib-3: 2px;
+    --fib-5: 5px;
+    --fib-8: 8px;
+    --fib-13: 13px;
+    --fib-21: 21px;
+    --fib-34: 34px;
+    --fib-55: 55px;
+    --fib-89: 89px;
+    --fib-144: 144px;
+    
+    /* Sacred Color Palette */
+    --sacred-gold: #C9A96E;
+    --sacred-bronze: #8B7355;
+    --sacred-cream: #F4E4BC;
+    --sacred-earth: #2C1810;
+    --sacred-light: #FFF8E7;
+    --sacred-shadow: rgba(44, 24, 16, 0.618);
+    
+    /* Sacred Gradients */
+    --golden-gradient: linear-gradient(var(--golden-angle), var(--sacred-gold) 0%, var(--sacred-bronze) 61.8%, transparent 100%);
+    --fibonacci-gradient: linear-gradient(90deg, var(--sacred-cream) 0%, var(--sacred-gold) 38.2%, var(--sacred-bronze) 61.8%, var(--sacred-earth) 100%);
+    
+    /* Sacred Typography */
+    --sacred-font-base: calc(1rem * var(--golden-ratio-inverse));
+    --sacred-font-large: calc(1rem * var(--golden-ratio));
+    --sacred-font-xlarge: calc(1rem * var(--golden-ratio) * var(--golden-ratio));
+    
+    /* Sacred Timing */
+    --golden-transition: calc(618ms);
+    --fibonacci-animation: calc(1618ms);
+}
+
+/* Universal Sacred Geometry Application */
+* {
+    box-sizing: border-box;
+}
+
+/* Sacred Body Foundation */
+body.vortex-artec-sacred {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    line-height: var(--golden-ratio);
+    color: var(--sacred-earth);
+    background: var(--sacred-light);
+    margin: 0;
+    padding: 0;
+}
+
+/* Sacred Geometry Container */
+.sacred-geometry-container {
+    position: relative;
+    background: var(--golden-gradient);
+    border-radius: var(--fib-13);
+    overflow: hidden;
+}
+
+.sacred-geometry-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(201,169,110,0.1)" stroke-width="0.5"/><circle cx="50" cy="50" r="18.54" fill="none" stroke="rgba(201,169,110,0.1)" stroke-width="0.5"/></svg>') center/cover;
+    opacity: 0.618;
+    pointer-events: none;
+}
+
+/* Golden Ratio Layouts */
+.golden-ratio-layout {
+    display: grid;
+    grid-template-columns: 1fr var(--golden-ratio)fr;
+    gap: var(--fib-21);
+    aspect-ratio: var(--golden-ratio);
+}
+
+.golden-ratio-card {
+    aspect-ratio: var(--golden-ratio);
+    padding: var(--fib-21);
+    background: var(--sacred-light);
+    border: var(--fib-2) solid var(--sacred-gold);
+    border-radius: var(--fib-8);
+    box-shadow: 0 var(--fib-8) var(--fib-21) var(--sacred-shadow);
+    transition: all var(--golden-transition) ease-in-out;
+}
+
+.golden-ratio-card:hover {
+    transform: scale(1.01618) rotate(0.618deg);
+    box-shadow: 0 var(--fib-13) var(--fib-34) var(--sacred-shadow);
+}
+
+/* Fibonacci Grid System */
+.fibonacci-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: var(--fib-8) var(--fib-13);
+    padding: var(--fib-21);
+}
+
+.fibonacci-layout {
+    padding: var(--fib-13) var(--fib-21) var(--fib-34) var(--fib-55);
+    margin: var(--fib-8) var(--fib-13) var(--fib-21) var(--fib-34);
+}
+
+/* Sacred Geometry Grid */
+.sacred-geometry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(calc(300px * var(--golden-ratio-inverse)), 1fr));
+    gap: var(--fib-21);
+    padding: var(--fib-34);
+}
+
+/* VORTEX AI Dashboard Specific Styles */
+.vortex-ai-dashboard {
+    min-height: 100vh;
+    background: var(--fibonacci-gradient);
+    position: relative;
+}
+
+.dashboard-header {
+    text-align: center;
+    padding: var(--fib-55) var(--fib-34);
+    background: var(--sacred-light);
+    border-bottom: var(--fib-3) solid var(--sacred-gold);
+}
+
+.sacred-title {
+    font-size: var(--sacred-font-xlarge);
+    color: var(--sacred-earth);
+    margin: 0 0 var(--fib-13) 0;
+    letter-spacing: calc(var(--fib-2) * var(--golden-ratio-inverse));
+    text-shadow: var(--fib-2) var(--fib-2) var(--fib-5) var(--sacred-shadow);
+}
+
+.sacred-subtitle {
+    font-size: var(--sacred-font-large);
+    color: var(--sacred-bronze);
+    margin: 0 0 var(--fib-21) 0;
+    font-style: italic;
+}
+
+.golden-ratio-indicator {
+    display: inline-block;
+    padding: var(--fib-8) var(--fib-13);
+    background: var(--sacred-gold);
+    color: var(--sacred-light);
+    border-radius: var(--fib-21);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+
+/* Agent Cards */
+.agent-orchestration-panel {
+    padding: var(--fib-34);
+}
+
+.agent-card {
+    background: var(--sacred-light);
+    border: var(--fib-2) solid var(--sacred-gold);
+    border-radius: var(--fib-13);
+    padding: var(--fib-21);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--golden-transition) ease-in-out;
+}
+
+.agent-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from var(--golden-angle), transparent 0deg, var(--sacred-gold) 61.8deg, transparent 123.6deg);
+    opacity: 0;
+    transition: opacity var(--golden-transition);
+    pointer-events: none;
+}
+
+.agent-card:hover::before {
+    opacity: 0.1;
+    animation: sacred-rotation var(--fibonacci-animation) linear infinite;
+}
+
+@keyframes sacred-rotation {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.agent-avatar {
+    width: calc(var(--fib-89) * var(--golden-ratio));
+    height: calc(var(--fib-89) * var(--golden-ratio));
+    margin: 0 auto var(--fib-21);
+    border-radius: 50%;
+    overflow: hidden;
+    border: var(--fib-3) solid var(--sacred-gold);
+    position: relative;
+}
+
+.agent-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sacred-geometry-overlay,
+.seed-art-overlay,
+.analysis-overlay,
+.strategy-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity var(--golden-transition);
+}
+
+.agent-card:hover .sacred-geometry-overlay,
+.agent-card:hover .seed-art-overlay,
+.agent-card:hover .analysis-overlay,
+.agent-card:hover .strategy-overlay {
+    opacity: 0.618;
+}
+
+.sacred-geometry-overlay {
+    background: radial-gradient(circle, transparent 30%, var(--sacred-gold) 61.8%, transparent 100%);
+}
+
+.seed-art-overlay {
+    background: conic-gradient(from 0deg, var(--sacred-gold), var(--sacred-bronze), var(--sacred-cream), var(--sacred-gold));
+}
+
+/* Sacred Buttons */
+.sacred-button,
+.sacred-execute-button,
+.sacred-generate-button {
+    background: var(--golden-gradient);
+    color: var(--sacred-light);
+    border: none;
+    padding: var(--fib-13) var(--fib-21);
+    border-radius: var(--fib-8);
+    font-size: var(--sacred-font-base);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all var(--golden-transition) ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.sacred-button::before,
+.sacred-execute-button::before,
+.sacred-generate-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--sacred-light);
+    border-radius: 50%;
+    transition: all var(--golden-transition);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+}
+
+.sacred-button:hover::before,
+.sacred-execute-button:hover::before,
+.sacred-generate-button:hover::before {
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+}
+
+.sacred-button:hover,
+.sacred-execute-button:hover,
+.sacred-generate-button:hover {
+    transform: scale(1.0618);
+    box-shadow: 0 var(--fib-8) var(--fib-21) var(--sacred-shadow);
+}
+
+/* Sacred Form Elements */
+.sacred-textarea,
+.sacred-prompt-input {
+    width: 100%;
+    min-height: calc(var(--fib-89) * var(--golden-ratio));
+    padding: var(--fib-13);
+    border: var(--fib-2) solid var(--sacred-gold);
+    border-radius: var(--fib-8);
+    background: var(--sacred-light);
+    color: var(--sacred-earth);
+    font-family: inherit;
+    font-size: var(--sacred-font-base);
+    line-height: var(--golden-ratio);
+    resize: vertical;
+    transition: all var(--golden-transition);
+}
+
+.sacred-textarea:focus,
+.sacred-prompt-input:focus {
+    outline: none;
+    border-color: var(--sacred-bronze);
+    box-shadow: 0 0 var(--fib-13) var(--sacred-shadow);
+    transform: scale(1.00618);
+}
+
+/* Seed-Art Components */
+.seed-art-components {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fib-8);
+    margin-top: var(--fib-13);
+}
+
+.component-indicator {
+    padding: var(--fib-5) var(--fib-8);
+    background: var(--sacred-cream);
+    border: var(--fib-1) solid var(--sacred-gold);
+    border-radius: var(--fib-13);
+    font-size: calc(var(--sacred-font-base) * var(--golden-ratio-inverse));
+    color: var(--sacred-earth);
+}
+
+.component-indicator.sacred-geometry {
+    background: linear-gradient(45deg, var(--sacred-gold), var(--sacred-bronze));
+    color: var(--sacred-light);
+}
+
+/* Sacred Geometry Monitor */
+.seed-art-monitor {
+    background: var(--sacred-light);
+    border: var(--fib-2) solid var(--sacred-gold);
+    border-radius: var(--fib-13);
+    padding: var(--fib-21);
+    margin-top: var(--fib-34);
+}
+
+.technique-indicators {
+    margin-top: var(--fib-13);
+}
+
+.indicator-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--fib-8);
+    gap: var(--fib-13);
+}
+
+.indicator-label {
+    min-width: calc(var(--fib-144) * var(--golden-ratio));
+    font-weight: bold;
+    color: var(--sacred-earth);
+}
+
+.indicator-bar {
+    flex: 1;
+    height: var(--fib-13);
+    background: var(--sacred-cream);
+    border-radius: var(--fib-8);
+    overflow: hidden;
+    position: relative;
+}
+
+.indicator-fill {
+    height: 100%;
+    background: var(--golden-gradient);
+    transition: width var(--golden-transition) ease-in-out;
+    border-radius: var(--fib-8);
+}
+
+.indicator-value {
+    min-width: var(--fib-34);
+    text-align: right;
+    font-weight: bold;
+    color: var(--sacred-bronze);
+}
+
+/* Sacred Geometry Workspace */
+.vortex-seed-art-studio {
+    background: var(--fibonacci-gradient);
+    min-height: 100vh;
+}
+
+.studio-workspace {
+    display: grid;
+    grid-template-columns: 1fr var(--golden-ratio)fr;
+    gap: var(--fib-34);
+    padding: var(--fib-34);
+}
+
+.seed-art-controls-panel {
+    background: var(--sacred-light);
+    border: var(--fib-2) solid var(--sacred-gold);
+    border-radius: var(--fib-13);
+    padding: var(--fib-21);
+    height: fit-content;
+}
+
+.parameter-group {
+    margin-bottom: var(--fib-21);
+    padding-bottom: var(--fib-13);
+    border-bottom: var(--fib-1) solid var(--sacred-cream);
+}
+
+.parameter-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.parameter-group h4 {
+    color: var(--sacred-earth);
+    margin: 0 0 var(--fib-13) 0;
+    font-size: var(--sacred-font-large);
+}
+
+.parameter-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fib-8);
+}
+
+.parameter-controls label {
+    display: flex;
+    align-items: center;
+    gap: var(--fib-8);
+    color: var(--sacred-bronze);
+    font-weight: bold;
+}
+
+.parameter-controls input[type="range"] {
+    flex: 1;
+    height: var(--fib-8);
+    background: var(--sacred-cream);
+    border-radius: var(--fib-5);
+    outline: none;
+    appearance: none;
+}
+
+.parameter-controls input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: var(--fib-13);
+    height: var(--fib-13);
+    background: var(--sacred-gold);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--golden-transition);
+}
+
+.parameter-controls input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.618);
+    background: var(--sacred-bronze);
+}
+
+.value-display {
+    min-width: var(--fib-21);
+    text-align: right;
+    color: var(--sacred-earth);
+    font-family: 'Courier New', monospace;
+}
+
+/* Sacred Geometry Patterns */
+.golden-spiral {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 50 Q75 25 100 50 Q75 75 50 50 Q25 25 0 50 Q25 75 50 50" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1"/></svg>') center/contain no-repeat;
+    opacity: 0.618;
+    animation: sacred-rotation calc(var(--fibonacci-animation) * 2) linear infinite;
+}
+
+.fibonacci-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(to right, transparent 0%, rgba(201,169,110,0.1) 38.2%, transparent 38.4%),
+        linear-gradient(to bottom, transparent 0%, rgba(201,169,110,0.1) 61.8%, transparent 62%);
+    pointer-events: none;
+}
+
+/* Responsive Sacred Geometry */
+@media (max-width: 768px) {
+    .golden-ratio-layout,
+    .studio-workspace {
+        grid-template-columns: 1fr;
+        aspect-ratio: auto;
+    }
+    
+    .sacred-geometry-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .fibonacci-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .agent-orchestration-panel {
+        padding: var(--fib-21);
+    }
+}
+
+/* Sacred Animations */
+@keyframes sacred-pulse {
+    0%, 100% { 
+        opacity: 0.618; 
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 1; 
+        transform: scale(1.0618);
+    }
+}
+
+@keyframes fibonacci-flow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.sacred-animation {
+    animation: sacred-pulse var(--fibonacci-animation) ease-in-out infinite;
+}
+
+.fibonacci-animation {
+    animation: fibonacci-flow calc(var(--fibonacci-animation) * var(--golden-ratio)) linear infinite;
+}
+
+/* Sacred Loading States */
+.sacred-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.sacred-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--sacred-gold), transparent);
+    animation: fibonacci-flow var(--fibonacci-animation) ease-in-out infinite;
+}
+
+/* Sacred Scrollbar */
+::-webkit-scrollbar {
+    width: var(--fib-8);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--sacred-cream);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--sacred-gold);
+    border-radius: var(--fib-5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--sacred-bronze);
+} 

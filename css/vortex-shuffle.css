@@ -1,0 +1,168 @@
+/**
+ * Styles for Vortex Marketplace Shuffle Functionality
+ */
+
+/* Notifications Container */
+.vortex-notifications {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 300px;
+}
+
+/* Notification */
+.vortex-notification {
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    line-height: 1.4;
+    animation: slideInRight 0.3s ease-out forwards;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Notification Types */
+.vortex-notification-success {
+    background-color: #e7f7ed;
+    border-left: 4px solid #28a745;
+    color: #1b5e20;
+}
+
+.vortex-notification-error {
+    background-color: #ffeaea;
+    border-left: 4px solid #dc3545;
+    color: #7f1d1d;
+}
+
+.vortex-notification-info {
+    background-color: #e6f7ff;
+    border-left: 4px solid #0099ff;
+    color: #0c457d;
+}
+
+/* Notification Close Button */
+.vortex-notification-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+    margin-left: 10px;
+    padding: 0;
+    color: inherit;
+}
+
+.vortex-notification-close:hover {
+    opacity: 0.9;
+}
+
+/* Shuffle Controls */
+.vortex-shuffle-controls {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.vortex-shuffle-controls-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.vortex-shuffle-stats {
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+.vortex-shuffle-stat {
+    margin-bottom: 5px;
+}
+
+.vortex-shuffle-stat-label {
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+/* Manual Shuffle Button */
+.vortex-manual-shuffle-btn {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.vortex-manual-shuffle-btn:hover {
+    background-color: #0055aa;
+}
+
+.vortex-manual-shuffle-btn:disabled {
+    background-color: #99bbdd;
+    cursor: not-allowed;
+}
+
+/* Shuffle Countdown */
+.vortex-shuffle-countdown {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.vortex-shuffle-countdown-label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.vortex-shuffle-countdown-timer {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: monospace;
+    color: #333;
+}
+
+/* Winners Date Picker */
+.vortex-winners-date-picker-container {
+    margin: 15px 0;
+    text-align: center;
+}
+
+.vortex-winners-date-picker-label {
+    font-size: 14px;
+    margin-right: 10px;
+    color: #555;
+}
+
+.vortex-winners-date-picker {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+} 

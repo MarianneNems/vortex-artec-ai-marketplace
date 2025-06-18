@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HURAII Artist Journey Demo</title>
+    <link rel="stylesheet" href="../css/huraii-demo.css">
+    <style>
+        /* Tab styling */
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ccc;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: #f0f0f0;
+            border-color: #ccc;
+            border-bottom-color: #f0f0f0;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Upload area styling */
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+        
+        /* Multi-panel view styling */
+        .panel-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            height: 400px;
+            margin-top: 15px;
+        }
+        .panel {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .panel img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .panel-label {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background-color: rgba(0,0,0,0.6);
+            color: white;
+            padding: 2px 6px;
+            font-size: 0.8em;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="huraii-demo-container">
+        <div class="huraii-demo-header">
+            <h1>HURAII Artist Journey Demo</h1>
+            <p>Experience the optimized API with advanced caching, batch processing, and real-time updates</p>
+            <div>
+                <span id="connection-status" class="disconnected">Disconnected</span>
+                <span id="status-message" class="info">Initializing HURAII components...</span>
+            </div>
+        </div>
+
+        <div class="huraii-demo-grid">
+            <!-- Generation Controls -->
+            <div class="huraii-card">
+                <div class="huraii-card-title">Create Artwork</div>
+                
+                <!-- Tab Navigation -->
+                <div class="tabs">
+                    <div class="tab active" data-tab="text-prompt">Text Prompt</div>
+                    <div class="tab" data-tab="image-upload">Image Upload</div>
+                </div>
+                
+                <!-- Text Prompt Tab Content -->
+                <div class="tab-content active" id="text-prompt-content">
+                    <div class="input-group">
+                        <label for="prompt-input">Prompt</label>
+                        <textarea id="prompt-input" placeholder="Describe what you want to create...">Colorful landscape with mountains at sunset, dramatic clouds</textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="negative-prompt">Negative Prompt</label>
+                        <input type="text" id="negative-prompt" placeholder="What to avoid in generation" value="blurry, distorted, low quality, unnatural colors">
+                    </div>
+                </div>
+                
+                <!-- Image Upload Tab Content -->
+                <div class="tab-content" id="image-upload-content">
+                    <div class="upload-area" id="upload-area">
+                        <div id="upload-placeholder">
+                            <i class="upload-icon">📁</i>
+                            <p>Click or drop an image here to upload</p>
+                            <p class="upload-hint">This will be used as a seed image for generation</p>
+                        </div>
+                        <div id="upload-preview" style="display: none;">
+                            <img id="seed-image-preview" alt="Seed image preview">
+                            <p id="seed-image-name">filename.jpg</p>
+                        </div>
+                    </div>
+                    <input type="file" id="seed-image-input" accept="image/*" style="display: none;">
+                    
+                    <div class="input-group">
+                        <label for="image-prompt">Image Description/Enhancement</label>
+                        <textarea id="image-prompt" placeholder="Describe how to enhance or modify the uploaded image...">Enhance colors, add dramatic lighting</textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="image-strength">Source Image Strength</label>
+                        <input type="range" id="image-strength" min="0" max="100" value="75">
+                        <div class="range-labels">
+                            <span>More Creative</span>
+                            <span>More Faithful</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Common Settings -->
+                <div class="input-group">
+                    <label for="style-select">Style</label>
+                    <select id="style-select">
+                        <option value="realistic">Realistic</option>
+                        <option value="abstract">Abstract</option>
+                        <option value="impressionist">Impressionist</option>
+                        <option value="digital-art">Digital Art</option>
+                        <option value="anime">Anime</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="format-select">Format</label>
+                    <select id="format-select">
+                        <option value="2d">2D Image</option>
+                        <option value="3d">3D Model</option>
+                        <option value="video">Video</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="width-input">Width</label>
+                    <input type="number" id="width-input" min="512" max="2048" step="64" value="1024">
+                </div>
+                <div class="input-group">
+                    <label for="height-input">Height</label>
+                    <input type="number" id="height-input" min="512" max="2048" step="64" value="1024">
+                </div>
+                <div class="input-group">
+                    <label for="steps-input">Quality Steps</label>
+                    <input type="number" id="steps-input" min="10" max="100" value="30">
+                </div>
+                
+                <div class="button-group">
+                    <button id="generate-artwork-btn" class="huraii-btn huraii-btn-primary">Generate Artwork</button>
+                    <button id="generate-multiple-btn" class="huraii-btn huraii-btn-secondary">Generate 4 Variations</button>
+                    <button id="cancel-generation-btn" class="huraii-btn huraii-btn-danger">Cancel</button>
+                </div>
+                
+                <div id="progress-container">
+                    <div class="progress">
+                        <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div>
+                    </div>
+                    <img id="preview-image" alt="Generation Preview">
+                </div>
+            </div>
+            
+            <!-- Result Display -->
+            <div class="huraii-card">
+                <div class="huraii-card-title">Generation Result</div>
+                <div id="result-section">
+                    <!-- Toggle for single/multi-panel view -->
+                    <div class="view-toggle">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="multi-panel-toggle">
+                            <span>4-Panel View</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Single image view -->
+                    <div id="single-view">
+                        <img id="result-image" alt="Generated Artwork">
+                        <div id="result-details"></div>
+                    </div>
+                    
+                    <!-- Four panel view -->
+                    <div id="multi-panel-view" style="display: none;">
+                        <div class="panel-container">
+                            <div class="panel" id="panel1">
+                                <div class="panel-label">Original</div>
+                                <img id="panel1-image" alt="Original Image">
+                            </div>
+                            <div class="panel" id="panel2">
+                                <div class="panel-label">Variation 1</div>
+                                <img id="panel2-image" alt="Variation 1">
+                            </div>
+                            <div class="panel" id="panel3">
+                                <div class="panel-label">Variation 2</div>
+                                <img id="panel3-image" alt="Variation 2">
+                            </div>
+                            <div class="panel" id="panel4">
+                                <div class="panel-label">Variation 3</div>
+                                <img id="panel4-image" alt="Variation 3">
+                            </div>
+                        </div>
+                        <div class="panel-controls">
+                            <button class="huraii-btn huraii-btn-secondary" id="panel-download-all-btn">Download All</button>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="artwork-title">Title</label>
+                        <input type="text" id="artwork-title" placeholder="Give your artwork a title">
+                    </div>
+                    <div class="input-group">
+                        <label for="artwork-description">Description</label>
+                        <textarea id="artwork-description" placeholder="Describe your artwork"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="artwork-tags">Tags (comma separated)</label>
+                        <input type="text" id="artwork-tags" placeholder="landscape, mountains, sunset">
+                    </div>
+                    <div class="input-group">
+                        <label>
+                            <input type="checkbox" id="artwork-public" checked>
+                            Make this artwork public
+                        </label>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="save-artwork-btn" class="huraii-btn huraii-btn-success" disabled>Save Artwork</button>
+                    </div>
+                    
+                    <div id="artwork-permalink"></div>
+                </div>
+                <div id="generation-params"></div>
+            </div>
+            
+            <!-- Recent Images -->
+            <div class="huraii-card huraii-demo-full-width">
+                <div class="huraii-card-title">Recent Artwork</div>
+                <div id="recent-images">
+                    <!-- Recent images will be displayed here -->
+                    <div class="empty-state">No recent artwork to display</div>
+                </div>
+            </div>
+            
+            <!-- Learning Data -->
+            <div class="huraii-card">
+                <div class="huraii-card-title">Batch Learning Demo</div>
+                <p>
+                    This demonstrates the batch processing optimization, which groups multiple learning data
+                    requests together to reduce server load.
+                </p>
+                <div class="input-group">
+                    <label for="batch-count">Number of Learning Requests</label>
+                    <input type="number" id="batch-count" min="1" max="100" value="10">
+                </div>
+                <button id="batch-learning-btn" class="huraii-btn huraii-btn-secondary">Send Batch Learning Data</button>
+            </div>
+            
+            <!-- Performance Metrics -->
+            <div class="huraii-card">
+                <div class="huraii-card-title">Performance Metrics</div>
+                <div class="metrics-panel">
+                    <div class="metric-box">
+                        <div class="metric-value" id="metrics-request-count">0</div>
+                        <div class="metric-label">Total Requests</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value" id="metrics-success-rate">0%</div>
+                        <div class="metric-label">Success Rate</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value" id="metrics-avg-response">0ms</div>
+                        <div class="metric-label">Avg Response Time</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value" id="metrics-cache-hit-ratio">0%</div>
+                        <div class="metric-label">Cache Hit Ratio</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value" id="metrics-batch-count">0</div>
+                        <div class="metric-label">Batched Requests</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Event Log -->
+            <div class="huraii-card huraii-demo-full-width">
+                <div class="huraii-card-title">Event Log</div>
+                <div id="event-log">
+                    <!-- Event logs will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- HURAII Components (Order matters for dependencies) -->
+    <script src="./huraii-components/huraii-lru-cache.js"></script>
+    <script src="./huraii-components/huraii-websocket.js"></script>
+    <script src="./huraii-components/huraii-api.js"></script>
+    
+    <!-- Demo Scripts -->
+    <script src="./huraii-components/demo-artist-journey.js"></script>
+    <script src="./huraii-components/huraii-image-upload.js"></script>
+</body>
+</html> 

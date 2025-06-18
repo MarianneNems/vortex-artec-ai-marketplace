@@ -1,0 +1,275 @@
+/**
+ * Styles for AI agent cards and chat interface.
+ *
+ * @link       https://vortexai.io
+ * @since      1.0.0
+ *
+ * @package    Vortex
+ * @subpackage Vortex/css
+ */
+
+/* AI Agent Cards Container */
+.vortex-ai-agents-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+/* Individual Agent Card */
+.vortex-agent-card {
+    width: 220px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e8e8e8;
+}
+
+.vortex-agent-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.vortex-agent-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #6e42f5, #b74cf5);
+}
+
+.vortex-agent-icon {
+    font-size: 36px;
+    color: #6e42f5;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+.vortex-agent-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.vortex-agent-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* Chat Modal */
+#vortex-chat-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.vortex-chat-modal-content {
+    width: 90%;
+    max-width: 450px;
+    height: 80%;
+    max-height: 600px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Chat Header */
+.vortex-chat-header {
+    background: linear-gradient(90deg, #6e42f5, #b74cf5);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.vortex-chat-agent-info {
+    display: flex;
+    align-items: center;
+}
+
+#vortex-chat-modal-icon {
+    font-size: 22px;
+    margin-right: 10px;
+}
+
+#vortex-chat-modal-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.vortex-chat-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+}
+
+/* Chat Messages Area */
+#vortex-chat-messages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.vortex-chat-message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    line-height: 1.4;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.vortex-chat-message.user-message {
+    align-self: flex-end;
+    background-color: #6e42f5;
+    color: white;
+    border-bottom-right-radius: 5px;
+}
+
+.vortex-chat-message.agent-message {
+    align-self: flex-start;
+    background-color: #f0f0f0;
+    color: #333;
+    border-bottom-left-radius: 5px;
+}
+
+.vortex-chat-message.error-message {
+    align-self: center;
+    background-color: #ffeeee;
+    color: #cc0000;
+    border-radius: 8px;
+    border: 1px solid #ffcccc;
+    width: 90%;
+    text-align: center;
+}
+
+/* Loading animation */
+.vortex-chat-message.loading {
+    align-self: flex-start;
+    background-color: #f0f0f0;
+    width: 70px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.loading-indicator span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #888;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-indicator span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.loading-indicator span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% { 
+        transform: scale(0);
+    } 
+    40% { 
+        transform: scale(1.0);
+    }
+}
+
+/* Chat Input Area */
+.vortex-chat-input-container {
+    padding: 15px;
+    border-top: 1px solid #e5e5e5;
+    background-color: #f9f9f9;
+}
+
+#vortex-chat-form {
+    display: flex;
+    gap: 10px;
+}
+
+#vortex-chat-input {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    font-size: 15px;
+    outline: none;
+}
+
+#vortex-chat-input:focus {
+    border-color: #6e42f5;
+    box-shadow: 0 0 0 2px rgba(110, 66, 245, 0.2);
+}
+
+.vortex-chat-send {
+    background-color: #6e42f5;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.vortex-chat-send:hover {
+    background-color: #5835c9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .vortex-chat-modal-content {
+        width: 95%;
+        height: 90%;
+    }
+    
+    .vortex-agent-card {
+        width: 45%;
+        min-width: 150px;
+    }
+} 

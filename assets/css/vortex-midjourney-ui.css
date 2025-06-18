@@ -1,0 +1,442 @@
+/**
+ * HURAII -like UI Styles
+ * Provides Discord Midjourney-style interface with grid layout and action buttons
+ */
+
+.vortex-huraii-interface {
+  --midnight-blue: #13141c;
+  --dark-blue: #1e1f2b;
+  --medium-blue: #2b2d3b;
+  --light-blue: #34364a;
+  --highlight-blue: #4c5efd;
+  --text-primary: #ffffff;
+  --text-secondary: #9a9ebc;
+  --text-tertiary: #636784;
+  --success-green: #30c85e;
+  --warning-yellow: #ffcf5c;
+  --error-red: #f04a5d;
+  --border-radius: 8px;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --transition-speed: 0.2s;
+
+  background-color: var(--midnight-blue);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Command Bar */
+.vortex-command-bar {
+  background-color: var(--dark-blue);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.vortex-command-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vortex-command-btn {
+  background-color: var(--medium-blue);
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  transition: all var(--transition-speed);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vortex-command-btn:hover {
+  background-color: var(--light-blue);
+  color: var(--text-primary);
+}
+
+.vortex-command-btn.active {
+  background-color: var(--highlight-blue);
+  color: var(--text-primary);
+}
+
+.vortex-command-btn i {
+  font-size: 14px;
+}
+
+/* Input Area */
+.vortex-input-area {
+  background-color: var(--dark-blue);
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+}
+
+.vortex-input-container {
+  display: flex;
+  border-radius: var(--border-radius);
+  background-color: var(--medium-blue);
+  padding: 12px 16px;
+  position: relative;
+}
+
+.vortex-input-prefix {
+  color: var(--highlight-blue);
+  font-weight: 600;
+  margin-right: 8px;
+  padding: 8px 0;
+}
+
+.vortex-midjourney-prompt {
+  background-color: transparent;
+  border: none;
+  color: var(--text-primary);
+  flex-grow: 1;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 8px 0;
+  resize: none;
+  height: 40px;
+  min-height: 40px;
+  overflow-y: hidden;
+  transition: height 0.3s ease;
+}
+
+.vortex-midjourney-prompt:focus {
+  outline: none;
+  height: 80px;
+}
+
+.vortex-midjourney-prompt::placeholder {
+  color: var(--text-tertiary);
+}
+
+.vortex-input-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 10px;
+}
+
+.vortex-aspect-ratio {
+  background-color: var(--light-blue);
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.vortex-generate-btn {
+  background-color: var(--highlight-blue);
+  border: none;
+  border-radius: var(--border-radius);
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  transition: all var(--transition-speed);
+}
+
+.vortex-generate-btn:hover {
+  opacity: 0.9;
+}
+
+.vortex-generate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.vortex-progress-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  color: var(--text-secondary);
+  gap: 10px;
+}
+
+.vortex-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--text-tertiary);
+  border-top-color: var(--highlight-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Grid Container */
+.vortex-grid-container {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.vortex-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Job Container */
+.vortex-job-container {
+  background-color: var(--dark-blue);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  margin-bottom: 24px;
+}
+
+.vortex-job-info {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.vortex-job-prompt {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+.vortex-grid-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+}
+
+@media (min-width: 768px) {
+  .vortex-grid-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Grid Items */
+.vortex-grid-item {
+  position: relative;
+  aspect-ratio: 1/1;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: var(--medium-blue);
+  transition: all var(--transition-speed);
+}
+
+.vortex-grid-item.selected {
+  outline: 3px solid var(--highlight-blue);
+  z-index: 2;
+}
+
+.vortex-image-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.vortex-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.vortex-grid-item:hover .vortex-image-container img {
+  transform: scale(1.05);
+}
+
+.vortex-grid-item:hover .vortex-image-actions {
+  opacity: 1;
+}
+
+.vortex-image-actions {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.vortex-variation-btn {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all var(--transition-speed);
+}
+
+.vortex-variation-btn:hover {
+  background-color: var(--highlight-blue);
+}
+
+/* Seed Display */
+.vortex-seed-info {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  margin-top: 4px;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Message Styles */
+.vortex-messages {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 300px;
+}
+
+.vortex-message {
+  background-color: var(--medium-blue);
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  animation: fadeIn 0.3s ease;
+}
+
+.vortex-message-error {
+  border-left: 4px solid var(--error-red);
+}
+
+.vortex-message-success {
+  border-left: 4px solid var(--success-green);
+}
+
+.vortex-message-warning {
+  border-left: 4px solid var(--warning-yellow);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Additional Features */
+.vortex-slash-commands {
+  position: absolute;
+  bottom: 100%;
+  left: 50px;
+  background-color: var(--dark-blue);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.vortex-slash-command-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color var(--transition-speed);
+}
+
+.vortex-slash-command-item:hover {
+  background-color: var(--light-blue);
+}
+
+.vortex-slash-command-item i {
+  color: var(--highlight-blue);
+}
+
+.vortex-slash-command-name {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.vortex-slash-command-desc {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Loading Placehodlers */
+.vortex-placeholder {
+  background: linear-gradient(
+    90deg,
+    var(--medium-blue) 25%,
+    var(--light-blue) 50%,
+    var(--medium-blue) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Four-Panel Layout */
+.vortex-four-panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  width: 100%;
+  height: 100%;
+  gap: 2px;
+}
+
+/* Artistic DNA Visualization */
+.vortex-artistic-dna-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  width: 100%;
+  height: 200px;
+  margin-top: 20px;
+  background-color: var(--medium-blue);
+}
+
+.vortex-dna-strand {
+  position: absolute;
+  height: 100%;
+  width: 4px;
+  background: linear-gradient(to bottom, transparent, var(--highlight-blue), transparent);
+  animation: dnaFloat 3s infinite alternate ease-in-out;
+}
+
+@keyframes dnaFloat {
+  0% { transform: translateY(-20px) translateX(0); }
+  100% { transform: translateY(20px) translateX(10px); }
+} 

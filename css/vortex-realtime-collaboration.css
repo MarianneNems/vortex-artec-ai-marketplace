@@ -1,0 +1,502 @@
+/**
+ * VORTEX Realtime Collaboration Styles
+ */
+
+/* Collaboration workspace */
+.vortex-collaboration-workspace {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.vortex-collaboration-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 5px 5px 0 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.vortex-session-info {
+    flex: 1;
+}
+
+.vortex-session-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+.vortex-session-id {
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.vortex-session-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.vortex-session-actions button {
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.vortex-session-actions button:hover {
+    background-color: #e7e7e7;
+}
+
+.vortex-session-actions button.vortex-leave-session {
+    background-color: #ffeeee;
+    border-color: #ffcccc;
+    color: #cc0000;
+}
+
+.vortex-session-actions button.vortex-leave-session:hover {
+    background-color: #ffdddd;
+}
+
+/* Collaboration main area */
+.vortex-collaboration-main {
+    display: flex;
+    height: 600px;
+    border: 1px solid #e0e0e0;
+    border-top: none;
+}
+
+/* Canvas area */
+.vortex-collaboration-canvas-container {
+    flex: 1;
+    position: relative;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+#vortex-collaboration-canvas {
+    display: block;
+    background-color: #ffffff;
+    cursor: crosshair;
+}
+
+/* Sidebar */
+.vortex-collaboration-sidebar {
+    width: 300px;
+    border-left: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Participants */
+.vortex-participants {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px;
+}
+
+.vortex-participants h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #555;
+    font-weight: 600;
+}
+
+.vortex-participants-list {
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.vortex-participant {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 13px;
+}
+
+.vortex-participant-name {
+    font-weight: 500;
+}
+
+.vortex-participant-role {
+    font-size: 11px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+.vortex-participant-role-creator {
+    background-color: #e6f7ff;
+    color: #0066cc;
+}
+
+/* Chat */
+.vortex-chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.vortex-chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+}
+
+.vortex-chat-message {
+    margin-bottom: 10px;
+    max-width: 85%;
+}
+
+.vortex-chat-message-self {
+    margin-left: auto;
+}
+
+.vortex-chat-message-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    margin-bottom: 3px;
+}
+
+.vortex-chat-message-name {
+    font-weight: 600;
+    color: #555;
+}
+
+.vortex-chat-message-time {
+    color: #999;
+}
+
+.vortex-chat-message-content {
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.vortex-chat-message-self .vortex-chat-message-content {
+    background-color: #dcf8c6;
+    color: #000;
+    border-top-right-radius: 0;
+}
+
+.vortex-chat-message-other .vortex-chat-message-content {
+    background-color: #ffffff;
+    color: #333;
+    border-top-left-radius: 0;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
+.vortex-chat-system-message {
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+    margin: 10px 0;
+    font-style: italic;
+}
+
+.vortex-chat-form {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.vortex-chat-form input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.vortex-chat-form button {
+    background-color: #0073aa;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    margin-left: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.vortex-chat-form button:hover {
+    background-color: #005983;
+}
+
+/* Toolbar */
+.vortex-collaboration-toolbar {
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.vortex-tool-group {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.vortex-tool {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #fff;
+    transition: all 0.2s ease;
+}
+
+.vortex-tool.active {
+    background-color: #e6f7ff;
+    border-color: #1890ff;
+    color: #1890ff;
+}
+
+.vortex-tool:hover {
+    border-color: #1890ff;
+}
+
+.vortex-tool-brush {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3m0 0a3 3 0 0 0 3-3m0 0l6 6m-6-6L9 12l-5 2-3-6 3-1 1-4L9 3l2 5L9 12"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.vortex-tool-eraser {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13l-5-5M8.5 19.5L19 9a2.828 2.828 0 0 0 0-4 2.828 2.828 0 0 0-4 0L5 15M22 19H2"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.vortex-tool-text {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.vortex-tool-line {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.vortex-tool-undo, .vortex-tool-redo, .vortex-tool-clear, .vortex-tool-save {
+    width: auto;
+    padding: 0 10px;
+    font-size: 12px;
+}
+
+/* Color picker */
+.vortex-color-picker-container {
+    display: flex;
+    align-items: center;
+}
+
+.vortex-color-picker-label {
+    margin-right: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+#vortex-color-picker {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+/* Line width */
+.vortex-line-width-container {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.vortex-line-width-label {
+    margin-right: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+#vortex-line-width {
+    width: 60px;
+}
+
+/* Session forms */
+.vortex-session-forms {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+}
+
+.vortex-session-forms h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 20px;
+    text-align: center;
+}
+
+.vortex-form-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.vortex-form-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.2s ease;
+}
+
+.vortex-form-tab.active {
+    color: #0073aa;
+    border-bottom: 2px solid #0073aa;
+}
+
+.vortex-form-content {
+    display: none;
+}
+
+.vortex-form-content.active {
+    display: block;
+}
+
+.vortex-form-group {
+    margin-bottom: 15px;
+}
+
+.vortex-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #555;
+}
+
+.vortex-form-group input,
+.vortex-form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.vortex-form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.vortex-form-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.vortex-form-actions button {
+    padding: 10px 20px;
+    background-color: #0073aa;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.vortex-form-actions button:hover {
+    background-color: #005983;
+}
+
+/* Remote cursors */
+.vortex-remote-cursor {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+    z-index: 100;
+    transform: translate(-8px, -8px);
+}
+
+.vortex-remote-cursor::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 12px solid rgba(24, 144, 255, 0.7);
+    transform: rotate(-45deg);
+}
+
+.vortex-cursor-name {
+    position: absolute;
+    left: 12px;
+    top: -20px;
+    background-color: rgba(24, 144, 255, 0.9);
+    color: white;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .vortex-collaboration-main {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .vortex-collaboration-sidebar {
+        width: 100%;
+        height: 300px;
+        border-left: none;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    .vortex-collaboration-canvas-container {
+        height: 400px;
+    }
+    
+    .vortex-collaboration-toolbar {
+        flex-wrap: wrap;
+    }
+    
+    .vortex-tool-group {
+        margin-bottom: 10px;
+    }
+} 

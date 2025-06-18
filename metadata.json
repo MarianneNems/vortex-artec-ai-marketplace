@@ -1,0 +1,72 @@
+{
+  "/": {
+    "title": "VORTEX ARTEC | Where Art Awakens AI - Revolutionary Art Marketplace",
+    "description": "Discover VORTEX ARTEC—the immersive art platform powered by AI agents THORIUS, HURAII, and CLOE. Experience blockchain-powered art trading with TOLA tokens.",
+    "ogImage": "/assets/images/VORTEX_ROUND_BLACK.png",
+    "keywords": "AI art, blockchain art, NFT marketplace, TOLA token, THORIUS, HURAII, CLOE",
+    "canonical": "https://www.vortexartec.com/"
+  },
+  "/nems-academy/": {
+    "title": "NEMS Academy | AI-Powered Art Education - VORTEX ARTEC",
+    "description": "Learn cutting-edge art techniques with NEMS Academy. AI-guided tutorials, blockchain integration, and personalized learning paths for digital artists.",
+    "ogImage": "/assets/images/marianne-nems.png",
+    "keywords": "art education, AI tutorials, digital art learning, NEMS Academy",
+    "canonical": "https://www.vortexartec.com/nems-academy/"
+  },
+  "/marketplace/": {
+    "title": "AI Art Marketplace | Buy & Sell Digital Art - VORTEX ARTEC",
+    "description": "Explore the revolutionary AI-powered art marketplace. Trade digital artworks with TOLA tokens, discover emerging artists, and invest in AI-generated art.",
+    "ogImage": "/assets/images/marketplace-hero.jpg",
+    "keywords": "art marketplace, digital art trading, NFT platform, AI art collection",
+    "canonical": "https://www.vortexartec.com/marketplace/"
+  },
+  "/agents/": {
+    "title": "AI Agents | THORIUS, HURAII & CLOE - VORTEX ARTEC",
+    "description": "Meet our AI agents: THORIUS for orchestration, HURAII for image generation, and CLOE for art discovery. Experience the future of AI-powered creativity.",
+    "ogImage": "/assets/images/ai-agents-banner.jpg",
+    "keywords": "AI agents, THORIUS, HURAII, CLOE, artificial intelligence, art AI",
+    "canonical": "https://www.vortexartec.com/agents/"
+  },
+  "/blockchain/": {
+    "title": "Blockchain Integration | TOLA Token Economy - VORTEX ARTEC",
+    "description": "Discover VORTEX's blockchain ecosystem powered by TOLA tokens on Solana. Secure transactions, smart contracts, and decentralized art ownership.",
+    "ogImage": "/assets/images/tola_token.png",
+    "keywords": "blockchain art, TOLA token, Solana, smart contracts, decentralized",
+    "canonical": "https://www.vortexartec.com/blockchain/"
+  },
+  "/artists/": {
+    "title": "Featured Artists | Digital Art Creators - VORTEX ARTEC",
+    "description": "Discover talented digital artists on VORTEX ARTEC. Browse portfolios, follow creators, and collect unique AI-enhanced artworks.",
+    "ogImage": "/assets/images/artists-showcase.jpg",
+    "keywords": "digital artists, art creators, artist portfolios, art community",
+    "canonical": "https://www.vortexartec.com/artists/"
+  },
+  "/dashboard/": {
+    "title": "Artist Dashboard | Manage Your Art Portfolio - VORTEX ARTEC",
+    "description": "Access your personalized artist dashboard. Upload artworks, track sales, manage TOLA tokens, and engage with AI agents for creative insights.",
+    "ogImage": "/assets/images/dashboard-preview.jpg",
+    "keywords": "artist dashboard, portfolio management, art analytics, creator tools",
+    "canonical": "https://www.vortexartec.com/dashboard/"
+  },
+  "/whitepaper/": {
+    "title": "VORTEX Whitepaper | Technical Documentation & Vision",
+    "description": "Read the complete VORTEX ARTEC whitepaper. Learn about our AI agents, TOLA tokenomics, blockchain integration, and the future of digital art.",
+    "ogImage": "/assets/images/whitepaper-cover.jpg",
+    "keywords": "whitepaper, technical documentation, TOLA tokenomics, blockchain",
+    "canonical": "https://www.vortexartec.com/whitepaper/"
+  },
+  "/api-docs/": {
+    "title": "API Documentation | Developer Resources - VORTEX ARTEC",
+    "description": "Comprehensive API documentation for VORTEX ARTEC. Integrate AI agents, blockchain features, and marketplace functionality into your applications.",
+    "ogImage": "/assets/images/api-docs-banner.jpg",
+    "keywords": "API documentation, developer resources, REST API, integration",
+    "canonical": "https://www.vortexartec.com/api-docs/"
+  },
+  "/about/": {
+    "title": "About VORTEX ARTEC | Revolutionary Art Platform",
+    "description": "Learn about VORTEX ARTEC's mission to revolutionize digital art through AI agents, blockchain technology, and community-driven creativity.",
+    "ogImage": "/assets/images/about-hero.jpg",
+    "keywords": "about VORTEX, company mission, art technology, innovation",
+    "canonical": "https://www.vortexartec.com/about/"
+  }
+} 
