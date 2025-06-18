@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HURAII Creation Suite | VORTEX AI</title>
+    <link rel="stylesheet" href="../assets/css/artbasel-inspired.css">
+    <link rel="icon" href="../assets/images/logo/vortex-favicon.png">
+    <style>
+        /* Additional HURAII-specific styles */
+        .generation-interface {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .generation-controls {
+            background-color: var(--color-light-gray);
+            padding: 2rem;
+            border: 1px solid var(--color-mid-gray);
+        }
+        
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .control-group input, 
+        .control-group select, 
+        .control-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--color-mid-gray);
+            font-family: var(--font-primary);
+        }
+        
+        .canvas-area {
+            background-color: white;
+            min-height: 600px;
+            border: 1px solid var(--color-mid-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .canvas-placeholder {
+            text-align: center;
+            color: var(--color-dark-gray);
+        }
+        
+        .canvas-placeholder svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .canvas-controls {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .canvas-button {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--color-mid-gray);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+        
+        .tab-navigation {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--color-mid-gray);
+        }
+        
+        .tab-item {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .tab-item.active {
+            border-bottom: 2px solid var(--color-black);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .history-preview {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+        
+        .history-item {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 1px solid var(--color-mid-gray);
+            cursor: pointer;
+            transition: var(--transition-standard);
+        }
+        
+        .history-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .tool-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .tool-card {
+            border: 1px solid var(--color-mid-gray);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-standard);
+        }
+        
+        .tool-card:hover {
+            background-color: var(--color-light-gray);
+        }
+        
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+        }
+        
+        .output-preview {
+            margin-top: 2rem;
+        }
+        
+        /* Founder's Note Styling */
+        .founders-note {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            line-height: 1.8;
+        }
+        
+        .founders-note h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .founders-note h3 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .founders-note p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .founders-note strong {
+            font-weight: 600;
+        }
+        
+        .founders-note ul {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .founders-note li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .founders-signature {
+            margin-top: 3rem;
+            text-align: right;
+            font-style: italic;
+        }
+        
+        .founders-signature strong {
+            display: block;
+            font-style: normal;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <header>
+        <div class="container">
+            <div class="header-inner">
+                <div class="logo">
+                    <a href="../index.html">
+                        <img src="../assets/images/vortex-logo.png" alt="VORTEX AI">
+                    </a>
+                </div>
+                <nav class="main-navigation">
+                    <ul class="nav-menu">
+                        <li><a href="../index.html">HOME</a></li>
+                        <li><a href="marketplace.html">MARKETPLACE</a></li>
+                        <li><a href="huraii-demo.html" class="active">HURAII</a></li>
+                        <li><a href="artists.html">ARTISTS</a></li>
+                        <li><a href="collector-experience.html">COLLECTORS</a></li>
+                        <li><a href="about.html">ABOUT</a></li>
+                        <li><a href="contact.html">CONTACT</a></li>
+                        <li><a href="vortex-registration.html" class="join-btn">JOIN VORTEX</a></li>
+                    </ul>
+                </nav>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="container mt-5">
+            <h1>HURAII Creation Suite</h1>
+            <p>Transform your artistic vision into reality with AI-powered creation tools</p>
+            
+            <!-- Tab Navigation -->
+            <div class="tab-navigation mt-4">
+                <div class="tab-item active" data-tab="create">Create with HURAII</div>
+                <div class="tab-item" data-tab="collector">Collector Experience</div>
+                <div class="tab-item" data-tab="swap">Artist Swap</div>
+                <div class="tab-item" data-tab="vision">Founder's Vision</div>
+            </div>
+            
+            <!-- Creation Tab Content -->
+            <div class="tab-content active" id="create-tab">
+                <!-- Tool Selection -->
+                <div class="tool-options">
+                    <div class="tool-card active">
+                        <div class="tool-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <h3>Text to Image</h3>
+                        <p>Create art from text descriptions</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3>Image Enhancement</h3>
+                        <p>Enhance and transform existing images</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                            </svg>
+                        </div>
+                        <h3>Style Transfer</h3>
+                        <p>Apply artistic styles to your images</p>
+                    </div>
+                </div>
+                
+                <!-- Generation Interface -->
+                <div class="generation-interface">
+                    <div class="generation-controls">
+                        <div class="control-group">
+                            <label for="generation-type">Generation Type</label>
+                            <select id="generation-type">
+                                <option>Text to Image</option>
+                                <option>Image to Image</option>
+                                <option>Style Transfer</option>
+                                <option>Image Enhancement</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="text-prompt">Text Prompt</label>
+                            <textarea id="text-prompt" rows="4" placeholder="Describe what you want to create..."></textarea>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="image-size">Image Size</label>
+                            <select id="image-size">
+                                <option>512 x 512</option>
+                                <option>768 x 768</option>
+                                <option>1024 x 1024</option>
+                                <option>Custom Size</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="art-style">Artistic Style</label>
+                            <select id="art-style">
+                                <option>Photorealistic</option>
+                                <option>Abstract</option>
+                                <option>Impressionist</option>
+                                <option>Digital Art</option>
+                                <option>Sketch</option>
+                                <option>Oil Painting</option>
+                                <option>Watercolor</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="guidance-scale">Creative Freedom</label>
+                            <input type="range" id="guidance-scale" min="1" max="20" value="7">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                                <span>More Creative</span>
+                                <span>More Precise</span>
+                            </div>
+                        </div>
+                        
+                        <button class="button" style="width: 100%; margin-top: 1rem;">Generate Artwork</button>
+                    </div>
+                    
+                    <div class="canvas-area">
+                        <div class="canvas-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p>Your generated artwork will appear here</p>
+                        </div>
+                        
+                        <div class="canvas-controls">
+                            <div>
+                                <button class="canvas-button">Undo</button>
+                                <button class="canvas-button">Redo</button>
+                            </div>
+                            <div>
+                                <button class="canvas-button">Download</button>
+                                <button class="canvas-button">Add to Collection</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Generation History -->
+                <div class="history-preview">
+                    <img src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/celestial-architectural-horizon.jpg" alt="Generation History" class="history-item">
+                    <img src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/L25Z.jpg" alt="Generation History" class="history-item">
+                    <img src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/chasing-time.jpg" alt="Generation History" class="history-item">
+                    <img src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/allah.jpg" alt="Generation History" class="history-item">
+                    <img src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/claire.jpg" alt="Generation History" class="history-item">
+                </div>
+            </div>
+            
+            <!-- Collector Experience Tab Content -->
+            <div class="tab-content" id="collector-tab">
+                <h2>Collect and Trade AI Artwork</h2>
+                <p>Experience the future of digital art collection with VORTEX's blockchain-powered marketplace</p>
+                
+                <div class="gallery-grid mt-4">
+                    <div class="artwork-card">
+                        <img class="artwork-image" src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/abyss-of-dreams.jpg" alt="Abyss of Dreams">
+                        <div class="artwork-details">
+                            <h3>Abyss of Dreams</h3>
+                            <p>Marianne Nems</p>
+                            <p>AI-Generated Digital Art</p>
+                            <p>0.25 TOLA</p>
+                            <a href="#" class="button" style="width: 100%; text-align: center; margin-top: 0.5rem;">Collect</a>
+                        </div>
+                    </div>
+                    
+                    <div class="artwork-card">
+                        <img class="artwork-image" src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/celestial-architectural-horizon.jpg" alt="Celestial Architectural Horizon">
+                        <div class="artwork-details">
+                            <h3>Celestial Architectural Horizon</h3>
+                            <p>Marianne Nems</p>
+                            <p>AI-Generated Digital Art</p>
+                            <p>0.15 TOLA</p>
+                            <a href="#" class="button" style="width: 100%; text-align: center; margin-top: 0.5rem;">Collect</a>
+                        </div>
+                    </div>
+                    
+                    <div class="artwork-card">
+                        <img class="artwork-image" src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/L25Z.jpg" alt="L²2'5Z">
+                        <div class="artwork-details">
+                            <h3>L²2'5Z</h3>
+                            <p>Elena Vortex</p>
+                            <p>AI-Generated Digital Art</p>
+                            <p>0.18 TOLA</p>
+                            <a href="#" class="button" style="width: 100%; text-align: center; margin-top: 0.5rem;">Collect</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Artist Swap Tab Content -->
+            <div class="tab-content" id="swap-tab">
+                <h2>Artist Swap Network</h2>
+                <p>Connect with other artists to collaborate, share techniques, and trade artwork</p>
+                
+                <div class="artist-grid mt-4" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+                    <div class="artist-card" style="border: 1px solid var(--color-mid-gray); padding: 1.5rem;">
+                        <img src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/marianne-nems.jpg" alt="Marianne Nems" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; margin-bottom: 1rem;">
+                        <h3>Marianne Nems</h3>
+                        <p>Digital Artist & VORTEX Founder</p>
+                        <p>20 Artworks Available for Swap</p>
+                        <a href="#" class="button" style="width: 100%; text-align: center; margin-top: 0.5rem;">Connect</a>
+                    </div>
+                    
+                    <div class="artist-card" style="border: 1px solid var(--color-mid-gray); padding: 1.5rem;">
+                        <img src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/artist-elena.jpg" alt="Elena Vortex" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; margin-bottom: 1rem;">
+                        <h3>Elena Vortex</h3>
+                        <p>Abstract AI Artist</p>
+                        <p>15 Artworks Available for Swap</p>
+                        <a href="#" class="button" style="width: 100%; text-align: center; margin-top: 0.5rem;">Connect</a>
+                    </div>
+                    
+                    <div class="artist-card" style="border: 1px solid var(--color-mid-gray); padding: 1.5rem;">
+                        <img src="https://vendor.artmonad.com/gallery/vortex/wp-content/uploads/2023/05/artist-marcus.jpg" alt="Marcus Thorn" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; margin-bottom: 1rem;">
+                        <h3>Marcus Thorn</h3>
+                        <p>Digital Surrealist</p>
+                        <p>8 Artworks Available for Swap</p>
+                        <a href="#" class="button" style="width: 100%; text-align: center; margin-top: 0.5rem;">Connect</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Founder's Vision Tab Content -->
+            <div class="tab-content" id="vision-tab">
+                <article class="founders-note">
+                    <h2>Inspiration</h2>
+                    
+                    <h3>VORTEX ARTEC: A New Era of Art, Economy, and Creative Freedom</h3>
+                    
+                    <p>Art has always been more than an expression—it is a <strong>universal language</strong>, a force that connects us beyond words, beyond borders, and beyond time. It has the power to <strong>elevate consciousness</strong>, to <strong>ignite change</strong>, and to <strong>bridge worlds</strong> between the artist and the observer.</p>
+                    
+                    <p>For years, I have watched artists struggle—not because they lack talent, vision, or passion, but because the traditional art industry was never built to serve them. Instead, it was designed to filter creativity through complex, outdated systems that <strong>restrict access, limit opportunities, and undervalue artistic mastery</strong>.</p>
+                    
+                    <p>I saw collectors, too, searching for more than just ownership. They weren't simply acquiring works of art; they were seeking <strong>a deeper connection to the artist, to the creative process, and to the stories behind each piece.</strong></p>
+                    
+                    <p>I knew there had to be a <strong>better way</strong>—a way where artists and collectors could interact <strong>freely</strong>, with trust, appreciation, and <strong>without barriers</strong>. A way where art could <strong>transcend commerce</strong> and become what it was always meant to be—a <strong>shared experience, a thriving ecosystem of creativity, and an economy rooted in love and abundance.</strong></p>
+                    
+                    <h3>The Birth of VORTEX ARTEC</h3>
+                    
+                    <p>This vision led me to create <strong>VORTEX ARTEC</strong>—not just as a platform, but as a <strong>movement</strong>, a <strong>living ecosystem</strong> where artists and collectors come together in a new kind of economy.</p>
+                    
+                    <p>This is a space where:</p>
+                    
+                    <ul>
+                        <li><strong>Artists</strong> no longer chase payments or worry about business logistics—our <strong>intelligent enterprise assistant</strong> handles marketing, transactions, research, and social media, allowing them to <strong>focus purely on creation.</strong></li>
+                        <li><strong>Collectors</strong> engage not just in transactions but in <strong>meaningful exchanges</strong>, offering a <strong>Token of Love and Appreciation (TOLA)</strong> to support and uplift artists directly.</li>
+                        <li><strong>Art is experienced in 4D</strong>—an expansion of the mind, where creation, collection, and exchange become a <strong>flow state of infinite possibility.</strong></li>
+                    </ul>
+                    
+                    <p>Here, we are <strong>not just creating an economy—we are redefining what art means to society.</strong> Instead of competition, we build <strong>collaboration.</strong> Instead of rigid transactions, we embrace <strong>fluidity, exchange, and trust.</strong> Instead of passive collecting, we establish <strong>active engagement.</strong></p>
+                    
+                    <p>This is where the <strong>soul of art meets the power of technology</strong>.</p>
+                    
+                    <h3>Inspiration & The Power of Creative Identity</h3>
+                    
+                    <p>What inspired me most in creating VORTEX ARTEC was the realization that <strong>art is one of the last frontiers of true freedom</strong>. Every artist has a <strong>unique fingerprint, a distinct creative identity</strong> that deserves to be seen, supported, and elevated.</p>
+                    
+                    <p>I have always believed that <strong>art should be liberated from external limitations</strong>—from restrictive galleries, from bureaucratic intermediaries, from systems that demand conformity. Every stroke, every form, every expression carries the <strong>essence of the artist's soul</strong>—and that soul should be free.</p>
+                    
+                    <p>I was inspired by the idea of an art world where:</p>
+                    
+                    <ul>
+                        <li>🎨 <strong>Every artist is recognized as a master of their craft.</strong></li>
+                        <li>💎 <strong>Every collector is an active participant, not just a buyer.</strong></li>
+                        <li>🔗 <strong>Every exchange is built on authenticity, trust, and appreciation.</strong></li>
+                    </ul>
+                    
+                    <p>At <strong>VORTEX ARTEC</strong>, we are creating <strong>our own artistic language</strong>, one where <strong>every artist, collector, and creator shapes the culture, the conversation, and the value of art itself.</strong> This is more than just an evolution—it is a revolution, <strong>an economy that thrives on shared passion and artistic integrity.</strong></p>
+                    
+                    <h3>The Future Starts Now</h3>
+                    
+                    <p>I invite you to step into the <strong>VORTEX ARTEC experience</strong>—where you are free to create, to collect, to express, and to evolve. This is not just a platform—it is <strong>a call to action for all artists, collectors, and visionaries</strong> who believe that art is more than a product—it is <strong>a force of transformation, a language of the mind, and the heartbeat of the human experience.</strong></p>
+                    
+                    <p>The <strong>future of art is here.</strong> The question is: <strong>Are you ready to be part of it?</strong></p>
+                    
+                    <div class="founders-signature">
+                        With passion, vision, and love,<br>
+                        <strong>Marianne Nems</strong><br>
+                        Founder, <strong>VORTEX ARTEC & The Nems Foundation for the Arts</strong><br>
+                        🌐 <a href="http://www.vortexartec.com">www.vortexartec.com</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h4>VORTEX AI</h4>
+                    <ul>
+                        <li><a href="team.html">About Us</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>For Artists</h4>
+                    <ul>
+                        <li><a href="artist-journey.html">Artist Journey</a></li>
+                        <li><a href="huraii-demo.html">HURAII Creation</a></li>
+                        <li><a href="#">Royalties Program</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>For Collectors</h4>
+                    <ul>
+                        <li><a href="marketplace.html">Marketplace</a></li>
+                        <li><a href="collector-experience.html">Collector Experience</a></li>
+                        <li><a href="#">Investment Guide</a></li>
+                        <li><a href="#">Authenticity Verification</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Copyright Notice</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="copyright">
+                    © 2023 VortexArtec. All Rights Reserved. Created by Marianne Nems.
+                </div>
+                
+                <div class="social-links">
+                    <a href="#" class="social-icon">
+                        <img src="../assets/images/icons/twitter.svg" alt="Twitter">
+                    </a>
+                    <a href="#" class="social-icon">
+                        <img src="../assets/images/icons/instagram.svg" alt="Instagram">
+                    </a>
+                    <a href="#" class="social-icon">
+                        <img src="../assets/images/icons/discord.svg" alt="Discord">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab Navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab-item');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the corresponding tab content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId + '-tab').classList.add('active');
+                });
+            });
+            
+            // Tool card selection
+            const toolCards = document.querySelectorAll('.tool-card');
+            toolCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    toolCards.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

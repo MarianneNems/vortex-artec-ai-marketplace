@@ -1,0 +1,18 @@
+﻿# WordPress
+wp-config.php
+.htaccess
+wp-content/uploads/
+wp-content/cache/
+
+# Node
+node_modules/
+package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
