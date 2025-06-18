@@ -1,0 +1,36 @@
+/* VortexArtec Demo - Main Stylesheet */
+:root {
+    --primary: #000000;
+    --primary-light: #333333;
+    --accent: #cc3333;
+    --light: #ffffff;
+    --gray: #e0e0e0;
+    --transition: all 0.3s ease;
+}
+
+body, html {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+header {
+    background: var(--light);
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--gray);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Add more styles as needed */
