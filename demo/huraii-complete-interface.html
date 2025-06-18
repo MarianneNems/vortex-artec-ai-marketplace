@@ -276,6 +276,499 @@
             background: var(--highlight-blue);
         }
         
+        /* Tab Content Styles */
+        .huraii-tab-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Studio Styles */
+        .studio-header h2 {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .studio-workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 24px;
+        }
+        
+        .creation-panel {
+            background: var(--medium-blue);
+            padding: 24px;
+            border-radius: 12px;
+        }
+        
+        .prompt-section textarea {
+            width: 100%;
+            height: 120px;
+            background: var(--light-blue);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            padding: 12px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .style-controls {
+            display: grid;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        
+        .control-group select {
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--light-blue);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+        }
+        
+        .create-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, var(--highlight-blue), var(--success-green));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .create-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .preview-panel {
+            background: var(--medium-blue);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+        
+        .preview-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .preview-placeholder i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        /* Gallery Header Styles */
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .gallery-controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding: 8px 40px 8px 12px;
+            background: var(--medium-blue);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            width: 200px;
+        }
+        
+        .search-box i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+        
+        /* Marketplace Styles */
+        .marketplace-stats {
+            display: flex;
+            gap: 24px;
+            margin: 16px 0 24px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 16px;
+            background: var(--medium-blue);
+            border-radius: 8px;
+            flex: 1;
+        }
+        
+        .stat-number {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--highlight-blue);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        /* Analytics Styles */
+        .metric-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .metric-card {
+            background: var(--medium-blue);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--highlight-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .metric-value {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        /* Community Styles */
+        .community-sections {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+        }
+        
+        .artist-list, .feed-list, .course-list, .achievement-list, .activity-list {
+            background: var(--medium-blue);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        /* Profile Styles */
+        .profile-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .profile-info {
+            background: var(--medium-blue);
+            padding: 24px;
+            border-radius: 12px;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+        
+        .change-avatar-btn {
+            margin-top: 8px;
+            padding: 4px 8px;
+            background: var(--light-blue);
+            border: none;
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        .profile-stat {
+            background: var(--medium-blue);
+            padding: 16px;
+            text-align: center;
+            border-radius: 8px;
+        }
+        
+        .profile-stat .stat-number {
+            display: block;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--highlight-blue);
+        }
+        
+        .profile-stat .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        /* Settings Styles */
+        .settings-group {
+            background: var(--medium-blue);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .settings-group h3 {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-item label {
+            color: var(--text-secondary);
+        }
+        
+        .setting-item input, .setting-item select {
+            background: var(--light-blue);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            padding: 6px 8px;
+        }
+        
+        .connect-wallet-btn {
+            padding: 6px 12px;
+            background: var(--highlight-blue);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        
+        /* Filter buttons */
+        .seed-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background: var(--medium-blue);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--highlight-blue);
+            color: white;
+            border-color: var(--highlight-blue);
+        }
+        
+        /* Additional Component Styles */
+        .marketplace-item {
+            background: var(--medium-blue);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+        
+        .marketplace-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .marketplace-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .marketplace-item-info {
+            padding: 16px;
+        }
+        
+        .marketplace-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .marketplace-item-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--success-green);
+            margin-bottom: 4px;
+        }
+        
+        .marketplace-item-artist {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .marketplace-item-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-amount {
+            color: var(--success-green);
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        
+        .artist-item, .feed-item, .course-item, .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .artist-item:last-child, .feed-item:last-child, 
+        .course-item:last-child, .achievement-item:last-child {
+            border-bottom: none;
+        }
+        
+        .artist-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        
+        .artist-info strong, .feed-user, .course-info strong, .achievement-info strong {
+            color: var(--text-primary);
+        }
+        
+        .artist-info div, .feed-content, .course-info div, .achievement-info div {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .feed-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .feed-meta {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        
+        .course-progress {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .progress-bar {
+            width: 100px;
+            height: 6px;
+            background: var(--light-blue);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--success-green);
+            transition: width 0.3s ease;
+        }
+        
+        .achievement-item.locked {
+            opacity: 0.6;
+        }
+        
+        .achievement-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--highlight-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .achievement-item.locked .achievement-icon {
+            background: var(--text-tertiary);
+        }
+        
         /* Responsive design */
         @media (max-width: 768px) {
             .gallery-grid {
@@ -286,6 +779,39 @@
             .seed-grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
+            }
+            
+            .studio-workspace {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+            
+            .gallery-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .marketplace-stats {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .community-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-info {
+                flex-direction: column;
+                text-align: center;
             }
         }
     </style>
@@ -355,6 +881,282 @@
         </div>
     </template>
     
+    <!-- Tab Content Templates -->
+    <div id="huraii-tab-contents" style="display: none;">
+        <!-- Studio Tab -->
+        <div id="studio-content" class="huraii-tab-content">
+            <div class="studio-header">
+                <h2><i class="fas fa-magic"></i> AI Art Studio</h2>
+                <p>Create stunning artwork with HURAII's advanced AI technology</p>
+            </div>
+            <div class="studio-workspace">
+                <div class="creation-panel">
+                    <div class="prompt-section">
+                        <label>Describe your vision:</label>
+                        <textarea placeholder="A magnificent vortex of colors swirling through digital space..."></textarea>
+                    </div>
+                    <div class="style-controls">
+                        <div class="control-group">
+                            <label>Art Style:</label>
+                            <select>
+                                <option>VortexArtec Signature</option>
+                                <option>Digital Renaissance</option>
+                                <option>Sacred Geometry</option>
+                                <option>Abstract Harmony</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Dimensions:</label>
+                            <select>
+                                <option>1024x1024 (Square)</option>
+                                <option>1920x1080 (Landscape)</option>
+                                <option>1080x1920 (Portrait)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="create-btn"><i class="fas fa-magic"></i> Generate Artwork</button>
+                </div>
+                <div class="preview-panel">
+                    <div class="preview-placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>Your creation will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Tab -->
+        <div id="gallery-content" class="huraii-tab-content">
+            <div class="gallery-header">
+                <h2><i class="fas fa-images"></i> My Gallery</h2>
+                <div class="gallery-controls">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search artworks...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="filter-controls">
+                        <select>
+                            <option>All Categories</option>
+                            <option>Abstract</option>
+                            <option>Landscapes</option>
+                            <option>Portraits</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Gallery items will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Seeds Tab -->
+        <div id="seeds-content" class="huraii-tab-content">
+            <div class="seeds-header">
+                <h2><i class="fas fa-seedling"></i> Seed-Art Library</h2>
+                <p>Discover and learn from masterful artistic principles</p>
+            </div>
+            <div class="seed-filters">
+                <button class="filter-btn active" data-category="all">All Seeds</button>
+                <button class="filter-btn" data-category="sacred-geometry">Sacred Geometry</button>
+                <button class="filter-btn" data-category="light-shadow">Light & Shadow</button>
+                <button class="filter-btn" data-category="color-harmony">Color Harmony</button>
+            </div>
+            <div class="seed-grid" id="seed-grid">
+                <!-- Seed items will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Marketplace Tab -->
+        <div id="marketplace-content" class="huraii-tab-content">
+            <div class="marketplace-header">
+                <h2><i class="fas fa-store"></i> VortexArtec Marketplace</h2>
+                <div class="marketplace-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="total-listings">1,247</span>
+                        <span class="stat-label">Active Listings</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="total-artists">89</span>
+                        <span class="stat-label">Artists</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="total-volume">23.45</span>
+                        <span class="stat-label">TOLA Volume</span>
+                    </div>
+                </div>
+            </div>
+            <div class="marketplace-content">
+                <div class="featured-collections">
+                    <h3>Featured Collections</h3>
+                    <div class="collection-grid" id="marketplace-grid">
+                        <!-- Marketplace items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics-content" class="huraii-tab-content">
+            <div class="analytics-header">
+                <h2><i class="fas fa-chart-line"></i> Analytics Dashboard</h2>
+            </div>
+            <div class="analytics-overview">
+                <div class="metric-cards">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-images"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-value">1,247</span>
+                            <span class="metric-label">Total Artworks</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-value">892</span>
+                            <span class="metric-label">Total Sales</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-coins"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-value">23.45</span>
+                            <span class="metric-label">TOLA Earned</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list" id="activity-list">
+                        <!-- Activity items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Tab -->
+        <div id="community-content" class="huraii-tab-content">
+            <div class="community-header">
+                <h2><i class="fas fa-users"></i> VortexArtec Community</h2>
+                <p>Connect with fellow digital artists and collectors</p>
+            </div>
+            <div class="community-sections">
+                <div class="featured-artists">
+                    <h3>Featured Artists</h3>
+                    <div class="artist-list" id="featured-artists">
+                        <!-- Featured artists will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="community-feed">
+                    <h3>Community Feed</h3>
+                    <div class="feed-list" id="community-feed">
+                        <!-- Community posts will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Tab -->
+        <div id="learning-content" class="huraii-tab-content">
+            <div class="learning-header">
+                <h2><i class="fas fa-graduation-cap"></i> HURAII Academy</h2>
+                <p>Master the art of AI-powered creativity</p>
+            </div>
+            <div class="learning-sections">
+                <div class="courses-section">
+                    <h3>Available Courses</h3>
+                    <div class="course-list" id="course-list">
+                        <!-- Courses will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="achievements-section">
+                    <h3>Your Achievements</h3>
+                    <div class="achievement-list" id="achievement-list">
+                        <!-- Achievements will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile-content" class="huraii-tab-content">
+            <div class="profile-header">
+                <h2><i class="fas fa-user"></i> My Profile</h2>
+            </div>
+            <div class="profile-sections">
+                <div class="profile-info">
+                    <div class="avatar-section">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Profile" class="profile-avatar">
+                        <button class="change-avatar-btn">Change Avatar</button>
+                    </div>
+                    <div class="profile-details">
+                        <h3>Demo User</h3>
+                        <p class="profile-email">demo@vortexartec.com</p>
+                        <p class="profile-joined">Member since January 2024</p>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-grid">
+                        <div class="profile-stat">
+                            <span class="stat-number">47</span>
+                            <span class="stat-label">Artworks Created</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="stat-number">152</span>
+                            <span class="stat-label">Community Likes</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="stat-number">8.7</span>
+                            <span class="stat-label">TOLA Balance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings-content" class="huraii-tab-content">
+            <div class="settings-header">
+                <h2><i class="fas fa-cog"></i> Settings</h2>
+            </div>
+            <div class="settings-sections">
+                <div class="settings-group">
+                    <h3>Account Settings</h3>
+                    <div class="setting-item">
+                        <label>Email Notifications</label>
+                        <input type="checkbox" checked>
+                    </div>
+                    <div class="setting-item">
+                        <label>Public Profile</label>
+                        <input type="checkbox" checked>
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <h3>AI Preferences</h3>
+                    <div class="setting-item">
+                        <label>Default Art Style</label>
+                        <select>
+                            <option>VortexArtec Signature</option>
+                            <option>Digital Renaissance</option>
+                            <option>Sacred Geometry</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>Auto-save Creations</label>
+                        <input type="checkbox" checked>
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <h3>Blockchain Settings</h3>
+                    <div class="setting-item">
+                        <label>TOLA Wallet Address</label>
+                        <input type="text" placeholder="0x..." readonly>
+                        <button class="connect-wallet-btn">Connect Wallet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     
@@ -367,76 +1169,156 @@
     
     <!-- Demo Data and Initialization -->
     <script>
-        // Demo data
+        // Demo data for www.vortexartec.com
         const demoData = {
+            tabs: [
+                { id: 'studio', label: 'AI Studio', icon: 'fas fa-magic', permission: 'create' },
+                { id: 'gallery', label: 'Gallery', icon: 'fas fa-images', permission: 'view_gallery' },
+                { id: 'seeds', label: 'Seed Library', icon: 'fas fa-seedling', permission: 'view_seeds' },
+                { id: 'marketplace', label: 'Marketplace', icon: 'fas fa-store', permission: 'view_marketplace' },
+                { id: 'analytics', label: 'Analytics', icon: 'fas fa-chart-line', permission: 'view_analytics' },
+                { id: 'community', label: 'Community', icon: 'fas fa-users', permission: 'view_community' },
+                { id: 'learning', label: 'Learning', icon: 'fas fa-graduation-cap', permission: 'view_learning' },
+                { id: 'profile', label: 'Profile', icon: 'fas fa-user', permission: 'view_profile' },
+                { id: 'settings', label: 'Settings', icon: 'fas fa-cog', permission: 'manage_settings' }
+            ],
             gallery: [
                 {
                     id: 1,
-                    title: "Ethereal Landscape",
+                    title: "Vortex Digital Landscape",
                     thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
                     created: "2024-01-15",
                     views: 245,
                     likes: 18,
-                    tags: ["landscape", "ethereal", "mountains"],
-                    seed_art_analysis: true
+                    tags: ["landscape", "digital", "vortex"],
+                    seed_art_analysis: true,
+                    price: 0.05,
+                    artist: "VORTEX AI"
                 },
                 {
                     id: 2,
-                    title: "Abstract Harmony",
+                    title: "Abstract Art Harmony",
                     thumbnail: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop",
                     created: "2024-01-14",
                     views: 189,
                     likes: 23,
-                    tags: ["abstract", "harmony", "colors"],
-                    seed_art_analysis: false
+                    tags: ["abstract", "harmony", "artec"],
+                    seed_art_analysis: false,
+                    price: 0.03,
+                    artist: "ARTEC Studio"
                 },
                 {
                     id: 3,
-                    title: "Sacred Geometry",
+                    title: "Sacred Digital Geometry",
                     thumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af2ac1?w=400&h=300&fit=crop",
                     created: "2024-01-13",
                     views: 312,
                     likes: 41,
                     tags: ["sacred", "geometry", "patterns"],
-                    seed_art_analysis: true
+                    seed_art_analysis: true,
+                    price: 0.08,
+                    artist: "VortexArtec"
                 },
                 {
                     id: 4,
-                    title: "Digital Dreams",
+                    title: "Futuristic Dreams",
                     thumbnail: "https://images.unsplash.com/photo-1516533075812-9bcdb6d1ac5f?w=400&h=300&fit=crop",
                     created: "2024-01-12",
                     views: 156,
                     likes: 12,
                     tags: ["digital", "dreams", "futuristic"],
-                    seed_art_analysis: false
+                    seed_art_analysis: false,
+                    price: 0.04,
+                    artist: "AI Collective"
                 }
             ],
             seedLibrary: [
                 {
                     id: 1,
                     title: "Golden Ratio Mandala",
-                    description: "Perfect example of sacred geometry with fibonacci spirals and golden ratio proportions",
+                    description: "Perfect example of sacred geometry with fibonacci spirals and golden ratio proportions - VortexArtec signature style",
                     image: "https://images.unsplash.com/photo-1518709268805-4e9042af2ac1?w=400&h=300&fit=crop",
                     principles: ["Sacred Geometry", "Color Weight", "Movement"],
-                    category: "sacred-geometry"
+                    category: "sacred-geometry",
+                    rarity: "legendary",
+                    blockchain_verified: true
                 },
                 {
                     id: 2,
-                    title: "Chiaroscuro Portrait",
-                    description: "Master study of light and shadow techniques with dramatic contrast",
+                    title: "Chiaroscuro Portrait Study",
+                    description: "Master study of light and shadow techniques with dramatic contrast - Classical meets Digital",
                     image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop",
                     principles: ["Light & Shadow", "Texture", "Perspective"],
-                    category: "light-shadow"
+                    category: "light-shadow",
+                    rarity: "rare",
+                    blockchain_verified: true
                 },
                 {
                     id: 3,
-                    title: "Harmonic Color Study",
-                    description: "Exploration of complementary colors and their emotional impact",
+                    title: "Harmonic Color Theory",
+                    description: "Exploration of complementary colors and their emotional impact in digital art creation",
                     image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
                     principles: ["Color Weight", "Movement", "Layering"],
-                    category: "color-harmony"
+                    category: "color-harmony",
+                    rarity: "common",
+                    blockchain_verified: false
                 }
-            ]
+            ],
+            marketplace: [
+                {
+                    id: 1,
+                    title: "Ethereal Vortex Collection",
+                    price: 0.25,
+                    currency: "TOLA",
+                    artist: "VortexMaster",
+                    rating: 4.8,
+                    sales: 45,
+                    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
+                },
+                {
+                    id: 2,
+                    title: "Digital Renaissance Pack",
+                    price: 0.15,
+                    currency: "TOLA", 
+                    artist: "ArtecStudio",
+                    rating: 4.6,
+                    sales: 28,
+                    image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop"
+                }
+            ],
+            analytics: {
+                total_artworks: 1247,
+                total_sales: 892,
+                total_revenue: 23.45,
+                top_categories: ["Abstract", "Landscapes", "Portraits", "Sacred Geometry"],
+                recent_activity: [
+                    { action: "Sale", item: "Vortex Mandala #1", amount: 0.08, time: "2 hours ago" },
+                    { action: "Creation", item: "Digital Dreams Series", amount: null, time: "4 hours ago" },
+                    { action: "Like", item: "Sacred Geometry Study", amount: null, time: "6 hours ago" }
+                ]
+            },
+            community: {
+                featured_artists: [
+                    { name: "VortexMaster", followers: 1254, artworks: 89, avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face" },
+                    { name: "DigitalSage", followers: 876, artworks: 156, avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" }
+                ],
+                recent_posts: [
+                    { user: "ArtecStudio", content: "Just completed my latest Sacred Geometry series!", time: "1 hour ago", likes: 24 },
+                    { user: "VortexCollector", content: "Amazing work on the marketplace today!", time: "3 hours ago", likes: 18 }
+                ]
+            },
+            learning: {
+                courses: [
+                    { title: "AI Art Fundamentals", progress: 75, instructor: "HURAII Master", duration: "4 hours" },
+                    { title: "Seed-Art Mastery", progress: 45, instructor: "VortexArtec Team", duration: "6 hours" },
+                    { title: "Blockchain for Artists", progress: 0, instructor: "Crypto Expert", duration: "3 hours" }
+                ],
+                achievements: [
+                    { title: "First Creation", description: "Created your first AI artwork", unlocked: true },
+                    { title: "Seed Master", description: "Used 10 different seed arts", unlocked: true },
+                    { title: "Community Builder", description: "Received 100 likes", unlocked: false }
+                ]
+            }
         };
         
         // Initialize demo
@@ -523,6 +1405,41 @@
                                 });
                                 break;
                                 
+                            case 'huraii_get_marketplace':
+                                resolve({
+                                    success: true,
+                                    data: {
+                                        items: demoData.marketplace,
+                                        stats: {
+                                            total_listings: 1247,
+                                            total_artists: 89,
+                                            total_volume: 23.45
+                                        }
+                                    }
+                                });
+                                break;
+                                
+                            case 'huraii_get_analytics':
+                                resolve({
+                                    success: true,
+                                    data: demoData.analytics
+                                });
+                                break;
+                                
+                            case 'huraii_get_community':
+                                resolve({
+                                    success: true,
+                                    data: demoData.community
+                                });
+                                break;
+                                
+                            case 'huraii_get_learning':
+                                resolve({
+                                    success: true,
+                                    data: demoData.learning
+                                });
+                                break;
+                                
                             default:
                                 resolve({
                                     success: true,
@@ -532,6 +1449,268 @@
                     }, 500);
                 });
             };
+            
+            // Load tab content when tabs are switched
+            initializeTabContent();
+        }
+        
+        // Initialize tab content functionality
+        function initializeTabContent() {
+            // Wait for HURAII navigation to be ready
+            const checkNavigation = setInterval(() => {
+                if (document.querySelector('.huraii-navigation-tabs')) {
+                    clearInterval(checkNavigation);
+                    setupTabSwitching();
+                    populateTabContent();
+                }
+            }, 100);
+        }
+        
+        // Setup tab switching functionality
+        function setupTabSwitching() {
+            $(document).on('click', '.huraii-tab-btn', function() {
+                const tabId = $(this).data('tab');
+                showTabContent(tabId);
+            });
+        }
+        
+        // Show specific tab content
+        function showTabContent(tabId) {
+            // Hide all tab contents
+            $('.huraii-tab-content').hide();
+            
+            // Show selected tab content
+            const content = $(`#${tabId}-content`);
+            if (content.length) {
+                content.show();
+                loadTabData(tabId);
+            }
+        }
+        
+        // Load data for specific tab
+        function loadTabData(tabId) {
+            switch(tabId) {
+                case 'gallery':
+                    populateGallery();
+                    break;
+                case 'seeds':
+                    populateSeeds();
+                    break;
+                case 'marketplace':
+                    populateMarketplace();
+                    break;
+                case 'analytics':
+                    populateAnalytics();
+                    break;
+                case 'community':
+                    populateCommunity();
+                    break;
+                case 'learning':
+                    populateLearning();
+                    break;
+            }
+        }
+        
+        // Populate all tab content
+        function populateTabContent() {
+            // Move tab contents to navigation wrapper
+            const tabContents = $('#huraii-tab-contents').html();
+            $('#huraii-navigation-wrapper').append(tabContents);
+            
+            // Show default tab (studio)
+            showTabContent('studio');
+        }
+        
+        // Populate gallery
+        function populateGallery() {
+            const grid = $('#gallery-grid');
+            grid.empty();
+            
+            demoData.gallery.forEach(item => {
+                const galleryItem = createGalleryItem(item);
+                grid.append(galleryItem);
+            });
+        }
+        
+        // Create gallery item
+        function createGalleryItem(data) {
+            return `
+                <div class="gallery-item">
+                    <img src="${data.thumbnail}" alt="${data.title}">
+                    <div class="gallery-item-info">
+                        <div class="gallery-item-title">${data.title}</div>
+                        <div class="gallery-item-meta">
+                            <span class="gallery-item-date">${data.created}</span>
+                            <div class="gallery-item-stats">
+                                <span><i class="fas fa-eye"></i> ${data.views}</span>
+                                <span><i class="fas fa-heart"></i> ${data.likes}</span>
+                                ${data.price ? `<span><i class="fas fa-coins"></i> ${data.price} TOLA</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Populate seeds
+        function populateSeeds() {
+            const grid = $('#seed-grid');
+            grid.empty();
+            
+            demoData.seedLibrary.forEach(seed => {
+                const seedItem = createSeedItem(seed);
+                grid.append(seedItem);
+            });
+        }
+        
+        // Create seed item
+        function createSeedItem(data) {
+            const principlesHtml = data.principles.map(p => `<span class="seed-principle">${p}</span>`).join('');
+            return `
+                <div class="seed-item">
+                    <div class="seed-item-image">
+                        <img src="${data.image}" alt="${data.title}">
+                        <div class="seed-overlay">
+                            <div class="seed-principles">${principlesHtml}</div>
+                        </div>
+                    </div>
+                    <div class="seed-item-content">
+                        <div class="seed-item-title">${data.title}</div>
+                        <div class="seed-item-description">${data.description}</div>
+                        <div class="seed-actions">
+                            <button class="seed-action-btn"><i class="fas fa-search"></i> Analyze</button>
+                            <button class="seed-action-btn"><i class="fas fa-magic"></i> Use as Seed</button>
+                            <button class="seed-action-btn"><i class="fas fa-graduation-cap"></i> Learn</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Populate marketplace
+        function populateMarketplace() {
+            const grid = $('#marketplace-grid');
+            grid.empty();
+            
+            demoData.marketplace.forEach(item => {
+                const marketItem = createMarketplaceItem(item);
+                grid.append(marketItem);
+            });
+        }
+        
+        // Create marketplace item
+        function createMarketplaceItem(data) {
+            return `
+                <div class="marketplace-item">
+                    <img src="${data.image}" alt="${data.title}">
+                    <div class="marketplace-item-info">
+                        <div class="marketplace-item-title">${data.title}</div>
+                        <div class="marketplace-item-price">${data.price} ${data.currency}</div>
+                        <div class="marketplace-item-artist">by ${data.artist}</div>
+                        <div class="marketplace-item-stats">
+                            <span>⭐ ${data.rating}</span>
+                            <span>${data.sales} sales</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Populate analytics
+        function populateAnalytics() {
+            const activityList = $('#activity-list');
+            activityList.empty();
+            
+            demoData.analytics.recent_activity.forEach(activity => {
+                const activityItem = `
+                    <div class="activity-item">
+                        <div class="activity-info">
+                            <strong>${activity.action}</strong>: ${activity.item}
+                            ${activity.amount ? `<span class="activity-amount">+${activity.amount} TOLA</span>` : ''}
+                        </div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                `;
+                activityList.append(activityItem);
+            });
+        }
+        
+        // Populate community
+        function populateCommunity() {
+            const artistsList = $('#featured-artists');
+            const feedList = $('#community-feed');
+            
+            artistsList.empty();
+            feedList.empty();
+            
+            demoData.community.featured_artists.forEach(artist => {
+                const artistItem = `
+                    <div class="artist-item">
+                        <img src="${artist.avatar}" alt="${artist.name}" class="artist-avatar">
+                        <div class="artist-info">
+                            <strong>${artist.name}</strong>
+                            <div>${artist.followers} followers • ${artist.artworks} artworks</div>
+                        </div>
+                    </div>
+                `;
+                artistsList.append(artistItem);
+            });
+            
+            demoData.community.recent_posts.forEach(post => {
+                const postItem = `
+                    <div class="feed-item">
+                        <div class="feed-user">${post.user}</div>
+                        <div class="feed-content">${post.content}</div>
+                        <div class="feed-meta">
+                            <span>${post.time}</span>
+                            <span><i class="fas fa-heart"></i> ${post.likes}</span>
+                        </div>
+                    </div>
+                `;
+                feedList.append(postItem);
+            });
+        }
+        
+        // Populate learning
+        function populateLearning() {
+            const courseList = $('#course-list');
+            const achievementList = $('#achievement-list');
+            
+            courseList.empty();
+            achievementList.empty();
+            
+            demoData.learning.courses.forEach(course => {
+                const courseItem = `
+                    <div class="course-item">
+                        <div class="course-info">
+                            <strong>${course.title}</strong>
+                            <div>by ${course.instructor} • ${course.duration}</div>
+                        </div>
+                        <div class="course-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${course.progress}%"></div>
+                            </div>
+                            <span>${course.progress}%</span>
+                        </div>
+                    </div>
+                `;
+                courseList.append(courseItem);
+            });
+            
+            demoData.learning.achievements.forEach(achievement => {
+                const achievementItem = `
+                    <div class="achievement-item ${achievement.unlocked ? 'unlocked' : 'locked'}">
+                        <div class="achievement-icon">
+                            <i class="fas ${achievement.unlocked ? 'fa-trophy' : 'fa-lock'}"></i>
+                        </div>
+                        <div class="achievement-info">
+                            <strong>${achievement.title}</strong>
+                            <div>${achievement.description}</div>
+                        </div>
+                    </div>
+                `;
+                achievementList.append(achievementItem);
+            });
         }
         
         // Demo-specific global variables for WordPress compatibility
