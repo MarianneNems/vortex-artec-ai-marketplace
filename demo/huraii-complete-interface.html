@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HURAII - AI Art Studio</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- HURAII Core Styles -->
+    <link rel="stylesheet" href="../assets/css/huraii-navigation-tabs.css">
+    <link rel="stylesheet" href="../assets/css/huraii-visual-descriptor.css">
+    <link rel="stylesheet" href="../assets/css/vortex-midjourney-ui.css">
+    
+    <!-- Additional Styles -->
+    <style>
+        :root {
+            --midnight-blue: #13141c;
+            --dark-blue: #1e1f2b;
+            --medium-blue: #2b2d3b;
+            --light-blue: #34364a;
+            --highlight-blue: #4c5efd;
+            --success-green: #30c85e;
+            --warning-yellow: #ffcf5c;
+            --error-red: #f04a5d;
+            --text-primary: #ffffff;
+            --text-secondary: #9a9ebc;
+            --text-tertiary: #636784;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--midnight-blue);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Demo-specific styles */
+        .demo-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, var(--highlight-blue), var(--success-green));
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 10000;
+        }
+        
+        .demo-banner a {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .huraii-navigation-wrapper {
+            margin-top: 40px; /* Account for demo banner */
+        }
+        
+        /* Loading animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--midnight-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+        
+        .loading-content {
+            text-align: center;
+        }
+        
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: linear-gradient(45deg, var(--highlight-blue), var(--success-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .loading-text {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .loading-subtext {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        /* Tab content styling */
+        .huraii-tab-content {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Gallery grid styles */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+        
+        .gallery-item {
+            background: var(--medium-blue);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .gallery-item-info {
+            padding: 16px;
+        }
+        
+        .gallery-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .gallery-item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        /* Seed library styles */
+        .seed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            padding: 20px 0;
+        }
+        
+        .seed-item {
+            background: var(--medium-blue);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .seed-item:hover {
+            border-color: var(--highlight-blue);
+            transform: translateY(-2px);
+        }
+        
+        .seed-item-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .seed-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .seed-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
+            display: flex;
+            align-items: flex-end;
+            padding: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .seed-item:hover .seed-overlay {
+            opacity: 1;
+        }
+        
+        .seed-principles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .seed-principle {
+            background: var(--highlight-blue);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        
+        .seed-item-content {
+            padding: 16px;
+        }
+        
+        .seed-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .seed-item-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        
+        .seed-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .seed-action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background: var(--light-blue);
+            border: none;
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .seed-action-btn:hover {
+            background: var(--highlight-blue);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 16px;
+            }
+            
+            .seed-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Banner -->
+    <div class="demo-banner">
+        🎨 HURAII Demo Interface - Complete AI Art Studio with Seed-Art Technology
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-logo">H</div>
+            <div class="loading-text">HURAII</div>
+            <div class="loading-subtext">Initializing AI Art Studio...</div>
+        </div>
+    </div>
+    
+    <!-- Main HURAII Interface -->
+    <div id="huraii-navigation-wrapper" class="huraii-navigation-wrapper">
+        <!-- Navigation will be generated by JavaScript -->
+    </div>
+    
+    <!-- Hidden templates for dynamic content -->
+    <template id="gallery-item-template">
+        <div class="gallery-item">
+            <img src="" alt="" class="gallery-item-image">
+            <div class="gallery-item-info">
+                <div class="gallery-item-title"></div>
+                <div class="gallery-item-meta">
+                    <span class="gallery-item-date"></span>
+                    <div class="gallery-item-stats">
+                        <span><i class="fas fa-eye"></i> <span class="views">0</span></span>
+                        <span><i class="fas fa-heart"></i> <span class="likes">0</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <template id="seed-item-template">
+        <div class="seed-item">
+            <div class="seed-item-image">
+                <img src="" alt="" class="seed-image">
+                <div class="seed-overlay">
+                    <div class="seed-principles">
+                        <!-- Principles will be added dynamically -->
+                    </div>
+                </div>
+            </div>
+            <div class="seed-item-content">
+                <div class="seed-item-title"></div>
+                <div class="seed-item-description"></div>
+                <div class="seed-actions">
+                    <button class="seed-action-btn" data-action="analyze">
+                        <i class="fas fa-search"></i> Analyze
+                    </button>
+                    <button class="seed-action-btn" data-action="use">
+                        <i class="fas fa-magic"></i> Use as Seed
+                    </button>
+                    <button class="seed-action-btn" data-action="learn">
+                        <i class="fas fa-graduation-cap"></i> Learn
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <!-- HURAII Core Scripts -->
+    <script src="../assets/js/huraii-core.js"></script>
+    <script src="../assets/js/huraii-components/huraii-navigation-tabs.js"></script>
+    <script src="../assets/js/huraii-components/huraii-midjourney-ui.js"></script>
+    <script src="../assets/js/huraii-components/huraii-visual-descriptor.js"></script>
+    <script src="../assets/js/huraii-components/huraii-gallery.js"></script>
+    
+    <!-- Demo Data and Initialization -->
+    <script>
+        // Demo data
+        const demoData = {
+            gallery: [
+                {
+                    id: 1,
+                    title: "Ethereal Landscape",
+                    thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
+                    created: "2024-01-15",
+                    views: 245,
+                    likes: 18,
+                    tags: ["landscape", "ethereal", "mountains"],
+                    seed_art_analysis: true
+                },
+                {
+                    id: 2,
+                    title: "Abstract Harmony",
+                    thumbnail: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop",
+                    created: "2024-01-14",
+                    views: 189,
+                    likes: 23,
+                    tags: ["abstract", "harmony", "colors"],
+                    seed_art_analysis: false
+                },
+                {
+                    id: 3,
+                    title: "Sacred Geometry",
+                    thumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af2ac1?w=400&h=300&fit=crop",
+                    created: "2024-01-13",
+                    views: 312,
+                    likes: 41,
+                    tags: ["sacred", "geometry", "patterns"],
+                    seed_art_analysis: true
+                },
+                {
+                    id: 4,
+                    title: "Digital Dreams",
+                    thumbnail: "https://images.unsplash.com/photo-1516533075812-9bcdb6d1ac5f?w=400&h=300&fit=crop",
+                    created: "2024-01-12",
+                    views: 156,
+                    likes: 12,
+                    tags: ["digital", "dreams", "futuristic"],
+                    seed_art_analysis: false
+                }
+            ],
+            seedLibrary: [
+                {
+                    id: 1,
+                    title: "Golden Ratio Mandala",
+                    description: "Perfect example of sacred geometry with fibonacci spirals and golden ratio proportions",
+                    image: "https://images.unsplash.com/photo-1518709268805-4e9042af2ac1?w=400&h=300&fit=crop",
+                    principles: ["Sacred Geometry", "Color Weight", "Movement"],
+                    category: "sacred-geometry"
+                },
+                {
+                    id: 2,
+                    title: "Chiaroscuro Portrait",
+                    description: "Master study of light and shadow techniques with dramatic contrast",
+                    image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop",
+                    principles: ["Light & Shadow", "Texture", "Perspective"],
+                    category: "light-shadow"
+                },
+                {
+                    id: 3,
+                    title: "Harmonic Color Study",
+                    description: "Exploration of complementary colors and their emotional impact",
+                    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
+                    principles: ["Color Weight", "Movement", "Layering"],
+                    category: "color-harmony"
+                }
+            ]
+        };
+        
+        // Initialize demo
+        $(document).ready(function() {
+            // Simulate loading
+            setTimeout(() => {
+                $('#loading-overlay').fadeOut(500);
+                
+                // Initialize HURAII with demo configuration
+                if (window.HURAII) {
+                    window.HURAII.init({
+                        debug: true,
+                        components: {
+                            navigationTabs: {
+                                enabled: true,
+                                defaultTab: 'studio'
+                            },
+                            midjourneyUI: {
+                                enabled: true,
+                                gridLayout: true
+                            },
+                            visualDescriptor: {
+                                enabled: true
+                            }
+                        }
+                    }).then(() => {
+                        console.log('HURAII Demo initialized successfully');
+                        loadDemoData();
+                    }).catch(error => {
+                        console.error('Failed to initialize HURAII Demo:', error);
+                    });
+                }
+            }, 2000);
+        });
+        
+        // Load demo data into components
+        function loadDemoData() {
+            // Simulate API responses for demo
+            const originalApiCall = window.HURAII.apiCall;
+            window.HURAII.apiCall = function(action, data = {}) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        switch (action) {
+                            case 'huraii_get_user_data':
+                                resolve({
+                                    success: true,
+                                    data: {
+                                        user: {
+                                            id: 1,
+                                            name: 'Demo User',
+                                            email: 'demo@huraii.com',
+                                            avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face'
+                                        },
+                                        permissions: [
+                                            'create', 'view_gallery', 'view_seeds', 'view_marketplace',
+                                            'view_analytics', 'view_community', 'view_learning',
+                                            'view_profile', 'manage_settings'
+                                        ]
+                                    }
+                                });
+                                break;
+                                
+                            case 'huraii_get_gallery':
+                                resolve({
+                                    success: true,
+                                    data: {
+                                        artworks: demoData.gallery,
+                                        stats: {
+                                            total: demoData.gallery.length,
+                                            likes: demoData.gallery.reduce((sum, item) => sum + item.likes, 0),
+                                            views: demoData.gallery.reduce((sum, item) => sum + item.views, 0)
+                                        },
+                                        total_pages: 1
+                                    }
+                                });
+                                break;
+                                
+                            case 'huraii_get_seed_library':
+                                resolve({
+                                    success: true,
+                                    data: {
+                                        seeds: demoData.seedLibrary
+                                    }
+                                });
+                                break;
+                                
+                            default:
+                                resolve({
+                                    success: true,
+                                    data: {}
+                                });
+                        }
+                    }, 500);
+                });
+            };
+        }
+        
+        // Demo-specific global variables for WordPress compatibility
+        window.huraii_nonce = 'demo_nonce_12345';
+        window.HURAII_DEBUG = true;
+    </script>
+</body>
+</html> 
