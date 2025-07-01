@@ -429,6 +429,12 @@ class Vortex_AI_Marketplace {
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-vortex-image-processor.php';
 
         /**
+         * RunPod AI Server Integration.
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-vortex-runpod-config.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/ajax/class-vortex-runpod-ajax.php';
+
+        /**
          * AI agents base classes.
          */
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/ai-agents/class-vortex-ai-agent-base.php';
@@ -547,6 +553,10 @@ class Vortex_AI_Marketplace {
         
         // Initialize Huraii AI
         $this->huraii = new Vortex_Huraii($this->get_plugin_name(), $this->get_version());
+        
+        // Initialize RunPod configuration and AJAX handlers
+        $this->runpod_config = Vortex_RunPod_Config::get_instance();
+        $this->runpod_ajax = new Vortex_RunPod_AJAX();
         
         // Initialize Image-to-Image processor
         $this->img2img = new Vortex_Img2img($this->get_plugin_name(), $this->get_version());
