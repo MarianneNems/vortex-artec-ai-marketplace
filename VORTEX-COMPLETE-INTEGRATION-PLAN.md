@@ -5,7 +5,7 @@
 ### **Current VortexArtec.com Analysis**
 - **Platform**: WordPress-based website
 - **Existing Sections**: 
-  - VORTEX AI (Overview, Seed Art Technique, User Manual)
+  - VORTEX AI (Overview, VortexArtec AI Engine, User Manual)
   - VORTEX MARKETPLACE
   - NEMS ACADEMY
   - Virtual Gallery & Events
