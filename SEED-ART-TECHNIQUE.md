@@ -1,12 +1,12 @@
-# Seed-Art Technique by Marianne Nems
+# VortexArtec AI Engine by Marianne Nems
 
 ## Overview
 
-The Seed-Art Technique is a pioneering methodology developed by Marianne Nems for integrating traditional artistic principles with AI-generated art. This technique allows artists to maintain their unique artistic signature and style while leveraging AI tools for creative exploration and efficiency.
+The VortexArtec AI Engine is a pioneering methodology developed by Marianne Nems for integrating traditional artistic principles with AI-generated art. This technique allows artists to maintain their unique artistic signature and style while leveraging AI tools for creative exploration and efficiency.
 
 ## Core Components
 
-The Seed-Art Technique is built around six fundamental artistic principles:
+The VortexArtec AI Engine is built around six fundamental artistic principles:
 
 1. **Sacred Geometry**: The application of mathematical proportions and harmonious structures that create balance and visual appeal.
    - Golden ratio (1.618)
@@ -46,15 +46,15 @@ The Seed-Art Technique is built around six fundamental artistic principles:
 
 ## Implementation in HURAII AI System
 
-The HURAII AI system implements the Seed-Art Technique through several key mechanisms:
+The HURAII AI system implements the VortexArtec AI Engine through several key mechanisms:
 
-### 1. Seed Art Library
+### 1. VortexArtec AI Engine Library
 
-Artists upload their original artworks to create a "seed library" that serves as the foundation for AI-assisted creation. These seed artworks are analyzed to extract the artist's unique style signature.
+Artists upload their original artworks to create a "reference library" that serves as the foundation for AI-assisted creation. These reference artworks are analyzed to extract the artist's unique style signature.
 
 ### 2. Artistic DNA Extraction
 
-The system analyzes uploaded seed artwork to identify:
+The system analyzes uploaded reference artwork to identify:
 - Style fingerprints
 - Technique mapping
 - Compositional patterns
@@ -64,12 +64,12 @@ The system analyzes uploaded seed artwork to identify:
 
 ### 3. Prompt Enhancement
 
-When generating new artwork, the system enhances user prompts with Seed-Art principles:
+When generating new artwork, the system enhances user prompts with VortexArtec AI Engine principles:
 
 ```php
-private function enhance_prompt_with_seed_art($prompt) {
-    // Add Seed Art enhancements to the prompt to guide the AI
-    $seed_art_enhancers = array(
+private function enhance_prompt_with_vortex_ai($prompt) {
+    // Add VortexArtec AI Engine enhancements to the prompt to guide the AI
+    $vortex_ai_enhancers = array(
         'sacred geometry' => array('golden ratio', 'sacred proportions', 'geometric harmony'),
         'color weight' => array('balanced color palette', 'harmonious color distribution'),
         'light and shadow' => array('dramatic lighting', 'balanced shadows', 'volumetric light'),
@@ -79,7 +79,7 @@ private function enhance_prompt_with_seed_art($prompt) {
     );
     
     // Only add enhancements if they're not already in the prompt
-    foreach ($seed_art_enhancers as $component => $enhancers) {
+    foreach ($vortex_ai_enhancers as $component => $enhancers) {
         $enhancer_added = false;
         
         foreach ($enhancers as $enhancer) {
@@ -104,10 +104,10 @@ private function enhance_prompt_with_seed_art($prompt) {
 After generation, the system performs a detailed analysis of the artwork using specialized models:
 
 ```php
-public function analyze_seed_art_components($image_data, $params = array()) {
+public function analyze_vortex_ai_components($image_data, $params = array()) {
     try {
-        // Get the seed art analyzer model
-        $analyzer_result = $this->model_loader->run_inference('seed-art-analyzer', array(
+        // Get the VortexArtec AI Engine analyzer model
+        $analyzer_result = $this->model_loader->run_inference('vortex-ai-analyzer', array(
             'image_data' => $image_data,
             'analyze_components' => array(
                 'sacred_geometry',
@@ -165,7 +165,7 @@ public function analyze_efficiency($image_data, $params) {
 }
 ```
 
-## Benefits of the Seed-Art Technique
+## Benefits of the VortexArtec AI Engine
 
 1. **Style Preservation**: Artists maintain their unique artistic signature while leveraging AI capabilities.
 
@@ -179,16 +179,16 @@ public function analyze_efficiency($image_data, $params) {
 
 ## Integration with VORTEX Marketplace
 
-The Seed-Art Technique is deeply integrated into the VORTEX AI Marketplace ecosystem:
+The VortexArtec AI Engine is deeply integrated into the VORTEX AI Marketplace ecosystem:
 
-1. **Artist Tiers**: Contributing seed artwork helps artists progress through marketplace tiers.
+1. **Artist Tiers**: Contributing reference artwork helps artists progress through marketplace tiers.
 
-2. **Royalty Structure**: Artists receive royalties when their seed art influences other creations.
+2. **Royalty Structure**: Artists receive royalties when their reference art influences other creations.
 
-3. **Community Learning**: The collective seed art library improves the system for all artists.
+3. **Community Learning**: The collective reference art library improves the system for all artists.
 
-4. **Marketplace Analytics**: Tracks which seed art components are most influential in successful sales.
+4. **Marketplace Analytics**: Tracks which reference art components are most influential in successful sales.
 
 ## Conclusion
 
-Marianne Nems' Seed-Art Technique represents a groundbreaking approach to AI-assisted art creation that preserves the human artistic essence while enhancing creative possibilities. By focusing on the six core principles of sacred geometry, color weight, light and shadow, texture, perspective, and movement/layering, the technique ensures that AI-generated art maintains the depth, intention, and quality of traditional artistic methods. 
+Marianne Nems' VortexArtec AI Engine represents a groundbreaking approach to AI-assisted art creation that preserves the human artistic essence while enhancing creative possibilities. By focusing on the six core principles of sacred geometry, color weight, light and shadow, texture, perspective, and movement/layering, the technique ensures that AI-generated art maintains the depth, intention, and quality of traditional artistic methods. 

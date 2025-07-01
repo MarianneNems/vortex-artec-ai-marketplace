@@ -223,7 +223,7 @@ class HuraiiAgent {
     }
 
     async generateArt(prompt, userStyle) {
-        // Apply SEED ART technique
+        // Apply VortexArtec AI Engine technique
         const processedPrompt = await this.seedArtTechnique.enhancePrompt(prompt, userStyle);
         
         // Generate with DALL-E 3
