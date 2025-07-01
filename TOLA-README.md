@@ -4,16 +4,28 @@
 
 ## Overview
 
-TOLA is a Solana-based utility token that powers the VORTEX AI Marketplace ecosystem. It enables a wide range of functionalities from purchases and transfers to governance and rewards, creating a complete token economy for the marketplace.
+TOLA (Token of Love and Appreciation) is a Solana-based utility token that powers the VORTEX AI Marketplace ecosystem. It enables a wide range of functionalities from purchases and transfers to governance and rewards, creating a complete token economy for the marketplace.
 
 ## Key Features
 
 - **Native Solana Integration**: Built on the Solana blockchain for fast, low-cost transactions
-- **Smart Contract Powered**: Secure, transparent transactions using audited smart contracts
+- **SPL Token Standard**: Secure, efficient token standard for Solana
+- **Smart Contract Powered**: Secure, transparent transactions using audited programs
 - **Multi-utility Design**: TOLA serves multiple functions within the ecosystem
 - **Real-time Metrics**: Comprehensive analytics on token usage and circulation
 - **Staking Mechanism**: Stake tokens for platform benefits and yield
 - **Governance Rights**: Token-weighted voting in the VORTEX DAO
+
+## Token Details
+
+- **Token Name**: TOLA (Token of Love and Appreciation)
+- **Blockchain Network**: Solana
+- **Token Standard**: SPL (Solana Program Library)
+- **Token Contract Address**: H6qNYafSrpCjckH8yVwiPmXYPd1nCNBP8uQMZkv5hkky
+- **Decimals**: 9
+- **Total Supply**: 50,000,000 TOLA (fixed)
+- **Original Supply**: 1,000,000,000 TOLA
+- **Burned Amount**: 950,000,000 TOLA
 
 ## Token Utilities
 
@@ -43,249 +55,240 @@ TOLA is a Solana-based utility token that powers the VORTEX AI Marketplace ecosy
    - Increase voting power in governance
    - Earn passive income through staking rewards
 
-## Token Economics
+## Fee Structure
 
-- **Total Supply**: 50,000,000 TOLA (fixed)
-- **Initial Circulating Supply**: 10,000,000 TOLA
-- **Token Distribution**:
-  - 10% (5,000,000) - Community & Incentives
-  - 15% (7,500,000) - Artist Royalties Pool
-  - 5% (2,500,000) - DAO Treasury
-  - 60% (30,000,000) - Team & Operations (6-mo cliff, 48-mo monthly vest)
-  - 5% (2,500,000) - Strategic Partners (6-mo cliff, 12-mo monthly vest)
-  - 5% (2,500,000) - Creator Reserve (12-mo cliff, 24-mo quarterly)
+### Primary AI Mint (Generative Art) – Buyer pays 100 TOLA:
+- **5% (5 TOLA)** → Vortex Creator (founder royalty)
+- **15% (15 TOLA)** → Platform Treasury (operations)
+- **80% (80 TOLA)** → Artist (initial creator)
 
-## Integration Components
+### Secondary Resale – Buyer pays 100 TOLA:
+- **5% (5 TOLA)** → Vortex Creator (founder royalty on resales)
+- **15% (15 TOLA)** → Original Artist (secondary royalty)
+- **15% (15 TOLA)** → Platform Treasury (operations)
+- **65% (65 TOLA)** → Current Seller (owner of NFT)
 
-### UI Components
+*All splits execute instantly in the smart contract upon each sale.*
 
-- **Wallet Connect Button**: Allows users to connect their Solana wallet (Phantom, Solflare, etc.)
-- **Balance Display**: Shows user's current TOLA balance
-- **Transfer Form**: Enables sending TOLA to other users
-- **Staking Interface**: UI for staking and unstaking tokens
-- **Purchase Module**: Interface for buying products with TOLA
+## Token Distribution
 
-### Backend Services
+- **Community & Incentives**: 5,000,000 TOLA (10%)
+- **Artist Royalties Pool**: 7,500,000 TOLA (15%)
+- **DAO Treasury**: 2,500,000 TOLA (5%)
+- **Team & Operations**: 30,000,000 TOLA (60%) - 6-mo cliff, 48-mo monthly vest
+- **Strategic Partners**: 2,500,000 TOLA (5%) - 6-mo cliff, 12-mo monthly vest
+- **Creator Reserve**: 2,500,000 TOLA (5%) - 12-mo cliff, 24-mo quarterly
 
-- **Token Contract API**: Interfaces with the TOLA token contract
-- **Balance Service**: Retrieves and caches token balances
-- **Transaction Service**: Records all TOLA transactions
-- **Access Control System**: Manages content access based on purchases
-- **Rewards Engine**: Distributes TOLA rewards based on actions
+## Incentives & Rewards
 
-### Data Management
+### Artist Rewards (5M TOLA pool):
+| Action | TOLA Award | Purpose |
+|--------|------------|---------|
+| Profile Setup | 500 | Quick onboarding bonus |
+| Upload Artwork | 250 | Encourage new content |
+| Publish Blog Post | 200 | Share insights and tips |
+| Trade Artwork | 500 | Boost platform activity |
+| Make a Sale | 700 | Reward revenue generation |
+| Weekly Top 10 | 1,000 | Celebrate outstanding work |
+| Refer an Artist | 1,000 | Grow the creator community |
+| Refer a Collector | 1,000 | Expand the buyer base |
 
-- **Transaction Database**: Records all token movements
-- **User Balances**: Caches user token balances for performance
-- **Purchase Records**: Links token transactions to product purchases
-- **Access Rights**: Manages content access based on token purchases
+### Collector Perks:
+- **1–3% Cashback** in TOLA on every purchase
+- **VIP Staking**: lock 5,000 TOLA for early access
+- **Quarterly Airdrops** based on TOLA holdings
 
-## Implementation
+### Casual & Daily Users:
+- **Micro‑Staking**: stake 50 TOLA, earn 5 TOLA per day
+- **Referral Bonus**: earn 50 TOLA for each new user
+- **Event Entry**: burn 50 TOLA to join exclusive raffles
 
-### For Developers
+## Subscription Tiers
 
-#### WordPress Integration
+Users and institutions can subscribe to our platform plans, paying in USDC or TOLA (1 TOLA = 1 USDC):
 
-```php
-// Hook into TOLA token system
-add_action('vortex_token_transaction_complete', 'my_custom_function', 10, 3);
+| Plan Name | Price (USDC/TOLA) | Benefits |
+|-----------|-------------------|----------|
+| Standard | 19 | Basic analytics, up to 100 uploads/month |
+| Essential | 49 | Advanced analytics, up to 500 uploads, priority support |
+| Premium | 99 | Full analytics, unlimited uploads, dedicated manager |
 
-function my_custom_function($user_id, $amount, $transaction_type) {
-    // Custom code to run after token transaction
-}
+## Deflation & Scarcity
 
-// Check if user has purchased access
-if (vortex_tola_has_access($user_id, $product_id)) {
-    // Show premium content
-} else {
-    // Show purchase form
-}
-```
+To increase value, we burn tokens over time:
+- **Optional Fee Burns**: burn a portion of platform fees
+- **Unclaimed Rewards**: expire and burn old bonuses weekly
+- **Event Burns**: require small burns (50 TOLA) for premium events
 
-#### JavaScript Integration
+### Supply Forecast:
+| Month | Start | Burned | End |
+|-------|-------|--------|-----|
+| 1 | 50,000,000 | 50,000 | 49,950,000 |
+| 6 | 49,700,000 | 250,000 | 49,450,000 |
+| 12 | 49,200,000 | 500,000 | 48,700,000 |
+
+## Technical Integration
+
+### Blockchain Infrastructure
+- **Blockchain**: Solana for fast, low-cost transactions
+- **Token Program**: SPL Token program
+- **Programs**: Rust-based, security audited
+- **APIs & SDKs**: JSON-RPC endpoints and JavaScript libraries
+- **Wallets Supported**: Phantom, Solflare, Sollet, Ledger, etc.
+
+### Integration Example
 
 ```javascript
-// Connect to user's wallet
-vortexTola.connectWallet().then(address => {
-    console.log('Connected wallet: ' + address);
+// TOLA Token Integration
+const { Connection, PublicKey, clusterApiUrl } = require('@solana/web3.js');
+const { Token, TOKEN_PROGRAM_ID } = require('@solana/spl-token');
+
+const TOLA_MINT = new PublicKey('H6qNYafSrpCjckH8yVwiPmXYPd1nCNBP8uQMZkv5hkky');
+const connection = new Connection(clusterApiUrl('mainnet-beta'));
+
+// Get TOLA balance
+async function getTolaBalance(walletAddress) {
+    const wallet = new PublicKey(walletAddress);
+    const tokenAccounts = await connection.getTokenAccountsByOwner(wallet, {
+        mint: TOLA_MINT
+    });
     
-    // Get token balance
-    return vortexTola.getBalance(address);
-}).then(balance => {
-    console.log('TOLA Balance: ' + balance);
-});
-
-// Handle token purchase
-vortexTola.purchaseProduct(productId, amount).then(result => {
-    if (result.success) {
-        // Handle successful purchase
+    if (tokenAccounts.value.length > 0) {
+        const accountInfo = await connection.getTokenAccountBalance(
+            tokenAccounts.value[0].pubkey
+        );
+        return accountInfo.value.uiAmount;
     }
-});
-```
-
-### For Store Owners
-
-1. **Enable TOLA Payments**:
-   - Navigate to VORTEX Settings > TOLA Configuration
-   - Connect your platform wallet
-   - Set desired commission rates
-   - Configure discount for TOLA payments
-
-2. **Product Configuration**:
-   - Edit any product to set TOLA pricing
-   - Enable/disable TOLA payments per product
-   - Set subscription durations (if applicable)
-
-3. **Monitor Transactions**:
-   - Use the TOLA Dashboard to track transactions
-   - View sales, commissions, and fees
-   - Export transaction reports
-
-### For Content Creators
-
-1. **Connect Wallet**:
-   - Link your Solana wallet to your VORTEX account
-   - Verify wallet ownership through signature
-
-2. **Configure Royalties**:
-   - Set royalty percentages for your artwork
-   - Determine payment splits for collaborations
-   - Configure wallet for receiving payments
-
-3. **Staking Strategy**:
-   - Stake TOLA to reduce platform fees
-   - Earn additional revenue through staking rewards
-   - Use staked tokens for governance voting
-
-## User Interaction Workflow
-
-### Wallet Connection
-
-1. User clicks "Connect Wallet" button
-2. System initiates connection to Phantom/Solflare
-3. User approves connection in wallet application
-4. System verifies wallet address and updates UI
-5. Balance and transaction history are displayed
-
-### Purchase Workflow
-
-1. User browses marketplace and selects an item
-2. User clicks "Buy with TOLA" button
-3. Purchase confirmation modal appears
-4. User reviews and confirms purchase
-5. Wallet prompts for transaction approval
-6. System processes transaction and grants access
-7. Receipt and confirmation are displayed
-
-### Staking Workflow
-
-1. User navigates to staking interface
-2. User specifies amount to stake
-3. System displays potential rewards and benefits
-4. User confirms staking transaction
-5. Wallet prompts for approval
-6. System records stake and updates user status
-7. Staked balance and rewards begin accruing
-
-## Real-time Metrics and Analytics
-
-TOLA integration includes comprehensive metrics for monitoring token ecosystem health:
-
-### Token Metrics Dashboard
-
-The dashboard displays:
-
-- **Total Value Locked**: Amount of TOLA staked or in escrow
-- **Transaction Volume**: Daily/monthly transaction counts and values
-- **Active Users**: Unique wallets interacting with TOLA
-- **Token Velocity**: Rate of token circulation
-- **Price Trends**: If applicable, price trends over time
-
-### Marketplace Metrics
-
-- **Sales by Token Type**: TOLA vs. fiat currency sales
-- **Most Traded Artworks**: Artworks with highest TOLA transaction volume
-- **Top Categories**: Artwork categories by TOLA volume
-- **Artist Rankings**: Artists ranked by TOLA earnings
-- **Fee Collection**: Platform fees collected in TOLA
-
-### DAO Metrics
-
-- **Governance Participation**: Voting rates and token weights
-- **Proposal Success Rate**: Percentage of proposals approved
-- **Treasury Growth**: TOLA accumulated in DAO treasury
-- **Distribution Stats**: Reward distribution analytics
-
-## Security Considerations
-
-- **Multi-sig Treasury**: DAO treasury secured by multi-signature requirements
-- **Smart Contract Audit**: TOLA contract audited by [Security Partner]
-- **Transaction Verification**: All transactions verified on-chain
-- **Rate Limiting**: Transaction rate limiting to prevent attacks
-- **Threshold Controls**: Large transactions require additional verification
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Wallet Not Connecting**
-   - Ensure Phantom/Solflare extension is installed
-   - Check that browser is supported (Chrome, Firefox, Brave)
-   - Confirm wallet is unlocked before attempting connection
-
-2. **Transaction Failing**
-   - Verify sufficient balance (including gas fees)
-   - Check network congestion and retry
-   - Confirm wallet has approved contract interaction
-
-3. **Balance Not Updating**
-   - Clear browser cache and reload
-   - Disconnect and reconnect wallet
-   - Check blockchain explorer to verify transaction status
-
-### Support Channels
-
-- **Documentation**: [TOLA Documentation](https://docs.vortexartec.com/tola)
-- **Community Forum**: [VORTEX Community](https://community.vortexartec.com)
-- **Discord Support**: [Discord Server](https://discord.gg/vortexartec)
-- **Email Support**: tola-support@vortexartec.com
-
-## Future Roadmap
-
-- **Cross-chain Bridging**: Ethereum, Polygon integration
-- **Mobile Wallet App**: Dedicated VORTEX wallet application
-- **Advanced Staking Options**: Tiered staking with varied benefits
-- **NFT Integration**: TOLA-powered NFT features
-- **Automated Market Maker**: AMM for TOLA token liquidity
-
-## Legal and Compliance
-
-- **Terms of Use**: [TOLA Terms](https://vortexartec.com/tola-terms)
-- **Privacy Policy**: [TOLA Privacy](https://vortexartec.com/tola-privacy)
-- **Regulatory Compliance**: Ongoing legal review for compliance
-- **Geographic Restrictions**: Service availability may vary by jurisdiction
-
-## Appendix
-
-### Smart Contract Interface
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-interface ITOLA {
-    function balanceOf(address account) external view returns (uint256);
-    function transfer(address to, uint256 amount) external returns (bool);
-    function transferFrom(address from, address to, uint256 amount) external returns (bool);
-    function approve(address spender, uint256 amount) external returns (bool);
-    function allowance(address owner, address spender) external view returns (uint256);
-    function stake(uint256 amount) external returns (bool);
-    function unstake(uint256 amount) external returns (bool);
-    function claimRewards() external returns (uint256);
+    return 0;
 }
 ```
 
-### API Reference
+### Smart Contract Logic (Rust)
 
-Complete API documentation for the TOLA token integration is available at:
-[TOLA API Documentation](https://docs.vortexartec.com/tola-api) 
+```rust
+// Fee Distribution Logic
+pub fn process_artwork_sale(
+    ctx: Context<ProcessSale>,
+    price: u64,
+    is_primary: bool,
+) -> Result<()> {
+    let mut remaining = price;
+    
+    // 1) Vortex Creator Royalty (5%) on all sales
+    let creator_fee = price.checked_mul(5).unwrap().checked_div(100).unwrap();
+    transfer_tola(&ctx, &ctx.accounts.vortex_creator, creator_fee)?;
+    remaining = remaining.checked_sub(creator_fee).unwrap();
+    
+    // 2) Platform Commission (15%) on all sales
+    let platform_fee = price.checked_mul(15).unwrap().checked_div(100).unwrap();
+    transfer_tola(&ctx, &ctx.accounts.treasury, platform_fee)?;
+    remaining = remaining.checked_sub(platform_fee).unwrap();
+    
+    if is_primary {
+        // 3a) Primary sale: remainder goes to artist
+        transfer_tola(&ctx, &ctx.accounts.artist, remaining)?;
+    } else {
+        // 3b) Secondary sale: 15% royalty to original artist
+        let artist_royalty = price.checked_mul(15).unwrap().checked_div(100).unwrap();
+        transfer_tola(&ctx, &ctx.accounts.artist, artist_royalty)?;
+        remaining = remaining.checked_sub(artist_royalty).unwrap();
+        
+        // 4) Remainder to current seller
+        transfer_tola(&ctx, &ctx.accounts.seller, remaining)?;
+    }
+    
+    Ok(())
+}
+```
+
+## Wallet Integration
+
+### Supported Wallets
+- **Phantom**: Primary recommended wallet
+- **Solflare**: Full-featured Solana wallet
+- **Sollet**: Web-based wallet
+- **Ledger**: Hardware wallet support
+- **Glow**: Mobile-first wallet
+
+### WordPress Integration
+
+```php
+// TOLA Balance Check
+class Vortex_TOLA_Integration {
+    private $mint_address = 'H6qNYafSrpCjckH8yVwiPmXYPd1nCNBP8uQMZkv5hkky';
+    
+    public function get_user_tola_balance($wallet_address) {
+        $rpc_url = 'https://api.mainnet-beta.solana.com';
+        
+        $data = array(
+            'jsonrpc' => '2.0',
+            'id' => 1,
+            'method' => 'getTokenAccountsByOwner',
+            'params' => array(
+                $wallet_address,
+                array('mint' => $this->mint_address),
+                array('encoding' => 'jsonParsed')
+            )
+        );
+        
+        $response = wp_remote_post($rpc_url, array(
+            'body' => json_encode($data),
+            'headers' => array('Content-Type' => 'application/json')
+        ));
+        
+        if (is_wp_error($response)) {
+            return 0;
+        }
+        
+        $body = json_decode(wp_remote_retrieve_body($response), true);
+        
+        if (isset($body['result']['value'][0])) {
+            $token_amount = $body['result']['value'][0]['account']['data']['parsed']['info']['tokenAmount'];
+            return floatval($token_amount['uiAmount']);
+        }
+        
+        return 0;
+    }
+}
+```
+
+## Governance
+
+### DAO Features (Future Implementation)
+- **Proposal Rights**: Holders with ≥10% TOLA to submit platform improvement proposals
+- **Voting Quorum**: ≥20% participation; simple majority to decide
+- **On-Chain Transparency**: All DAO actions publicly auditable
+- **Multi-Sig Admin**: 2-of-3 signers required for contract upgrades
+
+### Compliance & Controls
+- **KYC/AML**: required for investor sale and large deposits
+- **Token Classification**: TOLA remains a utility/incentive token, non-security
+- **Data Privacy**: GDPR & CCPA compliance
+
+## Integration Testing
+
+```bash
+# Test TOLA integration
+curl -X POST https://api.mainnet-beta.solana.com \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getAccountInfo",
+    "params": [
+      "H6qNYafSrpCjckH8yVwiPmXYPd1nCNBP8uQMZkv5hkky",
+      {"encoding": "jsonParsed"}
+    ]
+  }'
+```
+
+## Contact & Support
+
+For integration support and technical questions:
+- **GitHub**: https://github.com/MarianneNems/vortex-artec-ai-marketplace
+- **Documentation**: https://docs.vortexartec.com
+- **Email**: marianne@vortexartec.com
+
+---
+
+**© 2025 Vortex Artec Corp. All Rights Reserved.** 

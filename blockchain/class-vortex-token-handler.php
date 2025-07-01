@@ -490,62 +490,65 @@ class Vortex_Token_Handler {
         }
 
         $token_info = array(
-            'name' => 'TOLA',
+            'name' => 'TOLA (Token of Love and Appreciation)',
             'symbol' => 'TOLA',
-            'decimals' => 18,
+            'decimals' => 9,
             'total_supply' => 50000000, // 50 million TOLA fixed supply
             'original_supply' => 1000000000, // 1 billion TOLA original supply
             'burned_amount' => 950000000, // 950 million TOLA burned
-            'contract_address' => 'H6qNYafSrpCjckH8yVwiPmXYPd1nCNBP8uQMZkv5hkky'
+            'contract_address' => 'H6qNYafSrpCjckH8yVwiPmXYPd1nCNBP8uQMZkv5hkky',
+            'blockchain' => 'solana',
+            'token_standard' => 'SPL',
+            'investor_price' => 0.60, // $0.60 per TOLA
+            'fee_structure' => array(
+                'primary_sale' => array(
+                    'vortex_creator' => 5, // 5%
+                    'platform_treasury' => 15, // 15%
+                    'artist' => 80 // 80%
+                ),
+                'secondary_sale' => array(
+                    'vortex_creator' => 5, // 5%
+                    'original_artist' => 15, // 15%
+                    'platform_treasury' => 15, // 15%
+                    'seller' => 65 // 65%
+                )
+            )
         );
 
         try {
-            // Get token name
-            $name_data = array(
-                'contract_address' => $this->contract_address,
-                'method' => 'name',
-                'parameters' => array(),
-                'abi' => $this->contract_abi
+            // For Solana SPL tokens, we would use Solana RPC calls
+            // instead of Ethereum contract calls
+            $solana_rpc_url = 'https://api.mainnet-beta.solana.com';
+            
+            // Get token supply from Solana
+            $supply_data = array(
+                'jsonrpc' => '2.0',
+                'id' => 1,
+                'method' => 'getTokenSupply',
+                'params' => array($this->contract_address)
             );
             
-            $name_response = $this->blockchain->call_contract_method($name_data);
-            if (!is_wp_error($name_response)) {
-                $token_info['name'] = $name_response;
+            $response = wp_remote_post($solana_rpc_url, array(
+                'body' => json_encode($supply_data),
+                'headers' => array('Content-Type' => 'application/json'),
+                'timeout' => 30
+            ));
+
+            if (!is_wp_error($response)) {
+                $body = json_decode(wp_remote_retrieve_body($response), true);
+                if (isset($body['result']['value']['uiAmount'])) {
+                    $token_info['circulating_supply'] = floatval($body['result']['value']['uiAmount']);
+                }
             }
 
-            // Get token symbol
-            $symbol_data = array(
-                'contract_address' => $this->contract_address,
-                'method' => 'symbol',
-                'parameters' => array(),
-                'abi' => $this->contract_abi
-            );
-            
-            $symbol_response = $this->blockchain->call_contract_method($symbol_data);
-            if (!is_wp_error($symbol_response)) {
-                $token_info['symbol'] = $symbol_response;
-            }
-
-            // Get token decimals
-            $decimals_data = array(
-                'contract_address' => $this->contract_address,
-                'method' => 'decimals',
-                'parameters' => array(),
-                'abi' => $this->contract_abi
-            );
-            
-            $decimals_response = $this->blockchain->call_contract_method($decimals_data);
-            if (!is_wp_error($decimals_response)) {
-                $token_info['decimals'] = (int) $decimals_response;
-            }
-
-            // Cache token info for 1 day
-            set_transient('vortex_tola_info', $token_info, DAY_IN_SECONDS);
-            
-            return $token_info;
         } catch (Exception $e) {
-            return $token_info; // Return default info on error
+            error_log('TOLA token info error: ' . $e->getMessage());
         }
+
+        // Cache for 10 minutes
+        set_transient('vortex_tola_info', $token_info, 600);
+        
+        return $token_info;
     }
 
     /**
