@@ -1,0 +1,242 @@
+/**
+ * HURAII Admin Styles
+ * Provides styling for the HURAII admin interface
+ */
+
+/* Admin Panel Layout */
+.huraii-admin-wrap {
+  max-width: 1200px;
+  margin: 20px auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.huraii-admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e2e4e7;
+}
+
+.huraii-admin-logo {
+  max-width: 200px;
+}
+
+.huraii-admin-logo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.huraii-admin-version {
+  font-size: 14px;
+  color: #757575;
+}
+
+/* Admin Cards */
+.huraii-admin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.huraii-admin-card {
+  background: #fff;
+  border: 1px solid #e2e4e7;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.card-header {
+  background: #f9f9f9;
+  padding: 15px;
+  border-bottom: 1px solid #e2e4e7;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.card-body {
+  padding: 15px;
+}
+
+.card-footer {
+  padding: 15px;
+  background: #f9f9f9;
+  border-top: 1px solid #e2e4e7;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Status Items */
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.status-item:last-child {
+  border-bottom: none;
+}
+
+.status-value {
+  font-weight: 500;
+}
+
+.status-connected {
+  color: #46b450;
+}
+
+.status-active {
+  color: #46b450;
+}
+
+.status-inactive {
+  color: #dc3232;
+}
+
+/* Statistics */
+.stat-item {
+  text-align: center;
+  padding: 10px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+  color: #23282d;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #757575;
+}
+
+/* Recent Artworks */
+.huraii-admin-recent {
+  background: #fff;
+  border: 1px solid #e2e4e7;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.huraii-admin-recent h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #e2e4e7;
+  padding-bottom: 10px;
+}
+
+.recent-artworks-empty {
+  padding: 30px;
+  text-align: center;
+  color: #757575;
+}
+
+/* Settings Form */
+.huraii-settings-form h3 {
+  margin-top: 30px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e4e7;
+}
+
+.form-table th {
+  width: 200px;
+  padding: 20px 10px 20px 0;
+}
+
+.form-table td {
+  padding: 20px 10px;
+}
+
+.form-table input[type="text"],
+.form-table input[type="number"],
+.form-table select {
+  width: 300px;
+  max-width: 100%;
+}
+
+.description {
+  color: #757575;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+/* Tabs */
+.huraii-admin-tabs {
+  margin-bottom: 20px;
+}
+
+.tab-pane {
+  display: none;
+  background: #fff;
+  border: 1px solid #e2e4e7;
+  border-radius: 0 5px 5px 5px;
+  padding: 20px;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Help Section */
+.huraii-help-section {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.huraii-help-section:last-child {
+  border-bottom: none;
+}
+
+.huraii-help-section h4 {
+  margin-top: 0;
+}
+
+.huraii-help-section code {
+  display: block;
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #e2e4e7;
+  margin: 10px 0;
+}
+
+.huraii-help-section ul, 
+.huraii-help-section ol {
+  margin-left: 20px;
+}
+
+/* Statistics Section */
+.huraii-statistics-empty {
+  padding: 30px;
+  text-align: center;
+  color: #757575;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+  .huraii-admin-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-table th,
+  .form-table td {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+  }
+  
+  .form-table th {
+    padding-bottom: 0;
+  }
+} 

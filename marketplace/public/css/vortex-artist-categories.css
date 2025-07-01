@@ -1,0 +1,321 @@
+/**
+ * Vortex Artist Categories CSS
+ *
+ * Styles for the artist category selection interface
+ */
+
+.vortex-artist-categories-container {
+    margin: 2rem 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* Category Grid */
+.vortex-category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.vortex-category-item {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.vortex-category-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.vortex-category-item.selected {
+    background-color: #f0f7ff;
+    border: 1px solid #4776E6;
+}
+
+.vortex-category-item.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #4776E6, #8E54E9);
+}
+
+.vortex-category-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #f0f7ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.vortex-category-icon i {
+    font-size: 22px;
+    color: #4776E6;
+}
+
+.vortex-category-info {
+    flex: 1;
+}
+
+.vortex-category-info h4 {
+    margin: 0 0 0.25rem;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.vortex-category-info p {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.vortex-category-checkbox {
+    margin-left: 1rem;
+}
+
+.vortex-category-checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.vortex-category-checkbox .checkmark {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    display: block;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.vortex-category-checkbox input[type="checkbox"]:checked + .checkmark {
+    background-color: #4776E6;
+    border-color: #4776E6;
+}
+
+.vortex-category-checkbox input[type="checkbox"]:checked + .checkmark::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 4px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg);
+}
+
+/* Selected Categories */
+.vortex-selected-categories {
+    margin-bottom: 2rem;
+}
+
+.vortex-selected-categories h3 {
+    font-size: 18px;
+    margin: 0 0 1rem;
+    color: #333;
+}
+
+.vortex-category-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    min-height: 40px;
+}
+
+.vortex-category-chip {
+    background-color: #4776E6;
+    color: #fff;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.vortex-category-chip i {
+    margin-right: 0.5rem;
+    font-size: 12px;
+}
+
+.vortex-remove-category {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    transition: color 0.2s ease;
+}
+
+.vortex-remove-category:hover {
+    color: #fff;
+}
+
+.vortex-category-hint {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+}
+
+.vortex-no-categories {
+    font-style: italic;
+    color: #999;
+    margin: 0;
+}
+
+.vortex-category-error {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 0.5rem;
+}
+
+/* Recommended Agents */
+.vortex-recommended-agents {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+    display: none;
+}
+
+.vortex-recommended-agents h3 {
+    font-size: 18px;
+    margin: 0 0 0.5rem;
+    color: #333;
+}
+
+.vortex-recommended-agents > p {
+    font-size: 14px;
+    color: #666;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.vortex-agent-recommendations {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.vortex-recommended-agent {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.vortex-recommended-agent:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.vortex-agent-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f0f7ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.vortex-agent-icon i {
+    font-size: 18px;
+    color: #4776E6;
+}
+
+.vortex-agent-info h4 {
+    margin: 0 0 0.25rem;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.vortex-agent-info p {
+    margin: 0;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.vortex-no-recommendations {
+    font-style: italic;
+    color: #999;
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 1rem;
+}
+
+/* Form Integration */
+#vortex-selected-categories {
+    display: none;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .vortex-category-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .vortex-agent-recommendations {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .vortex-category-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .vortex-category-item {
+        padding: 0.75rem;
+    }
+    
+    .vortex-category-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .vortex-category-icon i {
+        font-size: 18px;
+    }
+    
+    .vortex-category-info h4 {
+        font-size: 14px;
+    }
+    
+    .vortex-category-info p {
+        font-size: 12px;
+    }
+} 
