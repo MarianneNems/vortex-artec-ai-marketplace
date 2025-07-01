@@ -100,16 +100,28 @@ if (is_admin()) {
 
 // Make sure CLOE is initialized during plugins_loaded 
 function vortex_initialize_cloe() {
+    // Prevent multiple initializations
+    static $initialized = false;
+    if ($initialized) {
+        return;
+    }
+    
     $cloe = VORTEX_CLOE::get_instance();
     
-    // Explicitly re-register the session tracking hooks if needed
-    if (has_action('wp_logout') && !has_action('wp_logout', array($cloe, 'end_session_tracking'))) {
-        add_action('wp_logout', array($cloe, 'end_session_tracking'), 10);
-    }
+    // Use a more reliable method to check and register hooks
+    // Remove any existing hooks first to prevent duplicates
+    remove_action('wp_logout', array($cloe, 'end_session_tracking'), 10);
+    remove_action('init', array($cloe, 'continue_session_tracking'), 10);
     
-    if (has_action('init') && !has_action('init', array($cloe, 'continue_session_tracking'))) {
-        add_action('init', array($cloe, 'continue_session_tracking'), 10);
-    }
+    // Now add the hooks cleanly
+    add_action('wp_logout', array($cloe, 'end_session_tracking'), 10);
+    add_action('init', array($cloe, 'continue_session_tracking'), 10);
+    
+    // Mark as initialized
+    $initialized = true;
+    
+    // Log successful initialization for debugging
+    error_log('VORTEX: CLOE initialized successfully');
 }
 add_action('plugins_loaded', 'vortex_initialize_cloe', 5); // Run this early with priority 5
 

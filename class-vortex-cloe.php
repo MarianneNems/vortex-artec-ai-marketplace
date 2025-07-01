@@ -1153,17 +1153,65 @@ class VORTEX_CLOE {
      * AJAX handler for getting recommendations
      */
     public function ajax_get_recommendations() {
-        check_ajax_referer('vortex_cloe_nonce', 'security');
+        // Enhanced security: verify nonce and user permissions
+        if (!check_ajax_referer('vortex_cloe_nonce', 'security', false)) {
+            wp_send_json_error(array('message' => __('Security verification failed.', 'vortex-marketplace')));
+            return;
+        }
         
-        $user_id = get_current_user_id(); // 0 if not logged in
+        // Additional rate limiting check
+        $user_id = get_current_user_id();
+        if (!$this->check_rate_limit($user_id, 'recommendations')) {
+            wp_send_json_error(array('message' => __('Rate limit exceeded. Please try again later.', 'vortex-marketplace')));
+            return;
+        }
+        
+        // Enhanced input validation
         $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : 'artwork';
         $limit = isset($_POST['limit']) ? intval($_POST['limit']) : 5;
         
-        $recommendations = $this->get_personalized_recommendations($user_id, $type, $limit);
+        // Validate type parameter against allowed values
+        $allowed_types = array('artwork', 'artist', 'collection', 'trend');
+        if (!in_array($type, $allowed_types)) {
+            $type = 'artwork';
+        }
         
-        wp_send_json_success(array(
-            'recommendations' => $recommendations
-        ));
+        // Limit the limit parameter to reasonable bounds
+        $limit = max(1, min(20, $limit));
+        
+        try {
+            $recommendations = $this->get_personalized_recommendations($user_id, $type, $limit);
+            
+            wp_send_json_success(array(
+                'recommendations' => $recommendations,
+                'timestamp' => current_time('timestamp')
+            ));
+        } catch (Exception $e) {
+            error_log('CLOE recommendations error: ' . $e->getMessage());
+            wp_send_json_error(array('message' => __('Failed to get recommendations.', 'vortex-marketplace')));
+        }
+    }
+    
+    /**
+     * Check rate limit for CLOE operations
+     * 
+     * @param int $user_id User ID
+     * @param string $operation Operation type
+     * @return bool Whether the operation is allowed
+     */
+    private function check_rate_limit($user_id, $operation) {
+        $key = 'vortex_cloe_rate_limit_' . $user_id . '_' . $operation;
+        $current_count = get_transient($key);
+        
+        if ($current_count === false) {
+            set_transient($key, 1, 60); // 1 minute window
+            return true;
+        } elseif ($current_count < 10) { // Allow 10 requests per minute
+            set_transient($key, $current_count + 1, 60);
+            return true;
+        }
+        
+        return false;
     }
     
     /**
