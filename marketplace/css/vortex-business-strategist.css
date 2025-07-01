@@ -1,0 +1,443 @@
+/**
+ * Business Strategist AI Agent Styles
+ */
+
+/* Modal Overlay */
+#vortex-business-strategist-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal Content */
+.vortex-modal-content {
+    position: relative;
+    background-color: #fff;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Modal Header */
+.vortex-modal-header {
+    background: linear-gradient(135deg, #4e85c5, #2c3e50);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.vortex-modal-header h2 {
+    margin: 0;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.vortex-bs-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
+
+/* Modal Body */
+.vortex-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(90vh - 80px);
+}
+
+/* Close Button */
+.vortex-bs-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.vortex-bs-close:hover {
+    color: #f1f1f1;
+}
+
+/* Welcome Message */
+.vortex-bs-welcome {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.vortex-bs-welcome p {
+    margin-bottom: 15px;
+}
+
+/* Form */
+#vortex-business-idea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.vortex-bs-error {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.vortex-button {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.vortex-button-primary {
+    background-color: #4e85c5;
+    color: white;
+}
+
+.vortex-button-primary:hover {
+    background-color: #3a6fa5;
+}
+
+.vortex-button-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.vortex-button-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+/* Loading Animation */
+.vortex-bs-loading {
+    text-align: center;
+    padding: 30px 0;
+}
+
+.vortex-loader {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #4e85c5;
+    border-radius: 50%;
+    animation: vortex-spin 1s linear infinite;
+    margin-top: 15px;
+}
+
+@keyframes vortex-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Business Plan Styles */
+.vortex-business-plan {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    line-height: 1.6;
+}
+
+.vortex-business-plan h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    border-bottom: 2px solid #4e85c5;
+    padding-bottom: 10px;
+}
+
+.vortex-business-plan h4 {
+    color: #4e85c5;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+.vortex-business-plan h5 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.vortex-business-analysis {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .vortex-business-analysis {
+        grid-template-columns: 1fr;
+    }
+}
+
+.vortex-analysis-section {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.vortex-analysis-section ul {
+    margin-left: 20px;
+    margin-bottom: 0;
+}
+
+.vortex-analysis-section li {
+    margin-bottom: 5px;
+}
+
+.vortex-recommendation {
+    background-color: #e8f4fb;
+    padding: 15px;
+    border-left: 4px solid #4e85c5;
+    margin-bottom: 20px;
+}
+
+/* Roadmap Styles */
+.vortex-roadmap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.vortex-roadmap-phase {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.vortex-roadmap-phase h5 {
+    margin-top: 0;
+    color: #4e85c5;
+}
+
+.vortex-roadmap-phase ul {
+    margin-left: 20px;
+    margin-bottom: 0;
+}
+
+.vortex-roadmap-phase li {
+    margin-bottom: 8px;
+}
+
+/* Calendar Styles */
+.vortex-calendar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.vortex-calendar-week {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.vortex-calendar-week h5 {
+    margin-top: 0;
+    color: #4e85c5;
+}
+
+.vortex-schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.vortex-schedule-table th,
+.vortex-schedule-table td {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.vortex-schedule-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.vortex-schedule-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Business Plan Actions */
+.vortex-business-plan-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Dashboard Widget Styles */
+.vortex-dashboard-widget {
+    padding: 10px 0;
+}
+
+.vortex-plan-summary {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-left: 4px solid #4e85c5;
+    margin-bottom: 15px;
+}
+
+.vortex-plan-summary h4 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.vortex-plan-progress {
+    margin-bottom: 15px;
+}
+
+.vortex-plan-progress h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.vortex-progress-bar {
+    height: 12px;
+    background-color: #f0f0f0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.vortex-progress {
+    height: 100%;
+    background: linear-gradient(to right, #4e85c5, #6ab04c);
+    border-radius: 6px;
+}
+
+/* Download Button & Icons */
+.vortex-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    vertical-align: middle;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.vortex-icon-download {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z'/%3E%3C/svg%3E");
+}
+
+.vortex-icon-email {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234A26AB'%3E%3Cpath d='M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/%3E%3C/svg%3E");
+}
+
+.vortex-email-notification {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #e8f4fb;
+    border-radius: 4px;
+    color: #4A26AB;
+    text-align: center;
+}
+
+.vortex-email-notification p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+/* Milestone Reminder Prompt */
+.vortex-milestone-reminder-prompt {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vortex-milestone-reminder-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.vortex-milestone-reminder-content h4 {
+    color: #4A26AB;
+    margin-top: 0;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.vortex-reminder-description {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.vortex-milestone-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Toast Notifications */
+.vortex-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background-color: #4A26AB;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.vortex-toast-show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+} 
