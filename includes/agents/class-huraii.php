@@ -59,6 +59,13 @@ class HURAII {
     private $tier;
 
     /**
+     * RunPod server configuration
+     *
+     * @var array
+     */
+    private $runpod_config;
+
+    /**
      * Constructor
      */
     public function __construct() {
@@ -66,12 +73,26 @@ class HURAII {
         $this->art_style_service = new Art_Style_Service();
         $this->artist_reference_service = new Artist_Reference_Service();
         
-        $this->api_endpoint = get_option( 'vortex_huraii_api_endpoint', 'https://api.vortex.ai/huraii/v1/generate' );
-        $this->api_key = get_option( 'vortex_huraii_api_key', '' );
+        // RunPod AUTOMATIC1111 WebUI API endpoint
+        $runpod_config = Vortex_RunPod_Config::get_instance();
+        $this->api_endpoint = $runpod_config->get('primary_url') . '/sdapi/v1/txt2img';
+        $this->api_key = get_option( 'vortex_huraii_api_key', '' ); // Not required for AUTOMATIC1111
         $this->tier = get_option( 'vortex_huraii_tier', 'standard' );
+        
+        // RunPod server configuration
+        $this->runpod_config = array(
+            'primary_url' => 'https://4416007023f09466f6.gradio.live',
+            'backup_urls' => get_option( 'vortex_runpod_backup_urls', array() ),
+            'timeout' => 120, // Longer timeout for GPU generation
+            'max_retries' => 3,
+            'health_check_endpoint' => '/sdapi/v1/options'
+        );
         
         add_action( 'rest_api_init', array( $this, 'register_routes' ) );
         add_shortcode( 'vortex_huraii_generator', array( $this, 'generator_shortcode' ) );
+        
+        // Initialize RunPod health monitoring
+        add_action( 'wp_loaded', array( $this, 'check_runpod_health' ) );
     }
 
     /**
@@ -169,12 +190,12 @@ class HURAII {
         $resolution = sanitize_text_field( $request->get_param( 'resolution' ) );
         $variations = intval( $request->get_param( 'variations' ) );
 
-        // Check if API key is configured
-        if ( empty( $this->api_key ) ) {
+        // Check RunPod server availability
+        if ( ! $this->is_runpod_available() ) {
             return new \WP_Error(
-                'huraii_api_not_configured',
-                __( 'HURAII API is not properly configured.', 'vortex-ai-agents' ),
-                array( 'status' => 500 )
+                'runpod_unavailable',
+                __( 'RunPod AI server is currently unavailable. Please try again later.', 'vortex-ai-agents' ),
+                array( 'status' => 503 )
             );
         }
 
@@ -186,36 +207,41 @@ class HURAII {
             return rest_ensure_response( $cached_result );
         }
 
-        // Prepare request to HURAII API
+        // Parse resolution for AUTOMATIC1111
+        $dimensions = $this->parse_resolution( $resolution );
+        
+        // Build enhanced prompt with style and artist influence
+        $enhanced_prompt = $this->build_enhanced_prompt( $prompt, $style, $artist_influence, $medium );
+
+        // Prepare request body for AUTOMATIC1111 WebUI API
         $request_body = array(
-            'prompt'           => $prompt,
-            'tier'             => $this->tier,
-            'resolution'       => $resolution,
-            'num_outputs'      => $variations,
+            'prompt' => $enhanced_prompt,
+            'negative_prompt' => 'lowres, text, error, cropped, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck',
+            'steps' => 30,
+            'cfg_scale' => 7.5,
+            'width' => $dimensions['width'],
+            'height' => $dimensions['height'],
+            'sampler_name' => 'DPM++ 2M Karras',
+            'batch_size' => 1,
+            'n_iter' => max( 1, $variations ),
+            'restore_faces' => true,
+            'tiling' => false,
+            'do_not_save_samples' => false,
+            'do_not_save_grid' => false,
+            'override_settings' => array(
+                'sd_model_checkpoint' => 'sd_xl_base_1.0.safetensors'
+            ),
+            'override_settings_restore_afterwards' => true
         );
-
-        // Add optional parameters if provided
-        if ( ! empty( $style ) ) {
-            $request_body['style'] = $style;
-        }
-
-        if ( ! empty( $artist_influence ) ) {
-            $request_body['artist_influence'] = $artist_influence;
-        }
-
-        if ( ! empty( $medium ) ) {
-            $request_body['medium'] = $medium;
-        }
 
         $response = wp_remote_post(
             $this->api_endpoint,
             array(
                 'headers'     => array(
                     'Content-Type'  => 'application/json',
-                    'Authorization' => 'Bearer ' . $this->api_key,
                 ),
                 'body'        => wp_json_encode( $request_body ),
-                'timeout'     => 60, // Longer timeout for image generation
+                'timeout'     => $this->runpod_config['timeout'],
                 'data_format' => 'body',
             )
         );
@@ -247,7 +273,7 @@ class HURAII {
     /**
      * Process generation results and store images in media library
      *
-     * @param array  $api_response API response data.
+     * @param array  $api_response API response data from AUTOMATIC1111.
      * @param string $prompt Original prompt used for generation.
      * @return array Processed results with WordPress media IDs
      */
@@ -255,46 +281,38 @@ class HURAII {
         $results = array(
             'prompt'     => $prompt,
             'images'     => array(),
-            'generation_id' => isset( $api_response['generation_id'] ) ? $api_response['generation_id'] : uniqid( 'huraii_' ),
+            'generation_id' => uniqid( 'runpod_' ),
             'created_at' => current_time( 'mysql' ),
+            'server_info' => array(
+                'model' => 'SDXL Base 1.0',
+                'server' => 'RunPod AUTOMATIC1111',
+                'url' => $this->runpod_config['primary_url']
+            )
         );
 
+        // AUTOMATIC1111 returns images in 'images' array as base64 strings
         if ( ! isset( $api_response['images'] ) || empty( $api_response['images'] ) ) {
             return $results;
         }
 
-        foreach ( $api_response['images'] as $index => $image_data ) {
-            // For base64 encoded images
-            if ( isset( $image_data['base64'] ) ) {
-                $image_id = $this->save_base64_image_to_media_library(
-                    $image_data['base64'],
-                    sanitize_title( $prompt ) . '_' . $index,
-                    $prompt
+        foreach ( $api_response['images'] as $index => $base64_image ) {
+            // AUTOMATIC1111 returns direct base64 strings
+            $image_id = $this->save_base64_image_to_media_library(
+                $base64_image,
+                sanitize_title( $prompt ) . '_' . $index,
+                $prompt
+            );
+            
+            if ( ! is_wp_error( $image_id ) ) {
+                $results['images'][] = array(
+                    'id'  => $image_id,
+                    'url' => wp_get_attachment_url( $image_id ),
+                    'metadata' => array(
+                        'server' => 'RunPod AUTOMATIC1111',
+                        'model' => 'SDXL Base 1.0',
+                        'timestamp' => current_time( 'mysql' )
+                    ),
                 );
-                
-                if ( ! is_wp_error( $image_id ) ) {
-                    $results['images'][] = array(
-                        'id'  => $image_id,
-                        'url' => wp_get_attachment_url( $image_id ),
-                        'metadata' => isset( $image_data['metadata'] ) ? $image_data['metadata'] : array(),
-                    );
-                }
-            }
-            // For image URLs
-            elseif ( isset( $image_data['url'] ) ) {
-                $image_id = $this->save_remote_image_to_media_library(
-                    $image_data['url'],
-                    sanitize_title( $prompt ) . '_' . $index,
-                    $prompt
-                );
-                
-                if ( ! is_wp_error( $image_id ) ) {
-                    $results['images'][] = array(
-                        'id'  => $image_id,
-                        'url' => wp_get_attachment_url( $image_id ),
-                        'metadata' => isset( $image_data['metadata'] ) ? $image_data['metadata'] : array(),
-                    );
-                }
             }
         }
 
@@ -791,5 +809,89 @@ class HURAII {
         $this->cache_service->set( $cache_key, $processed_results );
 
         return $processed_results;
+    }
+
+    /**
+     * Check RunPod health
+     */
+    public function check_runpod_health() {
+        $health_url = $this->runpod_config['primary_url'] . $this->runpod_config['health_check_endpoint'];
+        
+        $response = wp_remote_get( $health_url, array(
+            'timeout' => 10,
+            'headers' => array(
+                'Content-Type' => 'application/json'
+            )
+        ) );
+        
+        $is_healthy = ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200;
+        
+        // Cache health status
+        set_transient( 'vortex_runpod_health', $is_healthy, 5 * MINUTE_IN_SECONDS );
+        
+        return $is_healthy;
+    }
+
+    /**
+     * Check if RunPod is available
+     */
+    private function is_runpod_available() {
+        $cached_health = get_transient( 'vortex_runpod_health' );
+        
+        if ( $cached_health !== false ) {
+            return $cached_health;
+        }
+        
+        return $this->check_runpod_health();
+    }
+
+    /**
+     * Parse resolution string to width/height array
+     */
+    private function parse_resolution( $resolution ) {
+        $default_dimensions = array( 'width' => 1024, 'height' => 1024 );
+        
+        if ( empty( $resolution ) ) {
+            return $default_dimensions;
+        }
+        
+        if ( strpos( $resolution, 'x' ) !== false ) {
+            $parts = explode( 'x', $resolution );
+            if ( count( $parts ) === 2 ) {
+                return array(
+                    'width' => max( 256, min( 2048, intval( $parts[0] ) ) ),
+                    'height' => max( 256, min( 2048, intval( $parts[1] ) ) )
+                );
+            }
+        }
+        
+        return $default_dimensions;
+    }
+
+    /**
+     * Build enhanced prompt with style and influences
+     */
+    private function build_enhanced_prompt( $prompt, $style = '', $artist_influence = '', $medium = '' ) {
+        $enhanced_parts = array( $prompt );
+        
+        // Add style modifiers
+        if ( ! empty( $style ) ) {
+            $enhanced_parts[] = $style . ' style';
+        }
+        
+        // Add artist influence
+        if ( ! empty( $artist_influence ) ) {
+            $enhanced_parts[] = 'in the style of ' . $artist_influence;
+        }
+        
+        // Add medium
+        if ( ! empty( $medium ) ) {
+            $enhanced_parts[] = $medium . ' medium';
+        }
+        
+        // Add quality enhancing keywords
+        $enhanced_parts[] = 'masterpiece, best quality, highly detailed, 8k resolution';
+        
+        return implode( ', ', $enhanced_parts );
     }
 } 
