@@ -74,20 +74,39 @@ foreach ($patterns as $pattern) {
 5. **Sale Processing**: Instant TOLA transfer + ownership change
 
 #### **Marketplace Rules**
-```solidity
-contract VortexMarketplace {
-    // 2.5% platform fee
-    uint256 constant PLATFORM_FEE = 250; // 2.5% in basis points
+```rust
+// Solana Program for VortexArtec Marketplace
+pub fn process_artwork_sale(
+    ctx: Context<ProcessSale>,
+    price: u64,
+    is_primary: bool,
+) -> Result<()> {
+    let mut remaining = price;
     
-    // Quality requirements
-    uint256 constant MIN_QUALITY = 6;
+    // 1) Vortex Creator Royalty (5%) on all sales
+    let creator_fee = price.checked_mul(5).unwrap().checked_div(100).unwrap();
+    transfer_tola(&ctx, &ctx.accounts.vortex_creator, creator_fee)?;
+    remaining = remaining.checked_sub(creator_fee).unwrap();
     
-    // Auto-rewards for high engagement
-    function rewardHighEngagement(uint256 tokenId) external {
-        if (getArtworkViews(tokenId) > 100) {
-            rewardCreator(tokenId, 10 * 10**18); // 10 TOLA bonus
-        }
+    // 2) Platform Commission (15%) on all sales
+    let platform_fee = price.checked_mul(15).unwrap().checked_div(100).unwrap();
+    transfer_tola(&ctx, &ctx.accounts.treasury, platform_fee)?;
+    remaining = remaining.checked_sub(platform_fee).unwrap();
+    
+    if is_primary {
+        // 3a) Primary sale: remainder goes to artist
+        transfer_tola(&ctx, &ctx.accounts.artist, remaining)?;
+    } else {
+        // 3b) Secondary sale: 15% royalty to original artist
+        let artist_royalty = price.checked_mul(15).unwrap().checked_div(100).unwrap();
+        transfer_tola(&ctx, &ctx.accounts.artist, artist_royalty)?;
+        remaining = remaining.checked_sub(artist_royalty).unwrap();
+        
+        // 4) Remainder to current seller
+        transfer_tola(&ctx, &ctx.accounts.seller, remaining)?;
     }
+    
+    Ok(())
 }
 ```
 
@@ -124,7 +143,19 @@ const tolaUses = {
     premium_features: '50 TOLA/month',
     marketplace_listing: '1 TOLA fee',
     daily_tola_art: '5 TOLA entry',
-    governance_voting: '10 TOLA per vote'
+    governance_voting: '10 TOLA per vote',
+    subscription_standard: '29 TOLA/month',
+    subscription_essential: '59 TOLA/month',
+    subscription_premium: '99 TOLA/month'
+}
+
+const tokenomics = {
+    total_supply: 50000000, // 50M TOLA (fixed)
+    original_supply: 1000000000, // 1B TOLA (burned 950M)
+    contract_address: 'H6qNYafSrpCjckH8yVwiPmXYPd1nCNBP8uQMZkv5hkky',
+    blockchain: 'solana',
+    token_standard: 'SPL',
+    investor_price: 0.60 // $0.60 per TOLA
 }
 ```
 
@@ -217,10 +248,10 @@ const optimizeUserExperience = (userId) => {
 - **Quality AI** → Automated assessment and upscaling
 
 ### **Blockchain Infrastructure**
-- **Ethereum** → Smart contracts and NFTs
-- **TOLA Token** → Native utility token (ERC-20)
+- **Solana** → Smart contracts and NFTs
+- **TOLA Token** → Native utility token (SPL)
 - **IPFS** → Decentralized image storage
-- **MetaMask** → Wallet integration
+- **Phantom/Solflare** → Wallet integration
 
 ### **Backend Services**
 - **AWS S3** → Secure image storage

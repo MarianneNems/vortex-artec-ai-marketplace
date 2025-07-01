@@ -134,19 +134,38 @@ class Vortex_TOLA {
      * @since    1.0.0
      */
     private function init_contract_settings() {
-        // Get contract settings from options
-        $this->contract_address = get_option( 'vortex_tola_contract_address', '' );
-        $this->decimals = get_option( 'vortex_tola_decimals', 18 );
+        // Get contract settings from options - Updated for Solana
+        $this->contract_address = get_option( 'vortex_tola_contract_address', 'H6qNYafSrpCjckH8yVwiPmXYPd1nCNBP8uQMZkv5hkky' );
+        $this->decimals = get_option( 'vortex_tola_decimals', 9 ); // Solana SPL tokens use 9 decimals by default
 
-        // Load contract ABI
-        $abi_path = plugin_dir_path( dirname( dirname( __FILE__ ) ) ) . 'includes/blockchain/contract-abi.json';
-        if ( file_exists( $abi_path ) ) {
-            $abi_json = file_get_contents( $abi_path );
-            $this->contract_abi = json_decode( $abi_json, true );
-        } else {
-            $this->log( 'Contract ABI file not found: ' . $abi_path, 'error' );
-            $this->contract_abi = array();
-        }
+        // For Solana SPL tokens, we don't need ABI like Ethereum
+        // Instead, we use the Solana RPC API and SPL Token program
+        $this->contract_abi = array(
+            'blockchain' => 'solana',
+            'token_standard' => 'SPL',
+            'rpc_endpoint' => 'https://api.mainnet-beta.solana.com',
+            'token_info' => array(
+                'name' => 'TOLA (Token of Love and Appreciation)',
+                'symbol' => 'TOLA',
+                'total_supply' => 50000000, // 50M TOLA
+                'original_supply' => 1000000000, // 1B TOLA
+                'burned_amount' => 950000000, // 950M TOLA burned
+                'investor_price' => 0.60 // $0.60 per TOLA
+            ),
+            'fee_structure' => array(
+                'primary_sale' => array(
+                    'vortex_creator' => 5, // 5%
+                    'platform_treasury' => 15, // 15%
+                    'artist' => 80 // 80%
+                ),
+                'secondary_sale' => array(
+                    'vortex_creator' => 5, // 5%
+                    'original_artist' => 15, // 15%
+                    'platform_treasury' => 15, // 15%
+                    'seller' => 65 // 65%
+                )
+            )
+        );
     }
 
     /**
@@ -1559,7 +1578,8 @@ class Vortex_TOLA {
 
         // Get staking rates
         $staking_rate = get_option( 'vortex_tola_staking_rate', '0.05' );
-        $annual_
+        $annual_rate = floatval($staking_rate);
+    }
 
     /**
      * Add meta boxes for TOLA pricing options to product pages.
