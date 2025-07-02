@@ -54,7 +54,7 @@ class ThoriusAgent:
                 },
                 "marketplace": {
                     "artist_journey": "Complete artist onboarding from registration to NFT sales",
-                    "subscription_plans": "Starter ($19.99), Pro ($39.99), Studio ($99.99)",
+                    "subscription_plans": "Starter ($29), Pro ($59.99), Studio ($99.99)",
                     "payment_system": "1:1 USD to TOLA token conversion",
                     "blockchain": "Solana integration for NFT minting and trading"
                 },
@@ -272,7 +272,7 @@ class ThoriusAgent:
         
         if "payment" in message or "subscription" in message:
             return {
-                "message": "💳 Subscription Plans:\n• Starter: $19.99/month\n• Pro: $39.99/month\n• Studio: $99.99/month\n\nAll payments convert to TOLA tokens at 1:1 ratio!",
+                "message": "💳 Subscription Plans:\n• Starter: $29/month\n• Pro: $59.99/month\n• Studio: $99.99/month\n\nAll payments convert to TOLA tokens at 1:1 ratio!",
                 "type": "feature_explanation", 
                 "category": "pricing"
             }

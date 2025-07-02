@@ -94,8 +94,8 @@ class Vortex_AI_Marketplace {
             <h2>🎨 VORTEX Artist Journey</h2>
             <p><strong>Plans Available:</strong></p>
             <ul>
-                <li>Starter: $19.99/month</li>
-                <li>Pro: $39.99/month</li>
+                <li>Starter: $29/month</li>
+                <li>Pro: $59.99/month</li>
                 <li>Studio: $99.99/month</li>
             </ul>
             <p>Join the TOLA-ART daily generation revenue sharing!</p>
