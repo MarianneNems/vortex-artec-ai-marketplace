@@ -1,0 +1,60 @@
+{
+    "name": "vortex-artec/ai-marketplace",
+    "description": "Complete AI-powered marketplace with WooCommerce integration, TOLA Masterwork automation, artist journey management, blockchain royalty distribution, and gamification systems.",
+    "type": "wordpress-plugin",
+    "keywords": ["wordpress", "plugin", "ai", "marketplace", "blockchain", "art"],
+    "homepage": "https://vortexartec.com",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Mariana Villard",
+            "email": "info@vortexartec.com",
+            "homepage": "https://vortexartec.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "composer/installers": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "wp-coding-standards/wpcs": "*",
+        "squizlabs/php_codesniffer": "*",
+        "phpcompatibility/phpcompatibility-wp": "*",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+        "vimeo/psalm": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "VortexAI\\Marketplace\\": "includes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "VortexAI\\Marketplace\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage",
+        "phpcs": "phpcs --standard=WordPress --extensions=php --ignore=*/vendor/*,*/node_modules/* .",
+        "phpcbf": "phpcbf --standard=WordPress --extensions=php --ignore=*/vendor/*,*/node_modules/* .",
+        "psalm": "psalm --show-info=true",
+        "post-install-cmd": [
+            "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
+        ],
+        "post-update-cmd": [
+            "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+} 
