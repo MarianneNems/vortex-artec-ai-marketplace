@@ -1,0 +1,409 @@
+/* THORIUS Chatbot Styles */
+.thorius-hidden {
+    display: none !important;
+}
+
+/* Chat Toggle Button */
+.thorius-chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    min-width: 120px;
+}
+
+.thorius-chat-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.thorius-notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: thorius-pulse 2s infinite;
+}
+
+@keyframes thorius-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Chatbot Container */
+#thorius-chatbot-container {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 380px;
+    height: 500px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+}
+
+/* Header */
+#thorius-chatbot-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 15px 15px 0 0;
+}
+
+.thorius-avatar {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.thorius-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    margin-right: 12px;
+    background: white;
+}
+
+.thorius-status-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 8px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.thorius-status-indicator.thorius-online {
+    background: #27ae60;
+}
+
+.thorius-info h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.thorius-info p {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.thorius-btn-minimize,
+.thorius-btn-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    transition: background 0.2s ease;
+}
+
+.thorius-btn-minimize:hover,
+.thorius-btn-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Messages Area */
+#thorius-chatbot-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+.thorius-message {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.thorius-message.thorius-user {
+    justify-content: flex-end;
+}
+
+.thorius-message-content {
+    max-width: 70%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.thorius-message.thorius-bot .thorius-message-content {
+    background: white;
+    border: 1px solid #e9ecef;
+    color: #333;
+    border-bottom-left-radius: 8px;
+}
+
+.thorius-message.thorius-user .thorius-message-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-bottom-right-radius: 8px;
+}
+
+.thorius-message-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.thorius-message-time {
+    font-size: 11px;
+    color: #999;
+    margin-top: 5px;
+    text-align: right;
+}
+
+.thorius-message.thorius-bot .thorius-message-time {
+    text-align: left;
+}
+
+/* Typing Indicator */
+.thorius-typing-indicator {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: white;
+    border-radius: 18px 18px 18px 8px;
+    margin-bottom: 15px;
+    max-width: 70%;
+}
+
+.thorius-typing-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.thorius-typing-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #999;
+    animation: thorius-typing 1.4s infinite;
+}
+
+.thorius-typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.thorius-typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes thorius-typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-10px); opacity: 1; }
+}
+
+/* Input Area */
+#thorius-chatbot-input {
+    padding: 15px 20px;
+    background: white;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#thorius-message-input {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    padding: 12px 16px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+#thorius-message-input:focus {
+    border-color: #667eea;
+}
+
+#thorius-send-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+#thorius-send-btn:hover {
+    transform: scale(1.05);
+}
+
+#thorius-send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Quick Actions */
+#thorius-quick-actions {
+    padding: 10px 20px 15px;
+    background: white;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.thorius-quick-btn {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 15px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #666;
+}
+
+.thorius-quick-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* Suggested Actions */
+.thorius-suggested-actions {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.thorius-action-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.thorius-action-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    #thorius-chatbot-container {
+        width: calc(100vw - 40px);
+        height: calc(100vh - 120px);
+        bottom: 80px;
+        right: 20px;
+        left: 20px;
+    }
+    
+    .thorius-chat-toggle {
+        bottom: 15px;
+        right: 15px;
+    }
+}
+
+/* Scrollbar Styling */
+#thorius-chatbot-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+#thorius-chatbot-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+#thorius-chatbot-messages::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+#thorius-chatbot-messages::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Animations */
+@keyframes thorius-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.thorius-message {
+    animation: thorius-slide-up 0.3s ease;
+}
+
+/* Warning/Error Messages */
+.thorius-warning-message {
+    background: #fff3cd !important;
+    border: 1px solid #ffeaa7 !important;
+    color: #856404 !important;
+}
+
+.thorius-error-message {
+    background: #f8d7da !important;
+    border: 1px solid #f5c6cb !important;
+    color: #721c24 !important;
+}
+
+.thorius-success-message {
+    background: #d1edff !important;
+    border: 1px solid #bee5eb !important;
+    color: #0c5460 !important;
+} 

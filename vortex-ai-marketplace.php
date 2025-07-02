@@ -75,6 +75,9 @@ function deactivate_vortex_ai_marketplace() {
 register_activation_hook( __FILE__, 'activate_vortex_ai_marketplace' );
 register_deactivation_hook( __FILE__, 'deactivate_vortex_ai_marketplace' );
 
+// VORTEX SYSTEM INITIALIZER - Load first to coordinate all components
+require_once plugin_dir_path(__FILE__) . 'includes/class-vortex-system-initializer.php';
+
 // Include the AI components first
 require_once plugin_dir_path(__FILE__) . 'includes/class-vortex-user-events.php';
 require_once plugin_dir_path(__FILE__) . 'includes/traits/trait-vortex-cloe-analytics.php';

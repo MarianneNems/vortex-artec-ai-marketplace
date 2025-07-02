@@ -1,0 +1,725 @@
+/**
+ * VORTEX SYSTEM ADMIN CSS
+ * 
+ * Modern admin interface styling for all VORTEX AI components
+ * Optimized for WordPress admin with dark mode support
+ */
+
+/* ==========================================
+   GLOBAL VARIABLES & BASE STYLES
+   ========================================== */
+
+:root {
+    --vortex-primary: #7209b7;
+    --vortex-secondary: #00d2ff;
+    --vortex-success: #28a745;
+    --vortex-warning: #ffc107;
+    --vortex-danger: #dc3545;
+    --vortex-info: #17a2b8;
+    
+    --vortex-bg-primary: #ffffff;
+    --vortex-bg-secondary: #f8f9fa;
+    --vortex-bg-accent: #f1f1f1;
+    --vortex-text-primary: #2d3748;
+    --vortex-text-secondary: #718096;
+    --vortex-border: #e2e8f0;
+    
+    --vortex-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --vortex-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --vortex-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    
+    --vortex-border-radius: 8px;
+    --vortex-transition: all 0.3s ease;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --vortex-bg-primary: #1a202c;
+        --vortex-bg-secondary: #2d3748;
+        --vortex-bg-accent: #4a5568;
+        --vortex-text-primary: #f7fafc;
+        --vortex-text-secondary: #cbd5e0;
+        --vortex-border: #4a5568;
+    }
+}
+
+/* ==========================================
+   MAIN DASHBOARD LAYOUT
+   ========================================== */
+
+.vortex-system-dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.vortex-system-dashboard .wp-heading-inline {
+    color: var(--vortex-primary);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vortex-system-dashboard .description {
+    color: var(--vortex-text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* ==========================================
+   STATUS GRID LAYOUT
+   ========================================== */
+
+.vortex-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 3rem;
+}
+
+.vortex-status-card {
+    background: var(--vortex-bg-primary);
+    border: 1px solid var(--vortex-border);
+    border-radius: var(--vortex-border-radius);
+    box-shadow: var(--vortex-shadow-md);
+    overflow: hidden;
+    transition: var(--vortex-transition);
+}
+
+.vortex-status-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--vortex-shadow-lg);
+}
+
+.vortex-status-card .card-header {
+    background: linear-gradient(135deg, var(--vortex-primary), var(--vortex-secondary));
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.vortex-status-card .card-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vortex-status-card .card-content {
+    padding: 20px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--vortex-border);
+}
+
+.stat-row:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: var(--vortex-text-secondary);
+    font-weight: 500;
+}
+
+.stat-value {
+    color: var(--vortex-text-primary);
+    font-weight: 600;
+}
+
+/* ==========================================
+   STATUS INDICATORS
+   ========================================== */
+
+.status-indicator {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-excellent,
+.status-active,
+.status-connected {
+    background: var(--vortex-success);
+    color: white;
+}
+
+.status-warning {
+    background: var(--vortex-warning);
+    color: #000;
+}
+
+.status-inactive,
+.status-error {
+    background: var(--vortex-danger);
+    color: white;
+}
+
+.status-info {
+    background: var(--vortex-info);
+    color: white;
+}
+
+/* ==========================================
+   SECRET SAUCE SPECIAL STYLING
+   ========================================== */
+
+.secret-sauce-status {
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    border: 2px solid #ffd700;
+}
+
+.secret-sauce-status .card-header {
+    background: linear-gradient(135deg, #ffd700, #ffed4a);
+    color: #000;
+}
+
+.secret-sauce-locked {
+    padding: 16px;
+    background: rgba(255, 215, 0, 0.1);
+    border: 2px dashed #ffd700;
+    border-radius: var(--vortex-border-radius);
+    text-align: center;
+    color: #ffd700;
+    font-weight: 600;
+}
+
+.secret-sauce-locked .dashicons {
+    font-size: 1.2rem;
+    margin-right: 8px;
+}
+
+/* ==========================================
+   AI AGENTS GRID
+   ========================================== */
+
+.vortex-section {
+    margin-bottom: 3rem;
+}
+
+.vortex-section h2 {
+    color: var(--vortex-primary);
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.agent-card {
+    background: var(--vortex-bg-primary);
+    border: 1px solid var(--vortex-border);
+    border-radius: var(--vortex-border-radius);
+    box-shadow: var(--vortex-shadow-sm);
+    overflow: hidden;
+    transition: var(--vortex-transition);
+}
+
+.agent-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--vortex-shadow-lg);
+}
+
+.agent-header {
+    padding: 20px;
+    background: var(--vortex-bg-secondary);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.agent-avatar {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--vortex-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.agent-info h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--vortex-text-primary);
+}
+
+.agent-info p {
+    margin: 4px 0 0;
+    color: var(--vortex-text-secondary);
+    font-size: 0.9rem;
+}
+
+.agent-status {
+    margin-left: auto;
+}
+
+.agent-metrics {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--vortex-border);
+}
+
+.metric {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.metric:last-child {
+    margin-bottom: 0;
+}
+
+.metric-label {
+    color: var(--vortex-text-secondary);
+    font-size: 0.9rem;
+}
+
+.metric-value {
+    color: var(--vortex-text-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.agent-actions {
+    padding: 15px 20px;
+    display: flex;
+    gap: 10px;
+}
+
+/* ==========================================
+   BUTTONS & CONTROLS
+   ========================================== */
+
+.agent-control-btn,
+.quick-action-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--vortex-border-radius);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--vortex-transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.agent-control-btn {
+    background: var(--vortex-bg-accent);
+    color: var(--vortex-text-primary);
+    border: 1px solid var(--vortex-border);
+}
+
+.agent-control-btn:hover {
+    background: var(--vortex-primary);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.card-actions {
+    padding: 15px 20px;
+    border-top: 1px solid var(--vortex-border);
+}
+
+.card-actions .button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+
+/* ==========================================
+   QUICK ACTIONS GRID
+   ========================================== */
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.quick-action-btn {
+    padding: 15px 20px;
+    background: var(--vortex-bg-primary);
+    border: 2px solid var(--vortex-border);
+    color: var(--vortex-text-primary);
+    text-align: center;
+    justify-content: center;
+    min-height: 60px;
+}
+
+.quick-action-btn:hover {
+    background: var(--vortex-primary);
+    color: white;
+    border-color: var(--vortex-primary);
+    transform: translateY(-2px);
+}
+
+.quick-action-btn.primary {
+    background: var(--vortex-primary);
+    color: white;
+    border-color: var(--vortex-primary);
+}
+
+.quick-action-btn.primary:hover {
+    background: var(--vortex-secondary);
+    border-color: var(--vortex-secondary);
+}
+
+.quick-action-btn.warning {
+    background: var(--vortex-warning);
+    color: #000;
+    border-color: var(--vortex-warning);
+}
+
+.quick-action-btn.warning:hover {
+    background: var(--vortex-danger);
+    color: white;
+    border-color: var(--vortex-danger);
+}
+
+/* ==========================================
+   ACTIVITY MONITOR
+   ========================================== */
+
+.activity-monitor {
+    background: var(--vortex-bg-primary);
+    border: 1px solid var(--vortex-border);
+    border-radius: var(--vortex-border-radius);
+    box-shadow: var(--vortex-shadow-sm);
+}
+
+.activity-log {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.log-entry {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--vortex-border);
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 0.85rem;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.log-entry .timestamp {
+    color: var(--vortex-text-secondary);
+    font-weight: 500;
+    min-width: 80px;
+}
+
+.log-entry .level {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    min-width: 50px;
+    text-align: center;
+}
+
+.log-entry .level.info {
+    background: var(--vortex-info);
+    color: white;
+}
+
+.log-entry .level.warning {
+    background: var(--vortex-warning);
+    color: #000;
+}
+
+.log-entry .level.error {
+    background: var(--vortex-danger);
+    color: white;
+}
+
+.log-entry .level.success {
+    background: var(--vortex-success);
+    color: white;
+}
+
+.log-entry .message {
+    color: var(--vortex-text-primary);
+    flex: 1;
+}
+
+/* ==========================================
+   SYSTEM INFORMATION
+   ========================================== */
+
+.system-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.info-card {
+    background: var(--vortex-bg-primary);
+    border: 1px solid var(--vortex-border);
+    border-radius: var(--vortex-border-radius);
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--vortex-shadow-sm);
+    transition: var(--vortex-transition);
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--vortex-shadow-md);
+}
+
+.info-card h3 {
+    margin: 0 0 10px;
+    color: var(--vortex-text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-card p {
+    margin: 0;
+    color: var(--vortex-text-primary);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* ==========================================
+   LOADING OVERLAY
+   ========================================== */
+
+.vortex-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+}
+
+.vortex-spinner {
+    text-align: center;
+    color: white;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid var(--vortex-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.vortex-spinner p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ==========================================
+   SPECIAL EFFECTS
+   ========================================== */
+
+/* ARCHER card special styling */
+.archer-status {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.archer-status .card-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+/* HURAII card special styling */
+.agent-card.huraii {
+    border-left: 4px solid #ff6b6b;
+}
+
+.agent-card.huraii .agent-avatar {
+    background: linear-gradient(135deg, #ff6b6b, #ffa500);
+}
+
+/* CHLOE card special styling */
+.agent-card.chloe {
+    border-left: 4px solid #4ecdc4;
+}
+
+.agent-card.chloe .agent-avatar {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+}
+
+/* HORACE card special styling */
+.agent-card.horace {
+    border-left: 4px solid #45b7d1;
+}
+
+.agent-card.horace .agent-avatar {
+    background: linear-gradient(135deg, #45b7d1, #96c93d);
+}
+
+/* THORIUS card special styling */
+.agent-card.thorius {
+    border-left: 4px solid #f39c12;
+}
+
+.agent-card.thorius .agent-avatar {
+    background: linear-gradient(135deg, #f39c12, #d35400);
+}
+
+/* Smart contracts card special styling */
+.smart-contracts-status {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.smart-contracts-status .card-header {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+@media (max-width: 1200px) {
+    .vortex-status-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .vortex-system-dashboard {
+        padding: 15px;
+    }
+    
+    .vortex-status-grid,
+    .agents-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .system-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .agent-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .agent-status {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .quick-actions-grid,
+    .system-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .agent-actions {
+        flex-direction: column;
+    }
+    
+    .vortex-system-dashboard .wp-heading-inline {
+        font-size: 1.8rem;
+    }
+}
+
+/* ==========================================
+   WORDPRESS ADMIN COMPATIBILITY
+   ========================================== */
+
+.wp-admin .vortex-system-dashboard .notice {
+    margin: 15px 0;
+}
+
+.wp-admin .vortex-system-dashboard .button {
+    padding: 8px 16px;
+    font-weight: 600;
+}
+
+.wp-admin .vortex-system-dashboard .button-primary {
+    background: var(--vortex-primary);
+    border-color: var(--vortex-primary);
+}
+
+.wp-admin .vortex-system-dashboard .button-primary:hover {
+    background: var(--vortex-secondary);
+    border-color: var(--vortex-secondary);
+}
+
+/* ==========================================
+   ACCESSIBILITY
+   ========================================== */
+
+.vortex-system-dashboard button:focus,
+.vortex-system-dashboard .button:focus {
+    outline: 2px solid var(--vortex-primary);
+    outline-offset: 2px;
+}
+
+.vortex-system-dashboard .status-indicator {
+    border: 2px solid transparent;
+}
+
+.vortex-system-dashboard .status-indicator:focus {
+    border-color: var(--vortex-primary);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --vortex-border: #000;
+        --vortex-text-secondary: #000;
+    }
+    
+    .vortex-status-card {
+        border-width: 2px;
+    }
+} 
