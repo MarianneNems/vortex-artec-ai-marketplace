@@ -1,5 +1,14 @@
+# Production dependencies
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
-pydantic==2.5.0
+pydantic==2.5.2
+
+# Development dependencies
 pytest==7.4.3
-httpx==0.25.2 
+httpx==0.25.2
+black==25.1.0
+flake8==7.3.0
+
+# Security scanning (optional for CI)
+safety==3.2.5
+bandit==1.8.0 

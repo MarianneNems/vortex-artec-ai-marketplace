@@ -4,9 +4,11 @@ from typing import Any, Dict
 
 router = APIRouter()
 
+
 class AnalyzeRequest(BaseModel):
     data: Dict[str, Any]
     analysis_type: str = "market"
+
 
 @router.get("/recommendations")
 async def get_recommendations():
@@ -21,8 +23,8 @@ async def get_recommendations():
                 "reasons": [
                     "Matches user's style preferences",
                     "Trending in similar markets",
-                    "Price within budget range"
-                ]
+                    "Price within budget range",
+                ],
             },
             {
                 "id": "rec_002",
@@ -30,15 +32,13 @@ async def get_recommendations():
                 "title": "Modern Abstracts Collection",
                 "artist": "Bob Digital",
                 "confidence": 0.87,
-                "reasons": [
-                    "High investment potential",
-                    "Artist gaining popularity"
-                ]
-            }
+                "reasons": ["High investment potential", "Artist gaining popularity"],
+            },
         ],
         "generated_at": "2024-01-15T10:30:00Z",
-        "total_count": 2
+        "total_count": 2,
     }
+
 
 @router.post("/analyze")
 async def analyze_data(request: AnalyzeRequest):
@@ -52,18 +52,18 @@ async def analyze_data(request: AnalyzeRequest):
             "key_insights": [
                 "Strong market demand detected",
                 "Price volatility within normal range",
-                "Positive sentiment indicators"
+                "Positive sentiment indicators",
             ],
             "metrics": {
                 "market_strength": 0.82,
                 "trend_alignment": 0.75,
-                "competition_level": 0.68
-            }
+                "competition_level": 0.68,
+            },
         },
         "recommendations": [
             "Consider increasing exposure",
             "Monitor for price changes",
-            "Diversify with related assets"
+            "Diversify with related assets",
         ],
-        "processed_at": "2024-01-15T10:30:00Z"
-    } 
+        "processed_at": "2024-01-15T10:30:00Z",
+    }

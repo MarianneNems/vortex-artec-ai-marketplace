@@ -1,0 +1,100 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install flake8 black
+    
+    - name: Code formatting check with Black
+      run: |
+        black --check --diff server/ tests/
+    
+    - name: Lint with flake8
+      run: |
+        # Stop build if there are Python syntax errors or undefined names
+        flake8 server/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings. Line length set to 88 (Black's default)
+        flake8 server/ tests/ --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+    
+    - name: Test with pytest - API Stubs
+      run: |
+        pytest tests/test_api_stubs.py -v --tb=short
+    
+    - name: Test API endpoint coverage
+      run: |
+        # Ensure all endpoints return 200
+        pytest tests/test_api_stubs.py --maxfail=1 --disable-warnings -q
+    
+    - name: Start FastAPI server (smoke test)
+      run: |
+        # Test that the server can start without errors
+        timeout 10s uvicorn server.main:app --host 0.0.0.0 --port 8000 &
+        sleep 5
+        curl -f http://localhost:8000/health || exit 1
+        curl -f http://localhost:8000/ || exit 1
+
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+    
+    - name: Install security tools
+      run: |
+        pip install safety bandit
+    
+    - name: Check for security vulnerabilities
+      run: |
+        safety check --json
+        bandit -r server/ -f json
+    
+    continue-on-error: true
+
+  docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Validate API documentation
+      run: |
+        # Check that API docs exist and are not empty
+        test -f docs/api-documentation.md
+        test -s docs/api-documentation.md
+        echo "✅ API documentation validation passed" 
