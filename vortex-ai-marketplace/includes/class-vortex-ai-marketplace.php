@@ -3,20 +3,18 @@
  * The core plugin class.
  *
  * This is used to define internationalization, admin-specific hooks, and
- * public-facing site hooks.
+ * public-facing site hooks for the Artist Journey implementation.
  *
- * @since      1.0.0
+ * @since      2.0.0
  * @package    Vortex_AI_Marketplace
  * @subpackage Vortex_AI_Marketplace/includes
  */
-
 class Vortex_AI_Marketplace {
 
     /**
-     * The loader that's responsible for maintaining and registering all hooks that power
-     * the plugin.
+     * The loader that's responsible for maintaining and registering all hooks.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   protected
      * @var      Vortex_Loader    $loader    Maintains and registers all hooks for the plugin.
      */
@@ -25,7 +23,7 @@ class Vortex_AI_Marketplace {
     /**
      * The unique identifier of this plugin.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   protected
      * @var      string    $plugin_name    The string used to uniquely identify this plugin.
      */
@@ -34,7 +32,7 @@ class Vortex_AI_Marketplace {
     /**
      * The current version of the plugin.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   protected
      * @var      string    $version    The current version of the plugin.
      */
@@ -43,17 +41,13 @@ class Vortex_AI_Marketplace {
     /**
      * Define the core functionality of the plugin.
      *
-     * Set the plugin name and the plugin version that can be used throughout the plugin.
-     * Load the dependencies, define the locale, and set the hooks for the admin area and
-     * the public-facing side of the site.
-     *
-     * @since    1.0.0
+     * @since    2.0.0
      */
     public function __construct() {
-        if ( defined( 'VORTEX_AI_MARKETPLACE_VERSION' ) ) {
+        if (defined('VORTEX_AI_MARKETPLACE_VERSION')) {
             $this->version = VORTEX_AI_MARKETPLACE_VERSION;
         } else {
-            $this->version = '1.0.0';
+            $this->version = '2.0.0';
         }
         $this->plugin_name = 'vortex-ai-marketplace';
 
@@ -61,59 +55,47 @@ class Vortex_AI_Marketplace {
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
-        $this->define_post_types();
-        $this->define_metrics_hooks();
-        $this->define_huraii_hooks();
-        $this->define_blockchain_hooks();
-        $this->define_tola_hooks();
+        $this->define_api_hooks();
     }
 
     /**
      * Load the required dependencies for this plugin.
      *
-     * Include the following files that make up the plugin:
-     *
-     * - Vortex_Loader. Orchestrates the hooks of the plugin.
-     * - Vortex_i18n. Defines internationalization functionality.
-     * - Vortex_Admin. Defines all hooks for the admin area.
-     * - Vortex_Public. Defines all hooks for the public side of the site.
-     *
-     * Create an instance of the loader which will be used to register the hooks
-     * with WordPress.
-     *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      */
     private function load_dependencies() {
-        // The class responsible for orchestrating the actions and filters of the core plugin.
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-vortex-loader.php';
+        // Core classes
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/class-vortex-loader.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/class-vortex-i18n.php';
 
-        // The class responsible for defining internationalization functionality of the plugin.
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-vortex-i18n.php';
+        // Custom Post Types and Taxonomies
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/class-vortex-post-types.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/class-vortex-taxonomies.php';
 
-        // The class responsible for defining all actions that occur in the admin area.
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-vortex-admin.php';
+        // API Classes
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/class-vortex-ai-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-plans-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-wallet-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-quiz-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-milestones-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-collections-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-listings-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-chloe-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-generate-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-nft-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-admin-api.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/api/class-rewards-api.php';
 
-        // The class responsible for defining all actions that occur in the public-facing side of the site.
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-vortex-public.php';
+        // Shortcodes and Widgets
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/class-vortex-shortcodes.php';
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'includes/class-vortex-elementor.php';
 
-        // Load post types
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/post-types/class-vortex-artwork.php';
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/post-types/class-vortex-artist.php';
+        // Admin classes
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'admin/class-vortex-admin.php';
 
-        // Load metrics and rankings
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-vortex-metrics.php';
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-vortex-rankings.php';
-
-        // Load HURAII AI integration
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-vortex-huraii.php';
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-vortex-image-processor.php';
-
-        // Load blockchain integration
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-vortex-blockchain.php';
-
-        // Load TOLA token integration
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/blockchain/class-vortex-tola.php';
+        // Public classes
+        require_once VORTEX_AI_MARKETPLACE_PLUGIN_DIR . 'public/class-vortex-public.php';
 
         $this->loader = new Vortex_Loader();
     }
@@ -121,137 +103,106 @@ class Vortex_AI_Marketplace {
     /**
      * Define the locale for this plugin for internationalization.
      *
-     * Uses the Vortex_i18n class in order to set the domain and to register the hook
-     * with WordPress.
-     *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      */
     private function set_locale() {
         $plugin_i18n = new Vortex_i18n();
-        $plugin_i18n->set_domain( $this->get_plugin_name() );
-
-        $this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+        $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
     }
 
     /**
-     * Register all of the hooks related to the admin area functionality
-     * of the plugin.
+     * Register all of the hooks related to the admin area functionality.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      */
     private function define_admin_hooks() {
-        $plugin_admin = new Vortex_Admin( $this->get_plugin_name(), $this->get_version() );
-
-        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-        $this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
+        $plugin_admin = new Vortex_Admin($this->get_plugin_name(), $this->get_version());
+        
+        // Admin menu and pages
+        $this->loader->add_action('admin_menu', $plugin_admin, 'add_admin_menu');
+        $this->loader->add_action('admin_init', $plugin_admin, 'admin_init');
     }
 
     /**
-     * Register all of the hooks related to the public-facing functionality
-     * of the plugin.
+     * Register all of the hooks related to the public-facing functionality.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      */
     private function define_public_hooks() {
-        $plugin_public = new Vortex_Public( $this->get_plugin_name(), $this->get_version() );
+        $plugin_public = new Vortex_Public($this->get_plugin_name(), $this->get_version());
+        
+        // Shortcodes
+        $shortcodes = new Vortex_Shortcodes();
+        $this->loader->add_action('init', $shortcodes, 'register_shortcodes');
 
-        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+        // Elementor widgets
+        if (did_action('elementor/loaded')) {
+            $elementor = new Vortex_Elementor();
+            $this->loader->add_action('elementor/widgets/widgets_registered', $elementor, 'register_widgets');
+        }
     }
 
     /**
-     * Register custom post types and taxonomies.
+     * Register all API-related hooks.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      */
-    private function define_post_types() {
-        // Include post type classes
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/post-types/class-vortex-artwork.php';
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/post-types/class-vortex-huraii-template.php';
-        
-        // Initialize post type objects
-        $artwork = new Vortex_Artwork();
-        $huraii_template = new Vortex_Huraii_Template();
+    private function define_api_hooks() {
+        // Custom Post Types
+        $post_types = new Vortex_Post_Types();
+        $this->loader->add_action('init', $post_types, 'register_post_types');
 
-        // Register post types on WordPress init
-        $this->loader->add_action('init', $artwork, 'register');
-        $this->loader->add_action('init', $huraii_template, 'register');
-    }
+        // Taxonomies
+        $taxonomies = new Vortex_Taxonomies();
+        $this->loader->add_action('init', $taxonomies, 'register_taxonomies');
 
-    /**
-     * Register metrics and rankings hooks.
-     *
-     * @since    1.0.0
-     * @access   private
-     */
-    private function define_metrics_hooks() {
-        $metrics = new Vortex_Metrics($this->get_plugin_name(), $this->get_version());
-        $rankings = new Vortex_Rankings($this->get_plugin_name(), $this->get_version());
+        // Main API class
+        $api = new Vortex_AI_API();
+        $this->loader->add_action('rest_api_init', $api, 'register_routes');
 
-        $this->loader->add_action('init', $metrics, 'initialize_metrics');
-        $this->loader->add_action('init', $rankings, 'initialize_rankings');
-    }
+        // Individual API handlers
+        $plans_api = new Vortex_Plans_API();
+        $this->loader->add_action('rest_api_init', $plans_api, 'register_routes');
 
-    /**
-     * Register HURAII AI integration hooks.
-     *
-     * @since    1.0.0
-     * @access   private
-     */
-    private function define_huraii_hooks() {
-        $huraii = new Vortex_Huraii($this->get_plugin_name(), $this->get_version());
-        $image_processor = new Vortex_Image_Processor($this->get_plugin_name(), $this->get_version());
+        $wallet_api = new Vortex_Wallet_API();
+        $this->loader->add_action('rest_api_init', $wallet_api, 'register_routes');
 
-        $this->loader->add_action('init', $huraii, 'initialize_huraii');
-        $this->loader->add_action('init', $image_processor, 'initialize_processor');
-    }
+        $quiz_api = new Vortex_Quiz_API();
+        $this->loader->add_action('rest_api_init', $quiz_api, 'register_routes');
 
-    /**
-     * Register blockchain integration hooks.
-     *
-     * @since    1.0.0
-     * @access   private
-     */
-    private function define_blockchain_hooks() {
-        $blockchain = new Vortex_Blockchain($this->get_plugin_name(), $this->get_version());
+        $milestones_api = new Vortex_Milestones_API();
+        $this->loader->add_action('rest_api_init', $milestones_api, 'register_routes');
 
-        $this->loader->add_action('init', $blockchain, 'initialize_blockchain');
-    }
+        $collections_api = new Vortex_Collections_API();
+        $this->loader->add_action('rest_api_init', $collections_api, 'register_routes');
 
-    /**
-     * Register TOLA token integration hooks.
-     *
-     * @since    1.0.0
-     * @access   private
-     */
-    private function define_tola_hooks() {
-        // Initialize TOLA token integration
-        $tola = new Vortex_TOLA();
-        
-        // Register admin settings
-        $this->loader->add_action('admin_init', $tola, 'register_admin_settings');
-        
-        // Add meta boxes for product pricing
-        $this->loader->add_action('add_meta_boxes', $tola, 'add_product_meta_boxes');
-        
-        // Save meta box data
-        $this->loader->add_action('save_post_vortex_product', $tola, 'save_tola_pricing_meta_box');
-        
-        // Filter content to check access
-        $this->loader->add_filter('the_content', $tola, 'check_content_access', 20);
-        
-        // AJAX handlers are already defined in the TOLA class constructor
+        $listings_api = new Vortex_Listings_API();
+        $this->loader->add_action('rest_api_init', $listings_api, 'register_routes');
+
+        $chloe_api = new Vortex_Chloe_API();
+        $this->loader->add_action('rest_api_init', $chloe_api, 'register_routes');
+
+        $generate_api = new Vortex_Generate_API();
+        $this->loader->add_action('rest_api_init', $generate_api, 'register_routes');
+
+        $nft_api = new Vortex_NFT_API();
+        $this->loader->add_action('rest_api_init', $nft_api, 'register_routes');
+
+        $admin_api = new Vortex_Admin_API();
+        $this->loader->add_action('rest_api_init', $admin_api, 'register_routes');
+
+        $rewards_api = new Vortex_Rewards_API();
+        $this->loader->add_action('rest_api_init', $rewards_api, 'register_routes');
     }
 
     /**
      * Run the loader to execute all of the hooks with WordPress.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      */
     public function run() {
         $this->loader->run();
@@ -261,7 +212,7 @@ class Vortex_AI_Marketplace {
      * The name of the plugin used to uniquely identify it within the context of
      * WordPress and to define internationalization functionality.
      *
-     * @since     1.0.0
+     * @since     2.0.0
      * @return    string    The name of the plugin.
      */
     public function get_plugin_name() {
@@ -271,7 +222,7 @@ class Vortex_AI_Marketplace {
     /**
      * The reference to the class that orchestrates the hooks with the plugin.
      *
-     * @since     1.0.0
+     * @since     2.0.0
      * @return    Vortex_Loader    Orchestrates the hooks of the plugin.
      */
     public function get_loader() {
@@ -281,7 +232,7 @@ class Vortex_AI_Marketplace {
     /**
      * Retrieve the version number of the plugin.
      *
-     * @since     1.0.0
+     * @since     2.0.0
      * @return    string    The version number of the plugin.
      */
     public function get_version() {
