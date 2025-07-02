@@ -120,6 +120,10 @@ class Vortex_TOLA_Art_Daily_Automation {
         // Marketplace hooks
         add_action('vortex_artwork_sold', array($this, 'handle_artwork_sale'), 10, 3);
         
+        // WooCommerce integration hooks
+        add_action('woocommerce_order_status_completed', array($this, 'handle_woocommerce_purchase'));
+        add_action('woocommerce_payment_complete', array($this, 'handle_woocommerce_purchase'));
+        
         // Smart contract hooks
         add_action('vortex_deploy_royalty_contract', array($this, 'deploy_royalty_contract'));
         
@@ -141,12 +145,13 @@ class Vortex_TOLA_Art_Daily_Automation {
             id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             date date NOT NULL,
             artwork_id bigint(20) UNSIGNED DEFAULT NULL,
+            woocommerce_product_id bigint(20) UNSIGNED DEFAULT NULL,
             prompt longtext NOT NULL,
             generation_settings longtext DEFAULT NULL,
             huraii_response longtext DEFAULT NULL,
             marketplace_listing_id bigint(20) UNSIGNED DEFAULT NULL,
             smart_contract_address varchar(42) DEFAULT NULL,
-            generation_status enum('pending','generating','completed','failed','listed') DEFAULT 'pending',
+            generation_status enum('pending','generating','completed','failed','listed','sold') DEFAULT 'pending',
             total_sales decimal(18,8) UNSIGNED DEFAULT 0,
             royalties_distributed decimal(18,8) UNSIGNED DEFAULT 0,
             participating_artists_count int UNSIGNED DEFAULT 0,
@@ -155,6 +160,7 @@ class Vortex_TOLA_Art_Daily_Automation {
             PRIMARY KEY (id),
             UNIQUE KEY unique_date (date),
             KEY artwork_id (artwork_id),
+            KEY woocommerce_product_id (woocommerce_product_id),
             KEY generation_status (generation_status)
         ) $charset_collate;";
         
@@ -426,8 +432,8 @@ class Vortex_TOLA_Art_Daily_Automation {
         
         // Create artwork post
         $artwork_post = array(
-            'post_title' => 'TOLA-ART of the Day - ' . date('F j, Y'),
-            'post_content' => 'Daily AI-generated artwork created by HURAII for the VORTEX ARTEC community. This unique piece features algorithmic creativity with blockchain-verified provenance.',
+            'post_title' => 'TOLA Masterwork - ' . date('F j, Y'),
+            'post_content' => 'Daily AI-generated masterwork created by HURAII for the VORTEX ARTEC community. This unique piece features algorithmic creativity with blockchain-verified provenance.',
             'post_status' => 'publish',
             'post_type' => 'artwork',
             'post_author' => $this->admin_account_id,
@@ -536,15 +542,19 @@ class Vortex_TOLA_Art_Daily_Automation {
     private function list_on_marketplace($artwork_id, $daily_art_id, $contract_address) {
         global $wpdb;
         
+        // Update the existing WooCommerce product with today's artwork
+        $wc_product_id = $this->update_woocommerce_product($artwork_id, $daily_art_id, $contract_address);
+        
         // Create marketplace listing
         $marketplace_table = $wpdb->prefix . 'vortex_marketplace_listings';
         
         $listing_data = array(
             'artwork_id' => $artwork_id,
+            'woocommerce_product_id' => $wc_product_id,
             'seller_id' => $this->admin_account_id,
             'seller_name' => 'VORTEX ARTEC',
-            'price' => 100, // 100 TOLA
-            'currency' => 'TOLA',
+            'price' => 4500, // $4,500 USD (converted to TOLA)
+            'currency' => 'USD',
             'listing_type' => 'fixed_price',
             'smart_contract_address' => $contract_address,
             'is_featured' => true,
@@ -554,12 +564,15 @@ class Vortex_TOLA_Art_Daily_Automation {
             'creator_royalty' => $this->creator_royalty_percentage,
             'listing_status' => 'active',
             'visibility' => 'public',
+            'woocommerce_integration' => true,
             'metadata' => json_encode(array(
                 'daily_art_id' => $daily_art_id,
                 'generation_date' => current_time('Y-m-d'),
                 'ai_agent' => 'HURAII',
                 'automated_listing' => true,
-                'community_artwork' => true
+                'community_artwork' => true,
+                'woocommerce_sku' => 'Tola-art-daily',
+                'product_url' => home_url('/product/tola-masterwork-daily-art-drop-at-0000-limited-series/')
             ))
         );
         
@@ -571,16 +584,20 @@ class Vortex_TOLA_Art_Daily_Automation {
             // Update daily art record
             $wpdb->update(
                 $this->daily_art_table,
-                array('marketplace_listing_id' => $listing_id),
+                array(
+                    'marketplace_listing_id' => $listing_id,
+                    'woocommerce_product_id' => $wc_product_id
+                ),
                 array('id' => $daily_art_id),
-                array('%d'),
+                array('%d', '%d'),
                 array('%d')
             );
             
             // Update artwork metadata
             update_post_meta($artwork_id, 'marketplace_listing_id', $listing_id);
-            update_post_meta($artwork_id, 'listing_price', 100);
-            update_post_meta($artwork_id, 'listing_currency', 'TOLA');
+            update_post_meta($artwork_id, 'woocommerce_product_id', $wc_product_id);
+            update_post_meta($artwork_id, 'listing_price', 4500);
+            update_post_meta($artwork_id, 'listing_currency', 'USD');
             
             return $listing_id;
         }
@@ -588,6 +605,157 @@ class Vortex_TOLA_Art_Daily_Automation {
         return false;
     }
     
+    /**
+     * Update WooCommerce product with daily artwork
+     */
+    private function update_woocommerce_product($artwork_id, $daily_art_id, $contract_address) {
+        // Find the TOLA Masterwork product by SKU
+        $product_id = wc_get_product_id_by_sku('Tola-art-daily');
+        
+        if (!$product_id) {
+            // Create the product if it doesn't exist
+            $product_id = $this->create_tola_masterwork_product();
+        }
+        
+        if (!$product_id) {
+            error_log("TOLA-ART: Failed to find or create WooCommerce product");
+            return false;
+        }
+        
+        $product = wc_get_product($product_id);
+        
+        if (!$product) {
+            error_log("TOLA-ART: Failed to load WooCommerce product");
+            return false;
+        }
+        
+        // Get today's artwork details
+        $artwork_post = get_post($artwork_id);
+        $image_url = get_post_meta($artwork_id, 'image_url', true);
+        $generation_date = current_time('F j, Y');
+        
+        // Update product title with today's date
+        $product->set_name("TOLA Masterwork - {$generation_date}");
+        
+        // Update product description
+        $description = "Today's AI-generated masterwork created by HURAII for the VORTEX ARTEC community. " .
+                      "This unique piece features algorithmic creativity with blockchain-verified provenance. " .
+                      "Generated on {$generation_date} with smart contract verification.";
+        
+        $product->set_description($description);
+        $product->set_short_description("Daily TOLA Masterwork - Limited Edition AI Art with Blockchain Provenance");
+        
+        // Set product as in stock and purchasable
+        $product->set_stock_status('instock');
+        $product->set_manage_stock(true);
+        $product->set_stock_quantity(1); // Limited to 1 per day
+        $product->set_catalog_visibility('visible');
+        
+        // Update product metadata
+        $product->update_meta_data('_artwork_id', $artwork_id);
+        $product->update_meta_data('_daily_art_id', $daily_art_id);
+        $product->update_meta_data('_smart_contract_address', $contract_address);
+        $product->update_meta_data('_generation_date', current_time('Y-m-d'));
+        $product->update_meta_data('_ai_agent', 'HURAII');
+        $product->update_meta_data('_blockchain_verified', true);
+        $product->update_meta_data('_is_tola_masterwork', true);
+        
+        // Handle product image if available
+        if ($image_url) {
+            $image_id = $this->attach_image_to_product($image_url, $product_id, $generation_date);
+            if ($image_id) {
+                $product->set_image_id($image_id);
+                
+                // Set as gallery image as well
+                $gallery_ids = array($image_id);
+                $product->set_gallery_image_ids($gallery_ids);
+            }
+        }
+        
+        // Save the product
+        $product->save();
+        
+        // Log successful update
+        error_log("TOLA-ART: Updated WooCommerce product #{$product_id} with daily artwork #{$artwork_id}");
+        
+        return $product_id;
+    }
+    
+    /**
+     * Create TOLA Masterwork WooCommerce product if it doesn't exist
+     */
+    private function create_tola_masterwork_product() {
+        $product = new WC_Product_Simple();
+        
+        $product->set_name('TOLA Masterwork (Daily Co-Creation at 00:00) Limited Series');
+        $product->set_slug('tola-masterwork-daily-art-drop-at-0000-limited-series');
+        $product->set_sku('Tola-art-daily');
+        $product->set_price(4500);
+        $product->set_regular_price(4500);
+        $product->set_status('publish');
+        $product->set_catalog_visibility('visible');
+        $product->set_stock_status('instock');
+        $product->set_manage_stock(true);
+        $product->set_stock_quantity(1);
+        
+        $description = '"TOLA Masterwork" is a daily incentive feature on the VORTEX platform that rewards the most impactful artistic contribution within a 24-hour cycle. Powered by AI, it selects one piece of art each day based on a mix of originality, engagement, and artistic integrity. The selected artist receives a bonus in TOLA tokens, special visibility across the platform, and earns a spotlight in the VORTEX ecosystem, encouraging consistent creativity and elevating quality over quantity.';
+        
+        $product->set_description($description);
+        $product->set_short_description('Daily AI-generated masterwork with blockchain provenance and artist royalties.');
+        
+        // Set product metadata
+        $product->update_meta_data('_is_tola_masterwork', true);
+        $product->update_meta_data('_daily_automation', true);
+        $product->update_meta_data('_ai_generated', true);
+        
+        $product_id = $product->save();
+        
+        if ($product_id) {
+            error_log("TOLA-ART: Created new WooCommerce product #{$product_id}");
+        }
+        
+        return $product_id;
+    }
+    
+    /**
+     * Attach image to WooCommerce product
+     */
+    private function attach_image_to_product($image_url, $product_id, $generation_date) {
+        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        
+        // Download image
+        $temp_file = download_url($image_url);
+        
+        if (is_wp_error($temp_file)) {
+            error_log("TOLA-ART: Failed to download image: " . $temp_file->get_error_message());
+            return false;
+        }
+        
+        // Prepare file array
+        $file_array = array(
+            'name' => "tola-masterwork-{$generation_date}.png",
+            'tmp_name' => $temp_file
+        );
+        
+        // Upload to media library
+        $attachment_id = media_handle_sideload($file_array, $product_id, "TOLA Masterwork - {$generation_date}");
+        
+        // Clean up temp file
+        @unlink($temp_file);
+        
+        if (is_wp_error($attachment_id)) {
+            error_log("TOLA-ART: Failed to attach image: " . $attachment_id->get_error_message());
+            return false;
+        }
+        
+        // Set as product featured image
+        set_post_thumbnail($product_id, $attachment_id);
+        
+        return $attachment_id;
+    }
+
     /**
      * Add participating artists
      */
@@ -694,6 +862,202 @@ class Vortex_TOLA_Art_Daily_Automation {
         if ($distribution_id) {
             // Execute distribution
             $this->execute_royalty_distribution($wpdb->insert_id);
+        }
+    }
+    
+    /**
+     * Handle WooCommerce purchase completion
+     */
+    public function handle_woocommerce_purchase($order_id) {
+        $order = wc_get_order($order_id);
+        
+        if (!$order) {
+            return;
+        }
+        
+        // Check if this order contains the TOLA Masterwork product
+        foreach ($order->get_items() as $item) {
+            $product = $item->get_product();
+            
+            if (!$product) {
+                continue;
+            }
+            
+            $sku = $product->get_sku();
+            
+            // Check if this is our TOLA Masterwork product
+            if ($sku === 'Tola-art-daily') {
+                $this->process_tola_masterwork_purchase($order, $item, $product);
+                break;
+            }
+        }
+    }
+    
+    /**
+     * Process TOLA Masterwork purchase
+     */
+    private function process_tola_masterwork_purchase($order, $item, $product) {
+        global $wpdb;
+        
+        $product_id = $product->get_id();
+        $order_id = $order->get_id();
+        $order_total = $order->get_total();
+        
+        // Get the associated artwork and daily art data
+        $artwork_id = $product->get_meta('_artwork_id');
+        $daily_art_id = $product->get_meta('_daily_art_id');
+        $smart_contract_address = $product->get_meta('_smart_contract_address');
+        
+        if (!$artwork_id || !$daily_art_id) {
+            error_log("TOLA-ART: Missing artwork or daily art ID for order #{$order_id}");
+            return;
+        }
+        
+        // Get participating artists count
+        $participating_artists = $wpdb->get_var($wpdb->prepare(
+            "SELECT participating_artists_count FROM {$this->daily_art_table} WHERE id = %d",
+            $daily_art_id
+        ));
+        
+        if ($participating_artists == 0) {
+            error_log("TOLA-ART: No participating artists for order #{$order_id}");
+            return;
+        }
+        
+        // Calculate royalty distribution (after 15% marketplace fee is deducted)
+        $net_amount = $order_total * 0.85; // Remove 15% marketplace fee
+        $creator_royalty = $net_amount * ($this->creator_royalty_percentage / 100); // 5% to Marianne Nems
+        $artist_pool = $net_amount * ($this->artist_pool_percentage / 100); // 80% to artists
+        $marketplace_fee = $order_total * 0.15; // 15% marketplace fee
+        $individual_artist_share = $artist_pool / $participating_artists;
+        
+        // Create unique transaction hash for this order
+        $transaction_hash = 'wc_order_' . $order_id . '_' . time();
+        
+        // Record royalty distribution
+        $distribution_id = $wpdb->insert(
+            $this->royalty_distribution_table,
+            array(
+                'daily_art_id' => $daily_art_id,
+                'sale_transaction_hash' => $transaction_hash,
+                'sale_amount' => $order_total,
+                'creator_royalty' => $creator_royalty,
+                'artist_pool' => $artist_pool,
+                'marketplace_fee' => $marketplace_fee,
+                'participating_artists' => $participating_artists,
+                'individual_artist_share' => $individual_artist_share,
+                'distribution_status' => 'pending'
+            ),
+            array('%d', '%s', '%f', '%f', '%f', '%f', '%d', '%f', '%s')
+        );
+        
+        if ($distribution_id) {
+            // Update daily art record with sale information
+            $wpdb->update(
+                $this->daily_art_table,
+                array(
+                    'total_sales' => $order_total,
+                    'royalties_distributed' => 0 // Will be updated after distribution
+                ),
+                array('id' => $daily_art_id),
+                array('%f', '%f'),
+                array('%d')
+            );
+            
+            // Add order metadata
+            $order->add_meta_data('_tola_masterwork_sale', true);
+            $order->add_meta_data('_artwork_id', $artwork_id);
+            $order->add_meta_data('_daily_art_id', $daily_art_id);
+            $order->add_meta_data('_distribution_id', $wpdb->insert_id);
+            $order->add_meta_data('_participating_artists', $participating_artists);
+            $order->add_meta_data('_creator_royalty', $creator_royalty);
+            $order->add_meta_data('_artist_pool', $artist_pool);
+            $order->save();
+            
+            // Execute royalty distribution
+            $this->execute_royalty_distribution($wpdb->insert_id);
+            
+            // Send notification emails
+            $this->notify_tola_masterwork_sale($order, $daily_art_id, $artwork_id);
+            
+            // Mark product as sold out (limit 1 per day)
+            $product->set_stock_quantity(0);
+            $product->set_stock_status('outofstock');
+            $product->save();
+            
+            error_log("TOLA-ART: Processed WooCommerce sale for order #{$order_id}, artwork #{$artwork_id}");
+        }
+    }
+    
+    /**
+     * Notify TOLA Masterwork sale
+     */
+    private function notify_tola_masterwork_sale($order, $daily_art_id, $artwork_id) {
+        global $wpdb;
+        
+        $artwork = get_post($artwork_id);
+        $customer_email = $order->get_billing_email();
+        $customer_name = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
+        
+        // Email to customer
+        $customer_subject = 'Thank you for purchasing today\'s TOLA Masterwork!';
+        $customer_message = "
+        <h2>TOLA Masterwork Purchase Confirmation</h2>
+        <p>Dear {$customer_name},</p>
+        
+        <p>Thank you for purchasing today's <strong>TOLA Masterwork</strong>: <em>{$artwork->post_title}</em></p>
+        
+        <p>Your purchase directly supports our community of artists through our automated royalty distribution system. 
+        80% of your purchase (after marketplace fees) will be distributed among all participating artists who contributed 
+        to today's collaborative creation.</p>
+        
+        <p><strong>Order Details:</strong></p>
+        <ul>
+            <li>Order ID: #{$order->get_id()}</li>
+            <li>Artwork: {$artwork->post_title}</li>
+            <li>Blockchain Verified: Yes</li>
+            <li>AI Agent: HURAII</li>
+        </ul>
+        
+        <p>You will receive your digital artwork and blockchain certificate within 24 hours.</p>
+        
+        <p>Best regards,<br>The VORTEX ARTEC Team</p>
+        ";
+        
+        wp_mail($customer_email, $customer_subject, $customer_message, array('Content-Type: text/html; charset=UTF-8'));
+        
+        // Email to participating artists
+        $participating_artists = $wpdb->get_results($wpdb->prepare(
+            "SELECT u.display_name, u.user_email, ap.participation_weight, ap.royalty_share
+             FROM {$this->artist_participation_table} ap
+             JOIN {$wpdb->users} u ON ap.user_id = u.ID
+             WHERE ap.daily_art_id = %d AND ap.payment_status = 'pending'",
+            $daily_art_id
+        ));
+        
+        foreach ($participating_artists as $artist) {
+            $artist_subject = 'Your TOLA Masterwork has been sold!';
+            $artist_message = "
+            <h2>TOLA Masterwork Sale Notification</h2>
+            <p>Dear {$artist->display_name},</p>
+            
+            <p>Great news! Today's TOLA Masterwork featuring your collaborative contribution has been sold!</p>
+            
+            <p><strong>Sale Details:</strong></p>
+            <ul>
+                <li>Artwork: {$artwork->post_title}</li>
+                <li>Your Royalty Share: \$" . number_format($artist->royalty_share, 2) . "</li>
+                <li>Participation Weight: " . number_format($artist->participation_weight, 2) . "</li>
+            </ul>
+            
+            <p>Your royalty payment will be processed automatically and transferred to your registered wallet address within 24 hours.</p>
+            
+            <p>Thank you for being part of the VORTEX ARTEC community!</p>
+            
+            <p>Best regards,<br>The VORTEX ARTEC Team</p>
+            ";
+            
+            wp_mail($artist->user_email, $artist_subject, $artist_message, array('Content-Type: text/html; charset=UTF-8'));
         }
     }
     

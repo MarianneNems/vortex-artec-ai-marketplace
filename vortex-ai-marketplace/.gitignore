@@ -1,0 +1,223 @@
+# WordPress Plugin Development
+# ===============================
+
+# WordPress Core Files
+wp-config.php
+wp-config-local.php
+wp-config-production.php
+.htaccess
+
+# WordPress Uploads
+uploads/
+wp-content/uploads/
+
+# WordPress Plugins (exclude our own)
+wp-content/plugins/*
+!wp-content/plugins/vortex-ai-marketplace/
+
+# WordPress Themes
+wp-content/themes/
+
+# WordPress Core
+wp-admin/
+wp-includes/
+*.log
+
+# Database
+*.sql
+*.sql.gz
+*.sqlite
+
+# Environment Files
+# ==================
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+wp-config-local.php
+
+# Node.js & NPM
+# ==============
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.node_repl_history
+
+# Package files
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+public/build/
+
+# IDE & Editor Files
+# ==================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# PHPStorm
+.phpstorm.meta.php
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Atom
+.atom/
+
+# Composer
+# ========
+vendor/
+composer.lock
+composer.phar
+
+# PHP
+# ===
+*.log
+error_log
+debug.log
+
+# Temporary files
+tmp/
+temp/
+cache/
+
+# Operating System
+# ================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Archive files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+*.tmp
+
+# AWS & Cloud
+# ===========
+.aws/
+*.pem
+*.key
+*-key.txt
+
+# Local development
+# =================
+local-config.php
+wp-config-local.php
+.htaccess.local
+
+# Testing
+# =======
+coverage/
+.nyc_output/
+.coverage
+htmlcov/
+.pytest_cache/
+.phpunit.result.cache
+
+# Documentation
+# =============
+docs/_build/
+
+# Security
+# ========
+secrets.json
+credentials.json
+private-keys/
+*.p12
+*.pfx
+
+# Plugin specific
+# ===============
+/vortex-ai-marketplace/logs/
+/vortex-ai-marketplace/cache/
+/vortex-ai-marketplace/uploads/
+/vortex-ai-marketplace/temp/
+
+# AI Models & Large Files
+# =======================
+*.model
+*.pkl
+*.h5
+*.pb
+models/
+checkpoints/
+
+# Blockchain & Crypto
+# ===================
+wallets/
+private-keys/
+*.wallet
+*.keystore
+
+# Logs
+# ====
+logs/
+*.log
+error.log
+debug.log
+access.log
+wp-content/debug.log
+
+# Generated files
+# ===============
+*.min.js
+*.min.css
+*.map
+
+# Version control
+# ===============
+.git/
+.gitmodules
+.gitattributes
+
+# Deployment
+# ==========
+deploy/
+deployment/
+*.tar.gz
+*.zip
+dist/
+release/
+
+# Local development overrides
+local/
+local-*
+
+# Custom exclusions
+# =================
+scratch/
+playground/
+experiments/
+test-data/ 

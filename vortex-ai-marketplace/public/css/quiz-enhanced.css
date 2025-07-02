@@ -1,0 +1,998 @@
+/**
+ * VORTEX Cosmic Business Quiz Enhanced Styles
+ * Advanced styling with cosmic themes, animations, and zodiacal elements
+ */
+
+/* Cosmic Base Styles */
+.vortex-cosmic-quiz-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.vortex-cosmic-quiz-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(119, 198, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.vortex-cosmic-quiz-container > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Cosmic Header */
+.cosmic-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+.cosmic-title {
+    background: linear-gradient(135deg, #ffd700, #ff8c00, #ff69b4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    font-weight: 700;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% { text-shadow: 0 0 30px rgba(255, 215, 0, 0.3); }
+    50% { text-shadow: 0 0 40px rgba(255, 215, 0, 0.6), 0 0 60px rgba(255, 105, 180, 0.3); }
+}
+
+.cosmic-description {
+    font-size: 1.2em;
+    color: #b8b8d1;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Cosmic Progress */
+.cosmic-progress {
+    margin: 30px 0;
+    position: relative;
+}
+
+.progress-bar.cosmic-gradient {
+    width: 100%;
+    height: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 25px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffd700, #ff8c00, #ff69b4, #9370db, #4169e1);
+    background-size: 300% 100%;
+    border-radius: 25px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: cosmicFlow 3s ease-in-out infinite;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes cosmicFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.progress-stars {
+    position: absolute;
+    top: -15px;
+    left: 0;
+    right: 0;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.star {
+    font-size: 16px;
+    color: rgba(255,255,255,0.3);
+    transition: all 0.5s ease;
+    cursor: pointer;
+    transform: scale(1);
+}
+
+.star.completed {
+    color: #ffd700;
+    text-shadow: 0 0 10px #ffd700;
+    transform: scale(1.3);
+    animation: starTwinkle 2s ease-in-out infinite;
+}
+
+.star.cosmic-star-active {
+    color: #ff69b4;
+    text-shadow: 0 0 15px #ff69b4;
+    animation: starPulse 1s ease-in-out infinite;
+}
+
+@keyframes starTwinkle {
+    0%, 100% { opacity: 1; transform: scale(1.3) rotate(0deg); }
+    50% { opacity: 0.7; transform: scale(1.5) rotate(180deg); }
+}
+
+@keyframes starPulse {
+    0%, 100% { transform: scale(1.3); }
+    50% { transform: scale(1.6); }
+}
+
+.progress-text {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    font-weight: 500;
+    color: #b8b8d1;
+}
+
+/* Cosmic Profile Section */
+.cosmic-profile-section {
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 40px;
+    transition: all 0.5s ease;
+    position: relative;
+}
+
+.cosmic-profile-section.completed {
+    background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(255,105,180,0.05) 100%);
+    border-color: #ffd700;
+    box-shadow: 0 0 30px rgba(255,215,0,0.2);
+}
+
+.section-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #ffd700, #ff69b4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-description {
+    color: #b8b8d1;
+    margin-bottom: 25px;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+.cosmic-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.cosmic-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #ffd700;
+    font-size: 1em;
+}
+
+.cosmic-input {
+    padding: 12px 16px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    background: rgba(0,0,0,0.3);
+    color: #ffffff;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.cosmic-input:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255,215,0,0.3), inset 0 0 20px rgba(255,215,0,0.1);
+    background: rgba(0,0,0,0.5);
+}
+
+.cosmic-input::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+.input-help {
+    font-size: 0.85em;
+    color: #9370db;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Zodiac Preview */
+.zodiac-preview {
+    margin-top: 15px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.zodiac-preview.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.zodiac-preview.cosmic-pulse {
+    animation: cosmicPulse 2s ease-in-out infinite;
+}
+
+@keyframes cosmicPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.zodiac-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(147,112,219,0.1) 100%);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 12px;
+    padding: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.zodiac-symbol {
+    font-size: 2em;
+    filter: drop-shadow(0 0 10px currentColor);
+}
+
+.zodiac-info h4 {
+    margin: 0 0 5px 0;
+    color: #ffd700;
+    font-size: 1.1em;
+}
+
+.zodiac-element {
+    color: #b8b8d1;
+    margin: 0 0 10px 0;
+    font-size: 0.9em;
+}
+
+.zodiac-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.trait-tag {
+    background: rgba(255,105,180,0.2);
+    color: #ff69b4;
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    border: 1px solid rgba(255,105,180,0.3);
+}
+
+/* Cosmic Questions */
+.cosmic-question {
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cosmic-question::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
+    transition: left 0.8s ease;
+}
+
+.cosmic-question.cosmic-glow::before {
+    left: 100%;
+}
+
+.cosmic-question.answered {
+    border-color: rgba(255,215,0,0.3);
+    background: linear-gradient(135deg, rgba(255,215,0,0.05) 0%, rgba(255,255,255,0.02) 100%);
+}
+
+.cosmic-question.confirmed.cosmic-confirmed {
+    border-color: #ff69b4;
+    background: linear-gradient(135deg, rgba(255,105,180,0.1) 0%, rgba(147,112,219,0.05) 100%);
+    box-shadow: 0 0 25px rgba(255,105,180,0.2);
+    transform: scale(1.02);
+}
+
+.question-header {
+    margin-bottom: 20px;
+}
+
+.question-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.2em;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.cosmic-number {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #0f0f23;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9em;
+    box-shadow: 0 4px 15px rgba(255,215,0,0.4);
+    flex-shrink: 0;
+}
+
+.cosmic-insight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(147,112,219,0.1);
+    border: 1px solid rgba(147,112,219,0.3);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #9370db;
+}
+
+.insight-icon {
+    font-size: 1.1em;
+    filter: drop-shadow(0 0 5px currentColor);
+}
+
+/* Cosmic Choices */
+.cosmic-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.choice-label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(0,0,0,0.2);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.choice-label:hover {
+    border-color: rgba(255,215,0,0.5);
+    background: rgba(255,215,0,0.05);
+    transform: translateX(5px);
+}
+
+.choice-label input[type="radio"] {
+    display: none;
+}
+
+.choice-label input[type="radio"]:checked + .choice-marker {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #0f0f23;
+    box-shadow: 0 0 20px rgba(255,215,0,0.5);
+    transform: scale(1.1);
+}
+
+.choice-label input[type="radio"]:checked ~ .choice-text {
+    color: #ffd700;
+    font-weight: 600;
+}
+
+.choice-marker {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.choice-text {
+    color: #ffffff;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+}
+
+/* Cosmic Confirmation */
+.confirmation-container {
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.cosmic-confirmation-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 12px;
+    background: rgba(147,112,219,0.1);
+    border: 2px solid rgba(147,112,219,0.2);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.cosmic-confirmation-label:hover {
+    border-color: rgba(255,105,180,0.5);
+    background: rgba(255,105,180,0.1);
+}
+
+.cosmic-confirmation-label input[type="checkbox"] {
+    display: none;
+}
+
+.cosmic-checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: transparent;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.cosmic-confirmation-label input[type="checkbox"]:checked + .cosmic-checkmark {
+    background: linear-gradient(135deg, #ff69b4, #9370db);
+    border-color: #ff69b4;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(255,105,180,0.5);
+    animation: checkmarkGlow 0.5s ease;
+}
+
+@keyframes checkmarkGlow {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.confirm-text {
+    color: #b8b8d1;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.cosmic-confirmation-label input[type="checkbox"]:checked ~ .confirm-text {
+    color: #ff69b4;
+}
+
+/* Cosmic Submit Section */
+.cosmic-submit-section {
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 2px solid rgba(255,255,255,0.1);
+}
+
+.cosmic-messages {
+    margin-bottom: 30px;
+    min-height: 50px;
+}
+
+.cosmic-success, .cosmic-error, .cosmic-info {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.5s ease;
+}
+
+.cosmic-success.cosmic-message-show,
+.cosmic-error.cosmic-message-show,
+.cosmic-info.cosmic-message-show {
+    opacity: 1;
+    transform: translateY(0);
+    display: flex;
+}
+
+.cosmic-success {
+    background: linear-gradient(135deg, rgba(40,167,69,0.2) 0%, rgba(40,167,69,0.1) 100%);
+    color: #28a745;
+    border: 1px solid rgba(40,167,69,0.3);
+    box-shadow: 0 0 20px rgba(40,167,69,0.2);
+}
+
+.cosmic-error {
+    background: linear-gradient(135deg, rgba(220,53,69,0.2) 0%, rgba(220,53,69,0.1) 100%);
+    color: #dc3545;
+    border: 1px solid rgba(220,53,69,0.3);
+    box-shadow: 0 0 20px rgba(220,53,69,0.2);
+}
+
+.cosmic-info {
+    background: linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0.1) 100%);
+    color: #ffd700;
+    border: 1px solid rgba(255,215,0,0.3);
+    box-shadow: 0 0 20px rgba(255,215,0,0.2);
+}
+
+.message-icon {
+    font-size: 1.2em;
+    filter: drop-shadow(0 0 5px currentColor);
+}
+
+/* Cosmic Submit Button */
+.btn-cosmic-submit {
+    background: linear-gradient(135deg, #ff69b4 0%, #9370db 50%, #4169e1 100%);
+    color: #ffffff;
+    border: none;
+    padding: 18px 40px;
+    font-size: 1.2em;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(255,105,180,0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-cosmic-submit:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(255,105,180,0.4);
+    background: linear-gradient(135deg, #ff1493 0%, #8a2be2 50%, #0000ff 100%);
+}
+
+.btn-cosmic-submit:disabled {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.3);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-cosmic-submit.cosmic-ready {
+    animation: cosmicReady 2s ease-in-out infinite;
+}
+
+@keyframes cosmicReady {
+    0%, 100% { 
+        box-shadow: 0 10px 25px rgba(255,105,180,0.3);
+        transform: translateY(0);
+    }
+    50% { 
+        box-shadow: 0 15px 40px rgba(255,105,180,0.6), 0 0 40px rgba(147,112,219,0.4);
+        transform: translateY(-5px);
+    }
+}
+
+.btn-cosmic-submit.cosmic-loading {
+    animation: none;
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #0f0f23;
+}
+
+.btn-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.cosmic-spinner {
+    animation: cosmicSpin 1s linear infinite;
+    font-size: 1.2em;
+}
+
+@keyframes cosmicSpin {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Cosmic Preview */
+.cosmic-preview {
+    margin-top: 30px;
+    padding: 25px;
+    background: linear-gradient(135deg, rgba(147,112,219,0.1) 0%, rgba(255,105,180,0.05) 100%);
+    border: 1px solid rgba(147,112,219,0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.cosmic-preview.cosmic-reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cosmic-preview h4 {
+    color: #ffd700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.preview-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.preview-zodiac h5,
+.preview-alignment h5 {
+    color: #ff69b4;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.traits {
+    color: #b8b8d1;
+    font-size: 0.9em;
+}
+
+.element-bars {
+    margin-top: 15px;
+}
+
+.element-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.element-name {
+    width: 60px;
+    font-size: 0.85em;
+    color: #b8b8d1;
+}
+
+.bar-container {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s ease;
+}
+
+.bar-fill.fire { background: linear-gradient(90deg, #ff4500, #ff6347); }
+.bar-fill.earth { background: linear-gradient(90deg, #8b4513, #daa520); }
+.bar-fill.air { background: linear-gradient(90deg, #87ceeb, #b0e0e6); }
+.bar-fill.water { background: linear-gradient(90deg, #4169e1, #1e90ff); }
+
+.element-count {
+    width: 20px;
+    text-align: center;
+    font-size: 0.85em;
+    color: #ffffff;
+}
+
+/* Cosmic Particles */
+.cosmic-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.cosmic-particle {
+    position: absolute;
+    color: rgba(255,215,0,0.3);
+    font-size: 12px;
+    animation: particleFloat linear infinite;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Cosmic Celebration */
+.cosmic-celebration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.celebration-star {
+    position: absolute;
+    color: #ffd700;
+    font-size: 24px;
+    animation: celebrationStar linear;
+}
+
+@keyframes celebrationStar {
+    0% {
+        transform: translateY(100vh) rotate(0deg) scale(0);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(80vh) rotate(72deg) scale(1);
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(20vh) rotate(288deg) scale(1.2);
+    }
+    100% {
+        transform: translateY(-20vh) rotate(360deg) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Login Required Styles */
+.vortex-quiz-login-required {
+    text-align: center;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+    border-radius: 20px;
+    color: #ffffff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.vortex-quiz-login-required h3 {
+    color: #ffd700;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.btn-cosmic {
+    background: linear-gradient(135deg, #ff69b4, #9370db);
+    color: #ffffff;
+    padding: 15px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(255,105,180,0.3);
+}
+
+.btn-cosmic:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(255,105,180,0.4);
+    text-decoration: none;
+    color: #ffffff;
+}
+
+/* Completed Quiz Styles */
+.vortex-quiz-completed.cosmic-theme {
+    text-align: center;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+    border-radius: 20px;
+    color: #ffffff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.cosmic-header h3 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+}
+
+.zodiac-badge {
+    background: linear-gradient(135deg, #ff69b4, #9370db);
+    color: #ffffff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(255,105,180,0.3);
+}
+
+.cosmic-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.btn-cosmic-secondary {
+    background: linear-gradient(135deg, #4169e1, #1e90ff);
+    color: #ffffff;
+    padding: 12px 25px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(65,105,225,0.3);
+}
+
+.btn-cosmic-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(65,105,225,0.4);
+    text-decoration: none;
+    color: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .vortex-cosmic-quiz-container {
+        padding: 15px;
+        margin: 10px;
+        border-radius: 15px;
+    }
+    
+    .cosmic-title {
+        font-size: 2em;
+    }
+    
+    .cosmic-inputs {
+        grid-template-columns: 1fr;
+    }
+    
+    .question-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .cosmic-number {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8em;
+    }
+    
+    .choice-label {
+        padding: 12px;
+    }
+    
+    .cosmic-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-cosmic, .btn-cosmic-secondary {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cosmic-title {
+        font-size: 1.6em;
+    }
+    
+    .cosmic-description {
+        font-size: 1em;
+    }
+    
+    .cosmic-question {
+        padding: 20px 15px;
+    }
+    
+    .progress-stars {
+        padding: 0 5px;
+    }
+    
+    .star {
+        font-size: 14px;
+    }
+    
+    .btn-cosmic-submit {
+        padding: 15px 25px;
+        font-size: 1em;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .cosmic-question {
+        border-width: 3px;
+    }
+    
+    .choice-label {
+        border-width: 3px;
+    }
+    
+    .btn-cosmic-submit {
+        border: 2px solid #ffffff;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .vortex-cosmic-quiz-container {
+        background: #ffffff !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+    }
+    
+    .cosmic-particles,
+    .cosmic-celebration {
+        display: none !important;
+    }
+} 

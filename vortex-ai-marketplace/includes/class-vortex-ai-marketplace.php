@@ -106,9 +106,27 @@ class Vortex_AI_Marketplace {
             }
         }
 
+        // New WooCommerce and AI integration classes
+        $new_integration_files = array(
+            'includes/class-vortex-subscriptions.php',
+            'includes/class-vortex-ai-marketplace-wallet.php',
+            'includes/class-vortex-artist-journey-shortcodes.php',
+            'includes/class-vortex-seed-art-manager.php',
+            'includes/class-vortex-gamification.php',
+            'includes/class-vortex-artist-registration.php',
+            'includes/class-vortex-horace-business-quiz.php'
+        );
+        
+        foreach ($new_integration_files as $file) {
+            $file_path = plugin_dir_path(dirname(__FILE__)) . $file;
+            if (file_exists($file_path)) {
+                require_once $file_path;
+            }
+        }
+
         // API Classes - only existing ones
         $api_files = array(
-            'includes/class-vortex-ai-api.php',
+            'includes/api/class-vortex-ai-api.php',
             'includes/api/class-plans-api.php',
             'includes/api/class-wallet-api.php',
             'includes/api/class-quiz-api.php',
@@ -253,8 +271,38 @@ class Vortex_AI_Marketplace {
             }
         }
 
+        // Initialize new integration systems
+        if (class_exists('Vortex_Subscriptions')) {
+            new Vortex_Subscriptions();
+        }
+        
+        if (class_exists('Vortex_AI_Marketplace_Wallet')) {
+            new Vortex_AI_Marketplace_Wallet();
+        }
+        
+        if (class_exists('Vortex_Artist_Journey_Shortcodes')) {
+            new Vortex_Artist_Journey_Shortcodes();
+        }
+        
+        if (class_exists('Vortex_Seed_Art_Manager')) {
+            new Vortex_Seed_Art_Manager();
+        }
+        
+        if (class_exists('Vortex_Gamification')) {
+            new Vortex_Gamification();
+        }
+        
+        if (class_exists('Vortex_Artist_Registration')) {
+            Vortex_Artist_Registration::get_instance();
+        }
+        
+        if (class_exists('Vortex_HORACE_Business_Quiz')) {
+            Vortex_HORACE_Business_Quiz::get_instance();
+        }
+
         // Individual API handlers - only register if classes exist
         $api_handlers = array(
+            'Vortex_AI_API_Enhanced',
             'Vortex_Plans_API',
             'Vortex_Wallet_API',
             'Vortex_Quiz_API',

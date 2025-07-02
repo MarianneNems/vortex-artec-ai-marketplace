@@ -11,6 +11,7 @@ class Test_VORTEX_API_Endpoints extends WP_UnitTestCase {
 
     private $user_id;
     private $admin_id;
+    private $api;
 
     /**
      * Set up test fixtures.
@@ -34,6 +35,15 @@ class Test_VORTEX_API_Endpoints extends WP_UnitTestCase {
         // Set up subscription plan for test user
         update_user_meta($this->user_id, 'vortex_subscription_plan', 'pro');
         update_user_meta($this->user_id, 'vortex_subscription_status', 'active');
+
+        // Initialize API
+        $this->api = new Vortex_AI_API_Enhanced();
+
+        // Set up user with active plan and tokens
+        update_user_meta($this->user_id, 'vortex_plan', 'artist-pro');
+        update_user_meta($this->user_id, 'vortex_plan_status', 'active');
+        update_user_meta($this->user_id, 'vortex_plan_expires', time() + 86400);
+        update_user_meta($this->user_id, 'vortex_tola_balance', 100);
     }
 
     /**
@@ -295,117 +305,306 @@ class Test_VORTEX_API_Endpoints extends WP_UnitTestCase {
     }
 
     /**
-     * Test AI generation endpoint.
+     * Test AI generation endpoint with valid request
      */
-    public function test_generate_artwork_endpoint() {
+    public function test_ai_generation_endpoint_success() {
         wp_set_current_user($this->user_id);
         
-        $request = new WP_REST_Request('POST', '/vortex/v1/api/generate');
-        $request->set_param('prompt', 'A beautiful sunset over the mountains');
+        $request = new WP_REST_Request('POST', '/vortex/v1/generate');
+        $request->set_param('prompt', 'A beautiful landscape with mountains');
         $request->set_param('style', 'realistic');
-        $request->set_param('dimensions', '1024x1024');
-        $response = rest_get_server()->dispatch($request);
         
-        $this->assertEquals(202, $response->get_status()); // Accepted for processing
+        $response = $this->api->handle_ai_generation($request);
+        
+        $this->assertInstanceOf('WP_REST_Response', $response);
+        $this->assertEquals(200, $response->get_status());
         
         $data = $response->get_data();
         $this->assertTrue($data['success']);
-        $this->assertArrayHasKey('job_id', $data);
-        $this->assertEquals('processing', $data['status']);
+        $this->assertArrayHasKey('image_url', $data);
+        $this->assertArrayHasKey('generation_id', $data);
+        $this->assertArrayHasKey('remaining_tokens', $data);
+        
+        // Check token was deducted
+        $new_balance = get_user_meta($this->user_id, 'vortex_tola_balance', true);
+        $this->assertEquals(99, $new_balance); // 100 - 1 for generation
     }
 
     /**
-     * Test generation without prompt fails.
+     * Test AI generation endpoint with insufficient tokens
      */
-    public function test_generate_without_prompt_fails() {
+    public function test_ai_generation_insufficient_tokens() {
         wp_set_current_user($this->user_id);
         
-        $request = new WP_REST_Request('POST', '/vortex/v1/api/generate');
-        $response = rest_get_server()->dispatch($request);
+        // Set low token balance
+        update_user_meta($this->user_id, 'vortex_tola_balance', 0);
         
-        $this->assertEquals(400, $response->get_status());
-    }
-
-    /**
-     * Test generation status endpoint.
-     */
-    public function test_generation_status_endpoint() {
-        wp_set_current_user($this->user_id);
+        $request = new WP_REST_Request('POST', '/vortex/v1/generate');
+        $request->set_param('prompt', 'A beautiful landscape');
         
-        // Create a mock generation job
-        $job_id = 'gen_test123';
-        update_user_meta($this->user_id, 'vortex_generation_' . $job_id, array(
-            'job_id' => $job_id,
-            'status' => 'completed',
-            'result_urls' => array('https://example.com/test.png'),
-        ));
-        
-        $request = new WP_REST_Request('GET', '/vortex/v1/api/generate/status/' . $job_id);
-        $response = rest_get_server()->dispatch($request);
-        
-        $this->assertEquals(200, $response->get_status());
-        
-        $data = $response->get_data();
-        $this->assertEquals('completed', $data['status']);
-        $this->assertArrayHasKey('result_urls', $data);
-    }
-
-    /**
-     * Test Horas quiz requires Pro subscription.
-     */
-    public function test_horas_quiz_requires_pro() {
-        // Create user with starter plan
-        $starter_user = $this->factory->user->create();
-        update_user_meta($starter_user, 'vortex_subscription_plan', 'starter');
-        wp_set_current_user($starter_user);
-        
-        $request = new WP_REST_Request('GET', '/vortex/v1/users/' . $starter_user . '/horas-quiz');
-        $response = rest_get_server()->dispatch($request);
+        $response = $this->api->handle_ai_generation($request);
         
         $this->assertEquals(403, $response->get_status());
+        
+        $data = $response->get_data();
+        $this->assertArrayHasKey('error', $data);
+        $this->assertStringContainsString('Insufficient TOLA tokens', $data['error']);
     }
 
     /**
-     * Test Horas quiz works for Pro users.
+     * Test AI generation endpoint without subscription
      */
-    public function test_horas_quiz_works_for_pro() {
-        wp_set_current_user($this->user_id); // This user has Pro plan
+    public function test_ai_generation_no_subscription() {
+        wp_set_current_user($this->user_id);
         
-        $request = new WP_REST_Request('GET', '/vortex/v1/users/' . $this->user_id . '/horas-quiz');
-        $response = rest_get_server()->dispatch($request);
+        // Remove subscription plan
+        delete_user_meta($this->user_id, 'vortex_plan');
         
+        $request = new WP_REST_Request('POST', '/vortex/v1/generate');
+        $request->set_param('prompt', 'A beautiful landscape');
+        
+        $response = $this->api->handle_ai_generation($request);
+        
+        $this->assertEquals(403, $response->get_status());
+        
+        $data = $response->get_data();
+        $this->assertArrayHasKey('error', $data);
+        $this->assertStringContainsString('No active subscription', $data['error']);
+    }
+
+    /**
+     * Test AI generation endpoint with invalid prompt
+     */
+    public function test_ai_generation_invalid_prompt() {
+        wp_set_current_user($this->user_id);
+        
+        $request = new WP_REST_Request('POST', '/vortex/v1/generate');
+        $request->set_param('prompt', 'ab'); // Too short
+        
+        $response = $this->api->handle_ai_generation($request);
+        
+        $this->assertEquals(400, $response->get_status());
+        
+        $data = $response->get_data();
+        $this->assertArrayHasKey('error', $data);
+        $this->assertStringContainsString('at least 3 characters', $data['error']);
+    }
+
+    /**
+     * Test seed upload endpoint success
+     */
+    public function test_seed_upload_endpoint_success() {
+        wp_set_current_user($this->user_id);
+        
+        // Mock file upload
+        $_FILES['file'] = array(
+            'name' => 'test-image.jpg',
+            'type' => 'image/jpeg',
+            'tmp_name' => $this->create_test_image(),
+            'error' => UPLOAD_ERR_OK,
+            'size' => 1024
+        );
+        
+        $request = new WP_REST_Request('POST', '/vortex/v1/upload-seed');
+        
+        $response = $this->api->handle_seed_upload($request);
+        
+        $this->assertInstanceOf('WP_REST_Response', $response);
         $this->assertEquals(200, $response->get_status());
         
         $data = $response->get_data();
-        $this->assertEquals($this->user_id, $data['user_id']);
-        $this->assertArrayHasKey('quiz_completed', $data);
+        $this->assertTrue($data['success']);
+        $this->assertArrayHasKey('filename', $data);
+        $this->assertArrayHasKey('url', $data);
+        
+        // Clean up
+        unlink($_FILES['file']['tmp_name']);
+        unset($_FILES['file']);
     }
 
     /**
-     * Test API endpoints require nonce for security.
+     * Test seed upload endpoint without file
      */
-    public function test_api_security_nonce() {
+    public function test_seed_upload_no_file() {
         wp_set_current_user($this->user_id);
         
-        // Test without nonce (should work for GET requests)
-        $request = new WP_REST_Request('GET', '/vortex/v1/users/' . $this->user_id . '/plan');
-        $response = rest_get_server()->dispatch($request);
-        $this->assertEquals(200, $response->get_status());
+        $request = new WP_REST_Request('POST', '/vortex/v1/upload-seed');
         
-        // POST requests should have additional security measures in real implementation
-        // This test verifies the structure is in place
-        $this->assertTrue(true); // Placeholder for more detailed security testing
+        $response = $this->api->handle_seed_upload($request);
+        
+        $this->assertEquals(400, $response->get_status());
+        
+        $data = $response->get_data();
+        $this->assertArrayHasKey('error', $data);
+        $this->assertEquals('No file uploaded', $data['error']);
     }
 
     /**
-     * Test rate limiting structure.
+     * Test get user balance endpoint
      */
-    public function test_rate_limiting_structure() {
-        // This test verifies that rate limiting can be implemented
-        // In real implementation, you would test actual rate limiting
-        $this->assertTrue(class_exists('Vortex_Plans_API'));
-        $this->assertTrue(class_exists('Vortex_Wallet_API'));
-        $this->assertTrue(class_exists('Vortex_Generate_API'));
+    public function test_get_user_balance_endpoint() {
+        wp_set_current_user($this->user_id);
+        
+        $request = new WP_REST_Request('GET', '/vortex/v1/balance');
+        
+        $response = $this->api->get_user_balance($request);
+        
+        $this->assertInstanceOf('WP_REST_Response', $response);
+        $this->assertEquals(200, $response->get_status());
+        
+        $data = $response->get_data();
+        $this->assertTrue($data['success']);
+        $this->assertEquals(100, $data['balance']);
+        $this->assertEquals('100 TOLA', $data['formatted']);
+    }
+
+    /**
+     * Test get seed gallery endpoint
+     */
+    public function test_get_seed_gallery_endpoint() {
+        wp_set_current_user($this->user_id);
+        
+        // Create some test seed artworks in database
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'vortex_seed_artworks';
+        
+        for ($i = 1; $i <= 3; $i++) {
+            $wpdb->insert(
+                $table_name,
+                array(
+                    'user_id' => $this->user_id,
+                    'filename' => "test-seed-{$i}.jpg",
+                    'original_filename' => "original-{$i}.jpg",
+                    's3_key' => "users/{$this->user_id}/seed/test-seed-{$i}.jpg",
+                    's3_url' => "https://mock-s3.com/test-seed-{$i}.jpg",
+                    'file_size' => 1024 * $i,
+                    'file_type' => 'image/jpeg',
+                    'status' => 'active'
+                ),
+                array('%d', '%s', '%s', '%s', '%s', '%d', '%s', '%s')
+            );
+        }
+        
+        $request = new WP_REST_Request('GET', '/vortex/v1/seed-gallery');
+        
+        $response = $this->api->get_seed_gallery($request);
+        
+        $this->assertInstanceOf('WP_REST_Response', $response);
+        $this->assertEquals(200, $response->get_status());
+        
+        $data = $response->get_data();
+        $this->assertTrue($data['success']);
+        $this->assertEquals(3, $data['count']);
+        $this->assertCount(3, $data['artworks']);
+        
+        // Check artwork structure
+        $artwork = $data['artworks'][0];
+        $this->assertArrayHasKey('filename', $artwork);
+        $this->assertArrayHasKey('s3_url', $artwork);
+        $this->assertArrayHasKey('file_size', $artwork);
+    }
+
+    /**
+     * Test unauthorized access to endpoints
+     */
+    public function test_unauthorized_access() {
+        // Test without being logged in
+        $request = new WP_REST_Request('POST', '/vortex/v1/generate');
+        $request->set_param('prompt', 'Test prompt');
+        
+        $permission_check = $this->api->check_user_permissions();
+        $this->assertFalse($permission_check);
+    }
+
+    /**
+     * Test generation statistics update
+     */
+    public function test_generation_statistics_update() {
+        wp_set_current_user($this->user_id);
+        
+        $initial_total = get_user_meta($this->user_id, 'vortex_total_generations', true) ?: 0;
+        $current_month = date('Y-m');
+        $initial_monthly = get_user_meta($this->user_id, "vortex_generations_{$current_month}", true) ?: 0;
+        
+        $request = new WP_REST_Request('POST', '/vortex/v1/generate');
+        $request->set_param('prompt', 'Test generation for statistics');
+        
+        $response = $this->api->handle_ai_generation($request);
+        
+        $this->assertEquals(200, $response->get_status());
+        
+        // Check statistics were updated
+        $new_total = get_user_meta($this->user_id, 'vortex_total_generations', true);
+        $new_monthly = get_user_meta($this->user_id, "vortex_generations_{$current_month}", true);
+        
+        $this->assertEquals($initial_total + 1, $new_total);
+        $this->assertEquals($initial_monthly + 1, $new_monthly);
+    }
+
+    /**
+     * Test first generation milestone
+     */
+    public function test_first_generation_milestone() {
+        wp_set_current_user($this->user_id);
+        
+        // Ensure this is the first generation
+        delete_user_meta($this->user_id, 'vortex_total_generations');
+        delete_user_meta($this->user_id, 'vortex_completed_milestones');
+        
+        $initial_balance = get_user_meta($this->user_id, 'vortex_tola_balance', true);
+        
+        $request = new WP_REST_Request('POST', '/vortex/v1/generate');
+        $request->set_param('prompt', 'First generation test');
+        
+        $response = $this->api->handle_ai_generation($request);
+        
+        $this->assertEquals(200, $response->get_status());
+        
+        // Check milestone was awarded
+        $milestones = get_user_meta($this->user_id, 'vortex_completed_milestones', true);
+        $this->assertContains('first_generation', $milestones);
+        
+        // Check bonus tokens were awarded (15 TOLA bonus - 1 TOLA generation cost)
+        $new_balance = get_user_meta($this->user_id, 'vortex_tola_balance', true);
+        $this->assertEquals($initial_balance + 14, $new_balance); // +15 bonus -1 generation cost
+    }
+
+    /**
+     * Test monthly generation limits
+     */
+    public function test_monthly_generation_limits() {
+        wp_set_current_user($this->user_id);
+        
+        // Set user to starter plan with 50 generation limit
+        update_user_meta($this->user_id, 'vortex_plan', 'artist-starter');
+        
+        $current_month = date('Y-m');
+        update_user_meta($this->user_id, "vortex_generations_{$current_month}", 50); // At limit
+        
+        $request = new WP_REST_Request('POST', '/vortex/v1/generate');
+        $request->set_param('prompt', 'Over limit test');
+        
+        $response = $this->api->handle_ai_generation($request);
+        
+        $this->assertEquals(403, $response->get_status());
+        
+        $data = $response->get_data();
+        $this->assertStringContainsString('Monthly generation limit reached', $data['error']);
+    }
+
+    /**
+     * Create a test image file
+     */
+    private function create_test_image() {
+        $temp_file = tempnam(sys_get_temp_dir(), 'vortex_test_');
+        
+        // Create a simple 1x1 pixel image
+        $image = imagecreate(1, 1);
+        imagecolorallocate($image, 255, 255, 255);
+        imagejpeg($image, $temp_file);
+        imagedestroy($image);
+        
+        return $temp_file;
     }
 
     /**
@@ -416,6 +615,22 @@ class Test_VORTEX_API_Endpoints extends WP_UnitTestCase {
         delete_user_meta($this->user_id, 'vortex_subscription_plan');
         delete_user_meta($this->user_id, 'vortex_subscription_status');
         delete_user_meta($this->user_id, 'vortex_wallet_address');
+        
+        // Clean up test data
+        wp_delete_user($this->user_id);
+        wp_delete_user($this->admin_id);
+        
+        // Clean up database tables
+        global $wpdb;
+        $tables = array(
+            $wpdb->prefix . 'vortex_seed_artworks',
+            $wpdb->prefix . 'vortex_token_transactions',
+            $wpdb->prefix . 'vortex_events'
+        );
+        
+        foreach ($tables as $table) {
+            $wpdb->query("DELETE FROM $table WHERE user_id = {$this->user_id}");
+        }
         
         parent::tearDown();
     }
