@@ -196,31 +196,32 @@ if (!defined('ABSPATH')) {
                 </div>
             </div>
 
-            <!-- CHLOE Agent -->
-            <div class="agent-card chloe">
-                <div class="agent-header">
-                    <div class="agent-avatar">📊</div>
-                    <div class="agent-info">
-                        <h3>CHLOE</h3>
-                        <p>Market Oracle</p>
-                    </div>
-                    <div class="agent-status status-<?php echo class_exists('VORTEX_CHLOE') ? 'active' : 'inactive'; ?>">
-                        <?php echo class_exists('VORTEX_CHLOE') ? 'Active' : 'Inactive'; ?>
-                    </div>
+            <!-- CLOE Agent -->
+            <div class="agent-card cloe">
+                <div class="agent-avatar">
+                    <span class="agent-icon">🔮</span>
                 </div>
+                <h3>CLOE</h3>
+                <p>Market Analysis & Trends</p>
+                
+                <div class="agent-status status-<?php echo class_exists('VORTEX_CLOE') ? 'active' : 'inactive'; ?>">
+                    <?php echo class_exists('VORTEX_CLOE') ? 'Active' : 'Inactive'; ?>
+                </div>
+                
                 <div class="agent-metrics">
                     <div class="metric">
-                        <span class="metric-label">Learning:</span>
-                        <span class="metric-value">Active</span>
+                        <span class="metric-label">Predictions</span>
+                        <span class="metric-value">1,247</span>
                     </div>
                     <div class="metric">
-                        <span class="metric-label">Market Analysis:</span>
-                        <span class="metric-value">Real-time</span>
+                        <span class="metric-label">Accuracy</span>
+                        <span class="metric-value">94%</span>
                     </div>
                 </div>
-                <div class="agent-actions">
-                    <button class="agent-control-btn" data-agent="CHLOE" data-action="restart">Restart</button>
-                    <button class="agent-control-btn" data-agent="CHLOE" data-action="sync">Sync</button>
+                
+                <div class="agent-controls">
+                    <button class="agent-control-btn" data-agent="CLOE" data-action="restart">Restart</button>
+                    <button class="agent-control-btn" data-agent="CLOE" data-action="sync">Sync</button>
                 </div>
             </div>
 

@@ -245,6 +245,138 @@ class VORTEX_RunPod_Vault_Config {
     );
     
     /**
+     * AI Agent Hardware Configuration
+     */
+    private $agent_hardware_config = array(
+        'HURAII' => array(
+            'hardware_type' => 'GPU',
+            'gpu_memory_gb' => 16,
+            'gpu_cores' => 4096,
+            'cpu_cores' => 8,
+            'ram_gb' => 32,
+            'priority' => 'high',
+            'compute_type' => 'CUDA',
+            'model_type' => 'generative_ai',
+            'endpoints' => array(
+                'art_generation' => '/api/huraii/generate',
+                'style_transfer' => '/api/huraii/style',
+                'neural_fusion' => '/api/huraii/fusion'
+            ),
+            'optimization' => array(
+                'batch_processing' => true,
+                'tensor_cores' => true,
+                'mixed_precision' => true,
+                'memory_optimization' => 'aggressive'
+            )
+        ),
+        
+        'CLOE' => array(
+            'hardware_type' => 'CPU',
+            'cpu_cores' => 4,
+            'ram_gb' => 8,
+            'priority' => 'medium',
+            'compute_type' => 'analytical',
+            'model_type' => 'market_analysis',
+            'endpoints' => array(
+                'trend_analysis' => '/api/cloe/trends',
+                'market_prediction' => '/api/cloe/predict',
+                'collector_matching' => '/api/cloe/match'
+            ),
+            'optimization' => array(
+                'cache_enabled' => true,
+                'parallel_processing' => true,
+                'memory_efficient' => true
+            )
+        ),
+        
+        'HORACE' => array(
+            'hardware_type' => 'CPU',
+            'cpu_cores' => 2,
+            'ram_gb' => 4,
+            'priority' => 'medium',
+            'compute_type' => 'content_processing',
+            'model_type' => 'curation_engine',
+            'endpoints' => array(
+                'content_optimization' => '/api/horace/optimize',
+                'seo_enhancement' => '/api/horace/seo',
+                'engagement_scoring' => '/api/horace/score'
+            ),
+            'optimization' => array(
+                'batch_content_processing' => true,
+                'lightweight_models' => true,
+                'fast_response' => true
+            )
+        ),
+        
+        'THORIUS' => array(
+            'hardware_type' => 'CPU',
+            'cpu_cores' => 2,
+            'ram_gb' => 4,
+            'priority' => 'high',
+            'compute_type' => 'conversational',
+            'model_type' => 'chatbot_guide',
+            'endpoints' => array(
+                'chat_response' => '/api/thorius/chat',
+                'platform_guide' => '/api/thorius/guide',
+                'security_monitor' => '/api/thorius/security'
+            ),
+            'optimization' => array(
+                'real_time_response' => true,
+                'conversation_memory' => true,
+                'security_protocols' => 'enhanced'
+            )
+        ),
+        
+        'ARCHER' => array(
+            'hardware_type' => 'CPU',
+            'cpu_cores' => 6,
+            'ram_gb' => 16,
+            'priority' => 'critical',
+            'compute_type' => 'orchestration',
+            'model_type' => 'coordination_engine',
+            'endpoints' => array(
+                'agent_coordination' => '/api/archer/coordinate',
+                'system_optimization' => '/api/archer/optimize',
+                'load_balancing' => '/api/archer/balance'
+            ),
+            'optimization' => array(
+                'master_controller' => true,
+                'multi_agent_sync' => true,
+                'system_monitoring' => 'comprehensive',
+                'failover_management' => true
+            )
+        )
+    );
+    
+    /**
+     * RunPod Instance Configuration
+     */
+    private $runpod_config = array(
+        'gpu_instance' => array(
+            'template_id' => 'runpod/pytorch:2.0.1-py3.10-cuda11.8.0-devel-ubuntu22.04',
+            'gpu_type' => 'RTX A6000',
+            'gpu_count' => 1,
+            'cpu_count' => 8,
+            'memory_gb' => 32,
+            'storage_gb' => 100,
+            'agents' => array('HURAII'),
+            'cost_per_hour' => 0.79,
+            'auto_shutdown' => false
+        ),
+        
+        'cpu_cluster' => array(
+            'template_id' => 'runpod/cpu:ubuntu22.04',
+            'cpu_count' => 16,
+            'memory_gb' => 32,
+            'storage_gb' => 50,
+            'agents' => array('CLOE', 'HORACE', 'THORIUS', 'ARCHER'),
+            'cost_per_hour' => 0.15,
+            'auto_shutdown' => true,
+            'shutdown_delay_minutes' => 30
+        )
+    );
+    
+    /**
      * Get singleton instance
      */
     public static function get_instance() {
@@ -263,6 +395,16 @@ class VORTEX_RunPod_Vault_Config {
         $this->initialize_monitoring();
         add_action('wp_ajax_vortex_test_runpod_connection', array($this, 'test_connection'));
         add_action('wp_ajax_vortex_configure_runpod_vault', array($this, 'configure_vault'));
+        $this->init_hooks();
+    }
+    
+    /**
+     * Initialize WordPress hooks
+     */
+    private function init_hooks() {
+        add_action('wp_ajax_vortex_get_hardware_config', array($this, 'ajax_get_hardware_config'));
+        add_action('wp_ajax_vortex_optimize_resource_allocation', array($this, 'ajax_optimize_resources'));
+        add_filter('vortex_agent_hardware_requirements', array($this, 'get_agent_hardware_config'), 10, 2);
     }
     
     /**
@@ -530,7 +672,202 @@ class VORTEX_RunPod_Vault_Config {
         return base64_encode($iv . $tag . $encrypted);
     }
     
-    // Additional helper methods would be implemented here...
+    /**
+     * Get hardware configuration for specific agent
+     */
+    public function get_agent_hardware_config($agent, $default = array()) {
+        $agent = strtoupper($agent);
+        return $this->agent_hardware_config[$agent] ?? $default;
+    }
+    
+    /**
+     * Get RunPod instance configuration
+     */
+    public function get_runpod_config() {
+        return $this->runpod_config;
+    }
+    
+    /**
+     * Optimize resource allocation based on workload
+     */
+    public function optimize_resource_allocation($workload_metrics = array()) {
+        $optimized_config = array(
+            'huraii_gpu_allocation' => $this->calculate_huraii_gpu_needs($workload_metrics),
+            'cpu_cluster_scaling' => $this->calculate_cpu_cluster_needs($workload_metrics),
+            'cost_optimization' => $this->calculate_cost_savings($workload_metrics)
+        );
+        
+        return $optimized_config;
+    }
+    
+    /**
+     * Calculate HURAII GPU requirements
+     */
+    private function calculate_huraii_gpu_needs($metrics) {
+        $base_gpu_memory = 16; // GB
+        $concurrent_generations = $metrics['concurrent_art_requests'] ?? 10;
+        $model_complexity = $metrics['model_complexity'] ?? 'standard';
+        
+        $multiplier = array(
+            'simple' => 0.8,
+            'standard' => 1.0,
+            'complex' => 1.5,
+            'premium' => 2.0
+        );
+        
+        $required_memory = $base_gpu_memory * ($multiplier[$model_complexity] ?? 1.0);
+        $scaling_factor = min(ceil($concurrent_generations / 5), 4); // Max 4x scaling
+        
+        return array(
+            'gpu_memory_gb' => $required_memory * $scaling_factor,
+            'gpu_instances' => $scaling_factor,
+            'estimated_cost_hour' => 0.79 * $scaling_factor,
+            'performance_boost' => $scaling_factor * 100 . '%'
+        );
+    }
+    
+    /**
+     * Calculate CPU cluster requirements for other agents
+     */
+    private function calculate_cpu_cluster_needs($metrics) {
+        $base_cpu_cores = 16;
+        $active_users = $metrics['active_users'] ?? 100;
+        $api_requests_per_minute = $metrics['api_requests'] ?? 500;
+        
+        $cpu_scaling = max(1, ceil($active_users / 50));
+        $memory_scaling = max(1, ceil($api_requests_per_minute / 200));
+        
+        return array(
+            'cpu_cores' => $base_cpu_cores * $cpu_scaling,
+            'memory_gb' => 32 * $memory_scaling,
+            'instances' => ceil(($cpu_scaling + $memory_scaling) / 2),
+            'estimated_cost_hour' => 0.15 * ceil(($cpu_scaling + $memory_scaling) / 2)
+        );
+    }
+    
+    /**
+     * Calculate cost savings with optimized allocation
+     */
+    private function calculate_cost_savings($metrics) {
+        $baseline_cost = (0.79 * 4) + (0.15 * 8); // Worst case scenario
+        $optimized_gpu = $this->calculate_huraii_gpu_needs($metrics);
+        $optimized_cpu = $this->calculate_cpu_cluster_needs($metrics);
+        
+        $optimized_cost = $optimized_gpu['estimated_cost_hour'] + $optimized_cpu['estimated_cost_hour'];
+        $savings_percent = (($baseline_cost - $optimized_cost) / $baseline_cost) * 100;
+        
+        return array(
+            'baseline_cost_hour' => $baseline_cost,
+            'optimized_cost_hour' => $optimized_cost,
+            'savings_percent' => max(0, round($savings_percent, 1)),
+            'monthly_savings' => ($baseline_cost - $optimized_cost) * 24 * 30
+        );
+    }
+    
+    /**
+     * Get Gradio endpoint mapping for GPU/CPU optimization
+     */
+    public function get_gradio_endpoint_mapping() {
+        return array(
+            'huraii' => array(
+                'endpoint_index' => 0,
+                'hardware' => 'GPU',
+                'priority' => 'high',
+                'timeout' => 60, // Longer timeout for GPU processing
+                'retry_attempts' => 2
+            ),
+            'cloe' => array(
+                'endpoint_index' => 1,
+                'hardware' => 'CPU',
+                'priority' => 'medium',
+                'timeout' => 15,
+                'retry_attempts' => 3
+            ),
+            'horace' => array(
+                'endpoint_index' => 2,
+                'hardware' => 'CPU',
+                'priority' => 'medium',
+                'timeout' => 10,
+                'retry_attempts' => 3
+            ),
+            'thorius' => array(
+                'endpoint_index' => 3,
+                'hardware' => 'CPU',
+                'priority' => 'high',
+                'timeout' => 5, // Fast response for chat
+                'retry_attempts' => 2
+            ),
+            'archer' => array(
+                'endpoint_index' => 4,
+                'hardware' => 'CPU',
+                'priority' => 'critical',
+                'timeout' => 20,
+                'retry_attempts' => 1
+            )
+        );
+    }
+    
+    /**
+     * AJAX handler for hardware configuration
+     */
+    public function ajax_get_hardware_config() {
+        check_ajax_referer('vortex_runpod_nonce', 'nonce');
+        
+        $agent = sanitize_text_field($_POST['agent'] ?? 'all');
+        
+        if ($agent === 'all') {
+            wp_send_json_success($this->agent_hardware_config);
+        } else {
+            $config = $this->get_agent_hardware_config($agent);
+            wp_send_json_success($config);
+        }
+    }
+    
+    /**
+     * AJAX handler for resource optimization
+     */
+    public function ajax_optimize_resources() {
+        check_ajax_referer('vortex_runpod_nonce', 'nonce');
+        
+        $metrics = array(
+            'concurrent_art_requests' => intval($_POST['art_requests'] ?? 10),
+            'active_users' => intval($_POST['active_users'] ?? 100),
+            'api_requests' => intval($_POST['api_requests'] ?? 500),
+            'model_complexity' => sanitize_text_field($_POST['complexity'] ?? 'standard')
+        );
+        
+        $optimized = $this->optimize_resource_allocation($metrics);
+        wp_send_json_success($optimized);
+    }
+    
+    /**
+     * Get total system resource requirements
+     */
+    public function get_total_system_requirements() {
+        $total_gpu_memory = 0;
+        $total_cpu_cores = 0;
+        $total_ram = 0;
+        $total_cost_hour = 0;
+        
+        foreach ($this->agent_hardware_config as $agent => $config) {
+            if ($config['hardware_type'] === 'GPU') {
+                $total_gpu_memory += $config['gpu_memory_gb'];
+                $total_cost_hour += 0.79; // GPU instance cost
+            }
+            $total_cpu_cores += $config['cpu_cores'];
+            $total_ram += $config['ram_gb'];
+        }
+        
+        $total_cost_hour += 0.15; // CPU cluster base cost
+        
+        return array(
+            'gpu_memory_gb' => $total_gpu_memory,
+            'cpu_cores' => $total_cpu_cores,
+            'total_ram_gb' => $total_ram,
+            'estimated_cost_hour' => round($total_cost_hour, 2),
+            'monthly_cost' => round($total_cost_hour * 24 * 30, 2)
+        );
+    }
 }
 
 // Initialize the RunPod Vault Configuration
