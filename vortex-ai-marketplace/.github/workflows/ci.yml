@@ -1,0 +1,66 @@
+name: VORTEX AI Marketplace CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: [7.4, 8.0, 8.1]
+        wordpress-version: [5.8, 6.0, 6.4]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+        coverage: none
+
+    - name: Cache Composer dependencies
+      uses: actions/cache@v3
+      with:
+        path: /tmp/composer-cache
+        key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+    - name: Install dependencies
+      run: |
+        composer install --prefer-dist --no-progress
+
+    - name: WordPress Coding Standards
+      run: |
+        vendor/bin/phpcs --standard=WordPress --extensions=php --ignore=*/vendor/*,*/node_modules/* .
+
+    - name: PHPUnit Tests
+      run: |
+        vendor/bin/phpunit --configuration phpunit.xml
+
+    - name: Security Scan
+      run: |
+        vendor/bin/psalm --show-info=true
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build deployment package
+      run: |
+        zip -r vortex-ai-marketplace.zip . -x "*.git*" "node_modules/*" "tests/*" "*.md"
+    
+    - name: Upload to releases
+      uses: actions/upload-artifact@v3
+      with:
+        name: vortex-ai-marketplace-${{ github.sha }}
+        path: vortex-ai-marketplace.zip 
