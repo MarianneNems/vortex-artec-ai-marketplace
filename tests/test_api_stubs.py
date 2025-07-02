@@ -7,10 +7,9 @@ client = TestClient(app)
 
 class TestAuthEndpoints:
     def test_login(self):
-        response = client.post("/auth/login", json={
-            "username": "test_user",
-            "password": "test_password"
-        })
+        response = client.post(
+            "/auth/login", json={"username": "test_user", "password": "test_password"}
+        )
         assert response.status_code == 200
         assert "token" in response.json()
 
@@ -25,10 +24,10 @@ class TestAuthEndpoints:
 
 class TestBlockchainEndpoints:
     def test_connect_wallet(self):
-        response = client.post("/blockchain/connect", json={
-            "wallet_address": "0x1234567890abcdef",
-            "chain_id": 1
-        })
+        response = client.post(
+            "/blockchain/connect",
+            json={"wallet_address": "0x1234567890abcdef", "chain_id": 1},
+        )
         assert response.status_code == 200
         assert response.json()["connected"] is True
 
@@ -65,13 +64,16 @@ class TestArtworkEndpoints:
         assert response.status_code == 200
 
     def test_get_batch_analytics(self):
-        response = client.post("/wp-json/vortex-ai/v1/artwork-analytics/batch", json={
-            "artwork_ids": [1, 2, 3]
-        })
+        response = client.post(
+            "/wp-json/vortex-ai/v1/artwork-analytics/batch",
+            json={"artwork_ids": [1, 2, 3]},
+        )
         assert response.status_code == 200
 
     def test_get_category_analytics(self):
-        response = client.get("/wp-json/vortex-ai/v1/artwork-analytics/category/digital")
+        response = client.get(
+            "/wp-json/vortex-ai/v1/artwork-analytics/category/digital"
+        )
         assert response.status_code == 200
 
 
@@ -81,10 +83,10 @@ class TestAIEndpoints:
         assert response.status_code == 200
 
     def test_analyze_data(self):
-        response = client.post("/api/v1/analyze", json={
-            "data": {"test": "data"},
-            "analysis_type": "market"
-        })
+        response = client.post(
+            "/api/v1/analyze",
+            json={"data": {"test": "data"}, "analysis_type": "market"},
+        )
         assert response.status_code == 200
 
 
@@ -97,4 +99,4 @@ class TestMainEndpoints:
     def test_health_check(self):
         response = client.get("/health")
         assert response.status_code == 200
-        assert response.json()["status"] == "healthy" 
+        assert response.json()["status"] == "healthy"
