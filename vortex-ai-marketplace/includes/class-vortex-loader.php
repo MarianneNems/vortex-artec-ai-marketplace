@@ -1,5 +1,15 @@
 <?php
 /**
+ * Register all actions and filters for the plugin
+ *
+ * @link       https://vortexartec.com
+ * @since      1.0.0
+ *
+ * @package    Vortex_AI_Marketplace
+ * @subpackage Vortex_AI_Marketplace/includes
+ */
+
+/**
  * Register all actions and filters for the plugin.
  *
  * Maintain a list of all hooks that are registered throughout
@@ -8,6 +18,7 @@
  *
  * @package    Vortex_AI_Marketplace
  * @subpackage Vortex_AI_Marketplace/includes
+ * @author     Marianne Nems <Marianne@VortexArtec.com>
  */
 class Vortex_Loader {
 
@@ -30,6 +41,22 @@ class Vortex_Loader {
     protected $filters;
 
     /**
+     * The array of shortcodes registered with WordPress.
+     *
+     * @since    
+     */
+    protected $shortcodes;
+
+    /**
+     * The theme compatibility instance.
+     *
+     * @since    1.0.0
+     * @access   protected
+     * @var      Vortex_Theme_Compatibility    $theme_compatibility    Ensures theme compatibility.
+     */
+    protected $theme_compatibility;
+
+    /**
      * Initialize the collections used to maintain the actions and filters.
      *
      * @since    1.0.0
@@ -37,6 +64,17 @@ class Vortex_Loader {
     public function __construct() {
         $this->actions = array();
         $this->filters = array();
+        $this->set_theme_compatibility();
+    }
+
+    /**
+     * Initialize theme compatibility.
+     *
+     * @since    1.0.0
+     * @access   private
+     */
+    private function set_theme_compatibility() {
+        $this->theme_compatibility = new Vortex_Theme_Compatibility( $this->get_plugin_name(), $this->get_version() );
     }
 
     /**
@@ -68,6 +106,18 @@ class Vortex_Loader {
     }
 
     /**
+     * Add a new shortcode to the collection of shortcodes.
+     *
+     * @since    1.0.0
+     * @param    string    $hook          The name of the WordPress shortcode that is being registered.
+     * @param    object    $component     A reference to the instance of the object on which the shortcode is defined.
+     * @param    string    $callback      The name of the function definition on the $component.
+     */
+    public function add_shortcode( $hook, $component, $callback ) {
+        $this->shortcodes = $this->add_to_collection( $this->shortcodes, $hook, $component, $callback );
+    }
+
+    /**
      * A utility function that is used to register the actions and hooks into a single
      * collection.
      *
@@ -87,7 +137,7 @@ class Vortex_Loader {
             'component'     => $component,
             'callback'      => $callback,
             'priority'      => $priority,
-            'accepted_args' => $accepted_args
+            'accepted_args' => $accepted_args,
         );
 
         return $hooks;
@@ -105,6 +155,10 @@ class Vortex_Loader {
 
         foreach ( $this->actions as $hook ) {
             add_action( $hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args'] );
+        }
+
+        foreach ( $this->shortcodes as $hook ) {
+            add_shortcode( $hook['hook'], array( $hook['component'], $hook['callback'] ) );
         }
     }
 } 
