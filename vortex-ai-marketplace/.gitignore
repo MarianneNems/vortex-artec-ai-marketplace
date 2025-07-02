@@ -220,4 +220,53 @@ local-*
 scratch/
 playground/
 experiments/
-test-data/ 
+test-data/
+
+# Frontend Build System
+# =====================
+# Node modules and lock files
+package-lock.json
+yarn.lock
+
+# Build outputs
+/dist/
+/build/
+/public/css/dist/
+/public/js/dist/
+/admin/css/dist/
+/admin/js/dist/
+
+# CSS processed files
+*.min.css
+*.min.css.map
+
+# JavaScript processed files
+*.min.js
+*.min.js.map
+
+# Testing and Coverage
+# ===================
+/coverage/
+/.nyc_output/
+/tests/js/coverage/
+jest-coverage/
+/tests/coverage/
+
+# Linting and formatting
+# ======================
+.eslintcache
+.sass-cache/
+.prettier-cache/
+
+# Development tools
+# =================
+*.log
+.webpack/
+stats.json
+bundle-analyzer-report.html
+
+# Editor and IDE temp files
+# =========================
+*.tmp
+*.temp
+.cache/ 
