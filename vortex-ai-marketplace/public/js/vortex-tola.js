@@ -1,385 +1,575 @@
 /**
- * TOLA Token Integration for Vortex AI Marketplace
+ * VORTEX AI Marketplace Frontend JavaScript
+ *
+ * Handles all AJAX interactions with the REST API endpoints
+ * for the Artist Journey implementation.
+ *
+ * @since 2.0.0
  */
+
 (function($) {
     'use strict';
 
     // Initialize when document is ready
     $(document).ready(function() {
-        // Initialize wallet connection
-        initWalletConnection();
-        
-        // Initialize TOLA balance display
-        updateTolaBalance();
-        
-        // Initialize token transaction handlers
-        initTransactionHandlers();
-        
-        // Initialize product purchase handlers
-        initProductPurchaseHandlers();
+        VortexAPI.init();
     });
 
     /**
-     * Initialize Solana wallet connection
+     * Main VORTEX API object
      */
-    function initWalletConnection() {
-        // Connect wallet button click handler
-        $('.vortex-connect-wallet-button').on('click', function(e) {
-            e.preventDefault();
-            connectWallet();
-        });
+    window.VortexAPI = {
         
-        // Disconnect wallet button click handler
-        $('.vortex-disconnect-wallet-button').on('click', function(e) {
-            e.preventDefault();
-            disconnectWallet();
-        });
-        
-        // Copy address button click handler
-        $('.vortex-copy-address-button').on('click', function(e) {
-            e.preventDefault();
-            const address = $(this).data('address');
-            copyToClipboard(address);
-            alert('Address copied to clipboard!');
-        });
-    }
-    
-    /**
-     * Connect to Solana wallet
-     */
-    async function connectWallet() {
-        try {
-            // Check if Phantom wallet is installed
-            const isPhantomInstalled = window.solana && window.solana.isPhantom;
+        /**
+         * Initialize the API handlers
+         */
+        init: function() {
+            this.bindEvents();
+            this.loadInitialData();
+        },
+
+        /**
+         * Bind event handlers
+         */
+        bindEvents: function() {
+            // Artist Journey Events
+            $(document).on('click', '#startRoleQuiz', this.startRoleQuiz);
+            $(document).on('click', '#connectWallet', this.connectWallet);
+            $(document).on('change', '#seedArtFile', this.uploadSeedArt);
+            $(document).on('click', '#completeSignup', this.completeSignup);
+
+            // AI Generation Events
+            $(document).on('click', '#generateArt', this.generateArtwork);
+            $(document).on('change', '#galleryFilter', this.filterGallery);
+            $(document).on('click', '#createCollection', this.createCollection);
+
+            // Plan Management Events
+            $(document).on('click', '.vortex-plan-select', this.selectPlan);
             
-            if (!isPhantomInstalled) {
-                alert('Phantom wallet is not installed. Please install it to continue.');
-                window.open('https://phantom.app/', '_blank');
-                return;
+            // Milestone Events
+            $(document).on('click', '.vortex-milestone-complete', this.completeMilestone);
+        },
+
+        /**
+         * Load initial data on page load
+         */
+        loadInitialData: function() {
+            if ($('#vortexPlansGrid').length) {
+                this.loadPlans();
             }
-            
-            // Connect to wallet
-            const response = await window.solana.connect();
-            const walletAddress = response.publicKey.toString();
-            
-            // Save the wallet address via AJAX
-            saveWalletAddress(walletAddress);
-            
-        } catch (error) {
-            console.error('Error connecting to wallet:', error);
-            alert('Failed to connect to wallet: ' + error.message);
-        }
-    }
-    
-    /**
-     * Disconnect from Solana wallet
-     */
-    async function disconnectWallet() {
-        try {
-            if (window.solana && window.solana.isConnected) {
-                await window.solana.disconnect();
+            if ($('#generationLimits').length) {
+                this.loadGenerationLimits();
             }
-            
-            // Remove the wallet address via AJAX
+            if ($('#milestonesTimeline').length) {
+                this.loadMilestones();
+            }
+            if ($('#galleryGrid').length) {
+                this.loadGallery();
+            }
+        },
+
+        /**
+         * Make API request with proper authentication
+         */
+        apiRequest: function(endpoint, method, data, callback) {
             $.ajax({
-                url: vortexTola.ajaxUrl,
-                type: 'POST',
-                data: {
-                    action: 'vortex_disconnect_wallet',
-                    nonce: vortexTola.nonce
+                url: vortexAjax.restUrl + endpoint,
+                method: method || 'GET',
+                data: data,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-WP-Nonce', vortexAjax.nonce);
                 },
                 success: function(response) {
-                    if (response.success) {
-                        location.reload();
-                    } else {
-                        alert(response.data.message);
-                    }
+                    if (callback) callback(null, response);
                 },
-                error: function() {
-                    alert('An error occurred while disconnecting your wallet.');
+                error: function(xhr, status, error) {
+                    const errorData = xhr.responseJSON || { message: error };
+                    if (callback) callback(errorData, null);
                 }
             });
-            
-        } catch (error) {
-            console.error('Error disconnecting wallet:', error);
-            alert('Failed to disconnect wallet: ' + error.message);
-        }
-    }
-    
-    /**
-     * Save wallet address to user profile
-     */
-    function saveWalletAddress(address) {
-        $.ajax({
-            url: vortexTola.ajaxUrl,
-            type: 'POST',
-            data: {
-                action: 'vortex_save_wallet_address',
-                wallet_address: address,
-                nonce: vortexTola.nonce
-            },
-            success: function(response) {
-                if (response.success) {
-                    location.reload();
-                } else {
-                    alert(response.data.message);
-                }
-            },
-            error: function() {
-                alert('An error occurred while saving your wallet address.');
-            }
-        });
-    }
-    
-    /**
-     * Update TOLA balance display
-     */
-    function updateTolaBalance() {
-        // Get wallet address from data attribute
-        const walletAddressEl = $('.vortex-tola-wallet-address .value');
-        
-        if (walletAddressEl.length === 0) {
-            return;
-        }
-        
-        const walletAddress = $('.vortex-copy-address-button').data('address');
-        
-        if (!walletAddress) {
-            return;
-        }
-        
-        // Get TOLA balance via AJAX
-        $.ajax({
-            url: vortexTola.ajaxUrl,
-            type: 'POST',
-            data: {
-                action: 'vortex_get_tola_balance',
-                wallet_address: walletAddress,
-                nonce: vortexTola.nonce
-            },
-            success: function(response) {
-                if (response.success) {
-                    $('.vortex-tola-wallet-balance .value').text(response.data.formatted_balance);
-                    $('.vortex-tola-balance-amount').text(response.data.formatted_balance);
-                }
-            },
-            error: function() {
-                console.error('Failed to update TOLA balance.');
-            }
-        });
-    }
-    
-    /**
-     * Initialize TOLA transaction handlers
-     */
-    function initTransactionHandlers() {
-        // Send TOLA form submission
-        $('.vortex-tola-send-form').on('submit', function(e) {
-            e.preventDefault();
-            
-            const recipientAddress = $('#recipient_address').val();
-            const amount = parseFloat($('#amount').val());
-            
-            if (!recipientAddress || isNaN(amount) || amount <= 0) {
-                $('.vortex-tola-send-result').html('<div class="error">Please enter a valid recipient address and amount.</div>');
-                return;
-            }
-            
-            sendTolaTokens(recipientAddress, amount);
-        });
-    }
-    
-    /**
-     * Send TOLA tokens to recipient
-     */
-    async function sendTolaTokens(recipient, amount) {
-        try {
-            // Check if Phantom wallet is installed and connected
-            if (!window.solana || !window.solana.isPhantom || !window.solana.isConnected) {
-                alert('Please connect your Phantom wallet first.');
-                return;
-            }
-            
-            // Get the token program
-            const tokenProgramId = new solanaWeb3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
-            const tokenMint = new solanaWeb3.PublicKey(vortexTola.tokenAddress);
-            
-            // Get the current wallet
-            const fromAddress = window.solana.publicKey.toString();
-            
-            // Create a new connection to the Solana network
-            const connection = new solanaWeb3.Connection(vortexTola.rpcUrl);
-            
-            // Get token accounts
-            const fromTokenAccounts = await connection.getParsedTokenAccountsByOwner(
-                window.solana.publicKey,
-                { mint: tokenMint }
-            );
-            
-            if (fromTokenAccounts.value.length === 0) {
-                alert('You do not have a TOLA token account.');
-                return;
-            }
-            
-            const fromTokenAccount = fromTokenAccounts.value[0].pubkey;
-            
-            // Get or create recipient token account
-            let toTokenAccount;
-            const recipientPubkey = new solanaWeb3.PublicKey(recipient);
-            
-            try {
-                const toTokenAccounts = await connection.getParsedTokenAccountsByOwner(
-                    recipientPubkey,
-                    { mint: tokenMint }
-                );
-                
-                if (toTokenAccounts.value.length > 0) {
-                    toTokenAccount = toTokenAccounts.value[0].pubkey;
-                } else {
-                    // Would need to create an account, which requires more complex transaction
-                    alert('Recipient does not have a TOLA token account yet.');
+        },
+
+        /**
+         * Load subscription plans
+         */
+        loadPlans: function() {
+            this.apiRequest('plans', 'GET', null, function(error, response) {
+                if (error) {
+                    $('#vortexPlansGrid').html('<div class="vortex-error">Failed to load plans</div>');
                     return;
                 }
-            } catch (error) {
-                console.error('Error getting recipient token account:', error);
-                alert('Failed to get recipient token account: ' + error.message);
+
+                let html = '';
+                response.plans.forEach(function(plan) {
+                    html += `
+                        <div class="vortex-plan ${plan.popular ? 'vortex-plan-popular' : ''}" data-plan="${plan.id}">
+                            ${plan.popular ? '<div class="vortex-plan-badge">Popular</div>' : ''}
+                            <h3>${plan.name}</h3>
+                            <div class="vortex-plan-price">$${plan.price}<span>/month</span></div>
+                            <ul class="vortex-plan-features">
+                                ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+                            </ul>
+                            <button class="vortex-btn vortex-btn-primary vortex-plan-select" data-plan="${plan.id}">
+                                Choose ${plan.name}
+                            </button>
+                        </div>
+                    `;
+                });
+
+                $('#vortexPlansGrid').html(html);
+            });
+        },
+
+        /**
+         * Select a subscription plan
+         */
+        selectPlan: function(e) {
+            e.preventDefault();
+            const planId = $(this).data('plan');
+            const userId = vortexAjax.currentUserId;
+
+            if (!userId) {
+                alert('Please log in to select a plan.');
+            return;
+        }
+        
+            VortexAPI.apiRequest(`users/${userId}/plan`, 'POST', { plan: planId }, function(error, response) {
+                if (error) {
+                    alert('Failed to select plan: ' + error.message);
+            return;
+        }
+        
+                alert('Plan selected successfully!');
+                $('.vortex-plan').removeClass('vortex-plan-selected');
+                $(`.vortex-plan[data-plan="${planId}"]`).addClass('vortex-plan-selected');
+            });
+        },
+
+        /**
+         * Start the role quiz
+         */
+        startRoleQuiz: function(e) {
+            e.preventDefault();
+            
+            // Mock quiz data - in real implementation, this would be dynamic
+            const quizQuestions = [
+                {
+                    question: "What describes your primary interest in art?",
+                    options: [
+                        { text: "Creating original artworks", value: "artist" },
+                        { text: "Collecting and investing", value: "collector" },
+                        { text: "Curating and organizing", value: "curator" },
+                        { text: "Trading and investing", value: "investor" }
+                    ]
+                }
+            ];
+
+            VortexAPI.showQuizModal(quizQuestions, function(answers) {
+                const userId = vortexAjax.currentUserId;
+                VortexAPI.apiRequest(`users/${userId}/role-quiz`, 'POST', { answers: answers }, function(error, response) {
+                    if (error) {
+                        alert('Quiz submission failed: ' + error.message);
                 return;
             }
             
-            // Convert amount to lamports (accounting for decimals)
-            const amountLamports = Math.floor(amount * Math.pow(10, vortexTola.tokenDecimals));
-            
-            // Create a new transaction
-            const transaction = new solanaWeb3.Transaction().add(
-                splToken.Token.createTransferInstruction(
-                    tokenProgramId,
-                    fromTokenAccount,
-                    toTokenAccount,
-                    window.solana.publicKey,
-                    [],
-                    amountLamports
-                )
-            );
-            
-            // Set recent blockhash and fee payer
-            transaction.feePayer = window.solana.publicKey;
-            transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
-            
-            // Sign and send transaction
-            const signed = await window.solana.signTransaction(transaction);
-            const signature = await connection.sendRawTransaction(signed.serialize());
-            
-            // Wait for confirmation
-            await connection.confirmTransaction(signature);
-            
-            // Record transaction on server
-            recordTransaction(fromAddress, recipient, amount, { signature: signature });
-            
-            $('.vortex-tola-send-result').html('<div class="success">Transaction sent successfully!</div>');
-            $('#recipient_address').val('');
-            $('#amount').val('');
-            
-            // Update balance
-            setTimeout(updateTolaBalance, 2000);
-            
-        } catch (error) {
-            console.error('Error sending TOLA tokens:', error);
-            $('.vortex-tola-send-result').html('<div class="error">Failed to send tokens: ' + error.message + '</div>');
-        }
-    }
-    
-    /**
-     * Record transaction on server
-     */
-    function recordTransaction(from, to, amount, transactionData) {
-        $.ajax({
-            url: vortexTola.ajaxUrl,
-            type: 'POST',
-            data: {
-                action: 'vortex_process_tola_transaction',
-                from_address: from,
-                to_address: to,
-                amount: amount,
-                transaction_data: transactionData,
-                nonce: vortexTola.nonce
-            },
-            success: function(response) {
-                if (!response.success) {
-                    console.error('Failed to record transaction:', response.data.message);
-                }
-            },
-            error: function() {
-                console.error('AJAX error recording transaction.');
+                    alert(`Quiz completed! Your recommended role: ${response.recommended_role}`);
+                    $('.vortex-step[data-step="role-quiz"]').addClass('vortex-step-completed');
+                    VortexAPI.checkSignupCompletion();
+                });
+            });
+        },
+
+        /**
+         * Connect wallet
+         */
+        connectWallet: function(e) {
+            e.preventDefault();
+
+            // Check if Phantom wallet is available
+            if (typeof window.solana === 'undefined') {
+                alert('Please install Phantom wallet to continue.');
+                return;
             }
-        });
-    }
-    
-    /**
-     * Initialize product purchase handlers
-     */
-    function initProductPurchaseHandlers() {
-        // Product purchase form submission
-        $('.vortex-product-purchase-form').on('submit', function(e) {
+            
+            window.solana.connect().then(function(response) {
+                const walletAddress = response.publicKey.toString();
+                
+                VortexAPI.apiRequest('wallet/connect', 'POST', {
+                    wallet_address: walletAddress,
+                    wallet_type: 'phantom'
+                }, function(error, response) {
+                    if (error) {
+                        alert('Wallet connection failed: ' + error.message);
+                        return;
+                    }
+
+                    alert('Wallet connected successfully!');
+                    $('.vortex-step[data-step="wallet-connect"]').addClass('vortex-step-completed');
+                    VortexAPI.checkSignupCompletion();
+                });
+            }).catch(function(error) {
+                alert('Wallet connection cancelled.');
+            });
+        },
+
+        /**
+         * Upload seed art
+         */
+        uploadSeedArt: function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('seed_art', file);
+
+            const userId = vortexAjax.currentUserId;
+            
+            $.ajax({
+                url: vortexAjax.restUrl + `users/${userId}/seed-art/upload`,
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-WP-Nonce', vortexAjax.nonce);
+                },
+                success: function(response) {
+                    alert('Seed art uploaded successfully!');
+                    $('.vortex-step[data-step="seed-art"]').addClass('vortex-step-completed');
+                    VortexAPI.checkSignupCompletion();
+                },
+                error: function(xhr) {
+                    const error = xhr.responseJSON || { message: 'Upload failed' };
+                    alert('Upload failed: ' + error.message);
+                }
+            });
+        },
+
+        /**
+         * Check if signup is complete
+         */
+        checkSignupCompletion: function() {
+            const completedSteps = $('.vortex-step-completed').length;
+            const totalSteps = $('.vortex-step').length;
+
+            if (completedSteps >= totalSteps) {
+                $('#completeSignup').prop('disabled', false);
+            }
+        },
+
+        /**
+         * Complete signup process
+         */
+        completeSignup: function(e) {
             e.preventDefault();
             
-            const productId = $(this).find('input[name="product_id"]').val();
-            const tolaPrice = $(this).find('input[name="tola_price"]').val();
-            
-            // Confirm purchase
-            if (confirm('Are you sure you want to purchase this product for ' + tolaPrice + ' TOLA?')) {
-                purchaseProduct($(this), productId, tolaPrice);
-            }
-        });
-    }
-    
-    /**
-     * Purchase a product with TOLA
-     */
-    function purchaseProduct(form, productId, tolaPrice) {
-        // Show loading state
-        const resultDiv = form.find('.vortex-purchase-result');
-        resultDiv.html('<div class="loading">Processing your purchase...</div>');
-        
-        // Send purchase request
-        $.ajax({
-            url: vortexTola.ajaxUrl,
-            type: 'POST',
-            data: {
-                action: 'vortex_purchase_product',
-                product_id: productId,
-                tola_price: tolaPrice,
-                nonce: form.find('input[name="nonce"]').val()
-            },
-            success: function(response) {
-                if (response.success) {
-                    resultDiv.html('<div class="success">' + response.data.message + '</div>');
-                    
-                    // Redirect after successful purchase
-                    if (response.data.redirect) {
-                        setTimeout(function() {
-                            window.location.href = response.data.redirect;
-                        }, 2000);
-                    }
-                } else {
-                    resultDiv.html('<div class="error">' + response.data.message + '</div>');
+            const userId = vortexAjax.currentUserId;
+            VortexAPI.apiRequest(`users/${userId}/accept-tos`, 'POST', { tos_version: '1.0' }, function(error, response) {
+                if (error) {
+                    alert('Signup completion failed: ' + error.message);
+                    return;
                 }
-            },
-            error: function() {
-                resultDiv.html('<div class="error">An error occurred while processing your purchase.</div>');
+
+                alert('Congratulations! Your Artist Journey setup is complete.');
+                window.location.reload();
+            });
+        },
+
+        /**
+         * Generate artwork
+         */
+        generateArtwork: function(e) {
+            e.preventDefault();
+
+            const prompt = $('#artPrompt').val();
+            const style = $('#artStyle').val();
+            const dimensions = $('#artDimensions').val();
+
+            if (!prompt.trim()) {
+                alert('Please enter a prompt for artwork generation.');
+                return;
             }
-        });
-    }
-    
-    /**
-     * Helper function to copy text to clipboard
-     */
-    function copyToClipboard(text) {
-        const el = document.createElement('textarea');
-        el.value = text;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-    }
+            
+            $('#generateArt').prop('disabled', true).text('Generating...');
+
+            VortexAPI.apiRequest('api/generate', 'POST', {
+                prompt: prompt,
+                style: style,
+                dimensions: dimensions
+            }, function(error, response) {
+                $('#generateArt').prop('disabled', false).text('Generate Artwork');
+
+                if (error) {
+                    alert('Generation failed: ' + error.message);
+                    return;
+                }
+
+                VortexAPI.pollGenerationStatus(response.job_id);
+            });
+        },
+
+        /**
+         * Poll generation status
+         */
+        pollGenerationStatus: function(jobId) {
+            const pollInterval = setInterval(function() {
+                VortexAPI.apiRequest(`api/generate/status/${jobId}`, 'GET', null, function(error, response) {
+                    if (error) {
+                        clearInterval(pollInterval);
+                        alert('Failed to check generation status');
+                return;
+            }
+            
+                    if (response.status === 'completed') {
+                        clearInterval(pollInterval);
+                        VortexAPI.displayGenerationResults(response);
+                    } else if (response.status === 'failed') {
+                        clearInterval(pollInterval);
+                        alert('Generation failed');
+                    }
+                });
+            }, 2000);
+        },
+
+        /**
+         * Display generation results
+         */
+        displayGenerationResults: function(generation) {
+            let html = '<div class="vortex-generation-result">';
+            html += '<h3>Generation Complete!</h3>';
+            html += '<div class="vortex-generated-images">';
+            
+            generation.result_urls.forEach(function(url, index) {
+                html += `
+                    <div class="vortex-generated-image">
+                        <img src="${url}" alt="Generated artwork ${index + 1}">
+                        <div class="vortex-image-actions">
+                            <button class="vortex-btn vortex-btn-sm" onclick="VortexAPI.downloadImage('${url}')">Download</button>
+                            <button class="vortex-btn vortex-btn-sm" onclick="VortexAPI.mintNFT('${url}')">Mint NFT</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div></div>';
+            $('#generationResults').html(html);
+            VortexAPI.loadGenerationLimits(); // Refresh limits
+        },
+
+        /**
+         * Load generation limits
+         */
+        loadGenerationLimits: function() {
+            const userId = vortexAjax.currentUserId;
+            if (!userId) return;
+
+            VortexAPI.apiRequest(`users/${userId}/plan`, 'GET', null, function(error, response) {
+                if (error || !response.plan_details) return;
+
+                const limits = response.plan_details.limits;
+                const remaining = limits.monthly_generations === -1 ? 'Unlimited' : '50'; // Mock remaining
+                $('#remainingGens').text(remaining);
+            });
+        },
+
+        /**
+         * Load user gallery
+         */
+        loadGallery: function() {
+            const userId = vortexAjax.currentUserId;
+            VortexAPI.apiRequest(`users/${userId}/collections`, 'GET', null, function(error, response) {
+                if (error) {
+                    $('#galleryGrid').html('<div class="vortex-error">Failed to load gallery</div>');
+                    return;
+                }
+
+                // Mock gallery items
+                const items = [
+                    { id: 1, title: 'Digital Sunset', type: 'generated', url: 'https://via.placeholder.com/300x300' },
+                    { id: 2, title: 'Abstract Dreams', type: 'uploaded', url: 'https://via.placeholder.com/300x300' }
+                ];
+
+                let html = '';
+                items.forEach(function(item) {
+                    html += `
+                        <div class="vortex-gallery-item" data-type="${item.type}">
+                            <img src="${item.url}" alt="${item.title}">
+                            <div class="vortex-item-overlay">
+                                <h4>${item.title}</h4>
+                                <div class="vortex-item-actions">
+                                    <button class="vortex-btn vortex-btn-sm" onclick="VortexAPI.viewItem(${item.id})">View</button>
+                                    <button class="vortex-btn vortex-btn-sm" onclick="VortexAPI.editItem(${item.id})">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                $('#galleryGrid').html(html);
+            });
+        },
+
+        /**
+         * Load user milestones
+         */
+        loadMilestones: function() {
+            const userId = vortexAjax.currentUserId;
+            VortexAPI.apiRequest(`users/${userId}/milestones`, 'GET', null, function(error, response) {
+                if (error) {
+                    $('#milestonesTimeline').html('<div class="vortex-error">Failed to load milestones</div>');
+                    return;
+                }
+
+                // Mock milestones
+                const milestones = [
+                    { 
+                        id: 1, 
+                        title: 'Complete Profile Setup', 
+                        status: 'completed', 
+                        progress: 100,
+                        reward: '10 TOLA tokens'
+                    },
+                    { 
+                        id: 2, 
+                        title: 'Upload First Artwork', 
+                        status: 'in_progress', 
+                        progress: 75,
+                        reward: '25 TOLA tokens'
+                    },
+                    { 
+                        id: 3, 
+                        title: 'Make First Sale', 
+                        status: 'pending', 
+                        progress: 0,
+                        reward: '50 TOLA tokens'
+                    }
+                ];
+
+                let html = '';
+                milestones.forEach(function(milestone) {
+                    html += `
+                        <div class="vortex-milestone vortex-milestone-${milestone.status}">
+                            <div class="vortex-milestone-icon">
+                                ${milestone.status === 'completed' ? '✓' : milestone.status === 'in_progress' ? '⏳' : '○'}
+                            </div>
+                            <div class="vortex-milestone-content">
+                                <h4>${milestone.title}</h4>
+                                <div class="vortex-milestone-progress">
+                                    <div class="vortex-progress-bar">
+                                        <div class="vortex-progress-fill" style="width: ${milestone.progress}%"></div>
+                                    </div>
+                                    <span>${milestone.progress}%</span>
+                                </div>
+                                <div class="vortex-milestone-reward">Reward: ${milestone.reward}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                $('#milestonesTimeline').html(html);
+
+                // Update overall progress
+                const overallProgress = Math.round(milestones.reduce((sum, m) => sum + m.progress, 0) / milestones.length);
+                $('#overallProgress').css('width', overallProgress + '%');
+                $('#overallProgressText').text(overallProgress + '%');
+            });
+        },
+
+        /**
+         * Show quiz modal
+         */
+        showQuizModal: function(questions, callback) {
+            // Create modal HTML
+            let modalHtml = `
+                <div class="vortex-modal" id="vortexQuizModal">
+                    <div class="vortex-modal-content">
+                        <div class="vortex-modal-header">
+                            <h3>Role Discovery Quiz</h3>
+                            <button class="vortex-modal-close">&times;</button>
+                        </div>
+                        <div class="vortex-modal-body">
+                            <form id="roleQuizForm">
+            `;
+
+            questions.forEach(function(q, index) {
+                modalHtml += `
+                    <div class="vortex-quiz-question">
+                        <h4>${q.question}</h4>
+                        <div class="vortex-quiz-options">
+                `;
+                q.options.forEach(function(option) {
+                    modalHtml += `
+                        <label>
+                            <input type="radio" name="question_${index}" value="${option.value}">
+                            ${option.text}
+                        </label>
+                    `;
+                });
+                modalHtml += '</div></div>';
+            });
+
+            modalHtml += `
+                            </form>
+                        </div>
+                        <div class="vortex-modal-footer">
+                            <button class="vortex-btn vortex-btn-primary" id="submitQuiz">Submit Quiz</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            $('body').append(modalHtml);
+            $('#vortexQuizModal').show();
+
+            // Handle quiz submission
+            $('#submitQuiz').on('click', function() {
+                const formData = new FormData(document.getElementById('roleQuizForm'));
+                const answers = [];
+                for (let [key, value] of formData.entries()) {
+                    answers.push({ [key]: value, role_preference: value });
+                }
+
+                $('#vortexQuizModal').remove();
+                callback(answers);
+            });
+
+            // Handle modal close
+            $('.vortex-modal-close').on('click', function() {
+                $('#vortexQuizModal').remove();
+            });
+        },
+
+        /**
+         * Utility functions
+         */
+        downloadImage: function(url) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'generated-artwork.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        },
+
+        mintNFT: function(imageUrl) {
+            VortexAPI.apiRequest('nft/mint', 'POST', { image_url: imageUrl }, function(error, response) {
+                if (error) {
+                    alert('NFT minting failed: ' + error.message);
+                    return;
+                }
+                alert('NFT minting initiated! Transaction ID: ' + response.transaction_id);
+            });
+        },
+
+        viewItem: function(itemId) {
+            // Open item in modal or navigate to detail page
+            console.log('Viewing item:', itemId);
+        },
+
+        editItem: function(itemId) {
+            // Open edit modal
+            console.log('Editing item:', itemId);
+        }
+    };
 
 })(jQuery); 
