@@ -2,539 +2,312 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
- * @title TOLA-ART Daily Royalty Distribution Contract
- * @dev Automated royalty distribution for daily AI-generated artwork
+ * @title TOLAArtDailyRoyalty
+ * @dev Smart contract for TOLA-ART daily generation with dual royalty structure
  * 
- * Features:
- * - Enforced 5% royalty to creator (Marianne Nems)
- * - Remaining 95% distributed equally among participating artists
- * - Automatic TOLA token distribution upon sale
- * - Immutable royalty percentages
- * - Gas-optimized batch payments
+ * ROYALTY STRUCTURE:
+ * First Sale: 5% creator + 95% participating artists
+ * Second+ Sales: 5% creator + 15% artists + 80% owner/reseller
  */
-contract TOLAArtDailyRoyalty is ERC721, Ownable, ReentrancyGuard {
-    using Counters for Counters.Counter;
+contract TOLAArtDailyRoyalty is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     
-    // === STATE VARIABLES ===
-    
-    Counters.Counter private _tokenIdCounter;
-    
-    // TOLA token contract
+    // TOLA Token interface
     IERC20 public immutable tolaToken;
     
-    // Creator address (Marianne Nems) - immutable for security
+    // Creator wallet (Marianne Nems) - receives 5% on all sales
     address public immutable creator;
     
     // Marketplace contract address
     address public marketplace;
     
-    // VORTEX ARTEC admin address
-    address public vortexAdmin;
+    // Royalty percentages (in basis points, 100 = 1%)
+    uint256 public constant CREATOR_ROYALTY = 500; // 5%
+    uint256 public constant FIRST_SALE_ARTIST_SHARE = 9500; // 95%
+    uint256 public constant RESALE_ARTIST_SHARE = 1500; // 15%
+    uint256 public constant RESALE_OWNER_SHARE = 8000; // 80%
     
-    // Royalty percentages (immutable to prevent manipulation)
-    uint256 public constant CREATOR_ROYALTY_PERCENTAGE = 5; // 5%
-    uint256 public constant ARTIST_POOL_PERCENTAGE = 95; // 95%
-    uint256 public constant PERCENTAGE_DENOMINATOR = 100;
+    // Counter for token IDs
+    uint256 private _tokenIdCounter;
     
-    // Daily artwork tracking
-    struct DailyArtwork {
-        uint256 tokenId;
-        string ipfsHash;
-        string generationPrompt;
-        uint256 generationDate;
-        uint256 salePrice;
-        bool royaltiesDistributed;
-        address[] participatingArtists;
-        mapping(address => bool) isParticipatingArtist;
-        mapping(address => uint256) artistRoyaltyPaid;
-    }
+    // Participating artists for each token
+    mapping(uint256 => address[]) public participatingArtists;
+    mapping(uint256 => mapping(address => bool)) public isParticipatingArtist;
+    mapping(uint256 => uint256) public participatingArtistCount;
     
-    // Artist participation tracking
-    struct ArtistParticipation {
-        address wallet;
-        uint256 participationWeight;
-        uint256 totalRoyaltiesEarned;
-        uint256 participationCount;
-        bool isActive;
-    }
+    // Track if token has been sold before (first sale vs resale)
+    mapping(uint256 => bool) public hasBeenSold;
+    mapping(uint256 => address) public originalOwner;
     
-    // Royalty distribution tracking
-    struct RoyaltyDistribution {
-        uint256 dailyArtworkId;
-        uint256 saleAmount;
-        uint256 creatorRoyalty;
-        uint256 artistPoolTotal;
-        uint256 individualArtistShare;
-        uint256 participatingArtistsCount;
-        uint256 distributionTimestamp;
-        bool isCompleted;
-        string transactionHash;
-    }
+    // Sales tracking
+    mapping(uint256 => uint256) public totalSales;
+    mapping(uint256 => uint256) public creatorEarnings;
+    mapping(uint256 => uint256) public artistEarnings;
+    mapping(uint256 => uint256) public ownerEarnings;
     
-    // === MAPPINGS ===
+    // Daily art metadata
+    mapping(uint256 => string) public generationDate;
+    mapping(uint256 => string) public artworkPrompt;
+    mapping(uint256 => uint256) public dailyArtId;
     
-    mapping(uint256 => DailyArtwork) public dailyArtworks;
-    mapping(address => ArtistParticipation) public artistParticipations;
-    mapping(uint256 => RoyaltyDistribution) public royaltyDistributions;
-    mapping(string => uint256) public dateToArtworkId; // "YYYY-MM-DD" => tokenId
-    
-    // === EVENTS ===
-    
-    event DailyArtworkMinted(
-        uint256 indexed tokenId,
-        string date,
-        string ipfsHash,
-        uint256 participatingArtists
-    );
-    
-    event ArtworkSold(
-        uint256 indexed tokenId,
-        address indexed buyer,
-        uint256 salePrice,
-        uint256 timestamp
-    );
-    
-    event RoyaltyDistributed(
-        uint256 indexed tokenId,
-        uint256 distributionId,
-        uint256 creatorRoyalty,
-        uint256 artistPoolTotal,
-        uint256 participatingArtistsCount
-    );
-    
-    event CreatorRoyaltyPaid(
-        uint256 indexed tokenId,
-        address indexed creator,
-        uint256 amount
-    );
-    
-    event ArtistRoyaltyPaid(
-        uint256 indexed tokenId,
-        address indexed artist,
-        uint256 amount,
-        uint256 distributionId
-    );
-    
-    event ArtistParticipationAdded(
-        address indexed artist,
-        uint256 indexed tokenId,
-        uint256 participationWeight
-    );
-    
-    event ArtistParticipationUpdated(
-        address indexed artist,
-        bool isActive,
-        uint256 totalRoyalties
-    );
-    
-    // === ERRORS ===
-    
-    error UnauthorizedAccess();
-    error InvalidRoyaltyPercentage();
-    error ArtworkAlreadyExists();
-    error ArtworkNotFound();
-    error RoyaltiesAlreadyDistributed();
-    error InvalidParticipatingArtists();
-    error InsufficientBalance();
-    error TransferFailed();
-    error InvalidSalePrice();
-    error ArtistNotParticipating();
-    
-    // === MODIFIERS ===
-    
-    modifier onlyMarketplace() {
-        if (msg.sender != marketplace) revert UnauthorizedAccess();
-        _;
-    }
-    
-    modifier onlyVortexAdmin() {
-        if (msg.sender != vortexAdmin) revert UnauthorizedAccess();
-        _;
-    }
-    
-    modifier artworkExists(uint256 tokenId) {
-        if (!_exists(tokenId)) revert ArtworkNotFound();
-        _;
-    }
-    
-    // === CONSTRUCTOR ===
+    // Events
+    event TokenMinted(uint256 indexed tokenId, string date, address[] artists);
+    event FirstSaleCompleted(uint256 indexed tokenId, uint256 price, uint256 creatorAmount, uint256 artistAmount);
+    event ResaleCompleted(uint256 indexed tokenId, uint256 price, uint256 creatorAmount, uint256 artistAmount, uint256 ownerAmount);
+    event ArtistAdded(uint256 indexed tokenId, address artist);
+    event RoyaltyDistributed(uint256 indexed tokenId, address recipient, uint256 amount, string royaltyType);
     
     constructor(
         address _tolaToken,
         address _creator,
-        address _marketplace,
-        address _vortexAdmin
-    ) ERC721("TOLA-ART Daily Collection", "TOLA-DAILY") {
-        require(_tolaToken != address(0), "Invalid TOLA token address");
-        require(_creator != address(0), "Invalid creator address");
-        require(_marketplace != address(0), "Invalid marketplace address");
-        require(_vortexAdmin != address(0), "Invalid admin address");
-        
+        address _marketplace
+    ) ERC721("TOLA-ART Daily Collection", "TOLA-ART") {
         tolaToken = IERC20(_tolaToken);
         creator = _creator;
         marketplace = _marketplace;
-        vortexAdmin = _vortexAdmin;
     }
     
-    // === MAIN FUNCTIONS ===
+    modifier onlyMarketplace() {
+        require(msg.sender == marketplace, "Only marketplace can call this function");
+        _;
+    }
     
     /**
-     * @dev Mint daily artwork NFT with participating artists
-     * @param to Address to mint the NFT to (VORTEX ARTEC admin)
-     * @param date Date string in format "YYYY-MM-DD"
-     * @param ipfsHash IPFS hash of the artwork
-     * @param generationPrompt The prompt used to generate the artwork
-     * @param participatingArtists Array of artist wallet addresses
-     * @param participationWeights Array of participation weights (must match artists length)
+     * @dev Mint new TOLA-ART daily piece
      */
-    function mintDailyArtwork(
+    function mintDailyArt(
         address to,
+        string memory tokenURI,
         string memory date,
-        string memory ipfsHash,
-        string memory generationPrompt,
-        address[] memory participatingArtists,
-        uint256[] memory participationWeights
-    ) external onlyVortexAdmin nonReentrant returns (uint256) {
-        if (dateToArtworkId[date] != 0) revert ArtworkAlreadyExists();
-        if (participatingArtists.length == 0) revert InvalidParticipatingArtists();
-        if (participatingArtists.length != participationWeights.length) revert InvalidParticipatingArtists();
+        string memory prompt,
+        uint256 _dailyArtId,
+        address[] memory artists
+    ) public onlyOwner returns (uint256) {
+        uint256 tokenId = _tokenIdCounter;
+        _tokenIdCounter++;
         
-        _tokenIdCounter.increment();
-        uint256 tokenId = _tokenIdCounter.current();
-        
-        // Mint NFT
         _safeMint(to, tokenId);
+        _setTokenURI(tokenId, tokenURI);
         
-        // Initialize daily artwork
-        DailyArtwork storage artwork = dailyArtworks[tokenId];
-        artwork.tokenId = tokenId;
-        artwork.ipfsHash = ipfsHash;
-        artwork.generationPrompt = generationPrompt;
-        artwork.generationDate = block.timestamp;
-        artwork.royaltiesDistributed = false;
+        // Set metadata
+        generationDate[tokenId] = date;
+        artworkPrompt[tokenId] = prompt;
+        dailyArtId[tokenId] = _dailyArtId;
+        originalOwner[tokenId] = to;
         
         // Add participating artists
-        for (uint256 i = 0; i < participatingArtists.length; i++) {
-            address artist = participatingArtists[i];
-            uint256 weight = participationWeights[i];
-            
-            artwork.participatingArtists.push(artist);
-            artwork.isParticipatingArtist[artist] = true;
-            
-            // Update artist participation
-            ArtistParticipation storage participation = artistParticipations[artist];
-            participation.wallet = artist;
-            participation.participationWeight = weight;
-            participation.participationCount++;
-            participation.isActive = true;
-            
-            emit ArtistParticipationAdded(artist, tokenId, weight);
+        for (uint256 i = 0; i < artists.length; i++) {
+            if (!isParticipatingArtist[tokenId][artists[i]]) {
+                participatingArtists[tokenId].push(artists[i]);
+                isParticipatingArtist[tokenId][artists[i]] = true;
+            }
         }
+        participatingArtistCount[tokenId] = artists.length;
         
-        // Map date to token ID
-        dateToArtworkId[date] = tokenId;
-        
-        emit DailyArtworkMinted(tokenId, date, ipfsHash, participatingArtists.length);
-        
+        emit TokenMinted(tokenId, date, artists);
         return tokenId;
     }
     
     /**
-     * @dev Process artwork sale and distribute royalties
-     * @param tokenId The token ID of the sold artwork
-     * @param buyer Address of the buyer
-     * @param salePrice Sale price in TOLA tokens
+     * @dev Process sale with dual royalty structure
      */
-    function processArtworkSale(
+    function processSale(
         uint256 tokenId,
+        address seller,
         address buyer,
-        uint256 salePrice
-    ) external onlyMarketplace nonReentrant artworkExists(tokenId) {
-        if (salePrice == 0) revert InvalidSalePrice();
+        uint256 price
+    ) external onlyMarketplace nonReentrant {
+        require(_exists(tokenId), "Token does not exist");
+        require(price > 0, "Price must be greater than 0");
         
-        DailyArtwork storage artwork = dailyArtworks[tokenId];
+        bool isFirstSale = !hasBeenSold[tokenId];
         
-        if (artwork.royaltiesDistributed) revert RoyaltiesAlreadyDistributed();
-        
-        artwork.salePrice = salePrice;
-        
-        emit ArtworkSold(tokenId, buyer, salePrice, block.timestamp);
-        
-        // Distribute royalties immediately
-        _distributeRoyalties(tokenId, salePrice);
-    }
-    
-    /**
-     * @dev Internal function to distribute royalties
-     * @param tokenId The token ID
-     * @param salePrice The sale price in TOLA tokens
-     */
-    function _distributeRoyalties(uint256 tokenId, uint256 salePrice) internal {
-        DailyArtwork storage artwork = dailyArtworks[tokenId];
-        
-        // Calculate royalty amounts
-        uint256 creatorRoyalty = (salePrice * CREATOR_ROYALTY_PERCENTAGE) / PERCENTAGE_DENOMINATOR;
-        uint256 artistPoolTotal = (salePrice * ARTIST_POOL_PERCENTAGE) / PERCENTAGE_DENOMINATOR;
-        uint256 participatingArtistsCount = artwork.participatingArtists.length;
-        uint256 individualArtistShare = artistPoolTotal / participatingArtistsCount;
-        
-        // Create distribution record
-        uint256 distributionId = _createDistributionRecord(
-            tokenId,
-            salePrice,
-            creatorRoyalty,
-            artistPoolTotal,
-            individualArtistShare,
-            participatingArtistsCount
-        );
-        
-        // Transfer TOLA tokens from marketplace to this contract first
-        require(
-            tolaToken.transferFrom(marketplace, address(this), salePrice),
-            "Failed to receive sale proceeds"
-        );
-        
-        // Pay creator royalty
-        _payCreatorRoyalty(tokenId, creatorRoyalty, distributionId);
-        
-        // Pay artist royalties
-        _payArtistRoyalties(tokenId, individualArtistShare, distributionId);
-        
-        // Mark as distributed
-        artwork.royaltiesDistributed = true;
-        royaltyDistributions[distributionId].isCompleted = true;
-        
-        emit RoyaltyDistributed(
-            tokenId,
-            distributionId,
-            creatorRoyalty,
-            artistPoolTotal,
-            participatingArtistsCount
-        );
-    }
-    
-    /**
-     * @dev Create royalty distribution record
-     */
-    function _createDistributionRecord(
-        uint256 tokenId,
-        uint256 salePrice,
-        uint256 creatorRoyalty,
-        uint256 artistPoolTotal,
-        uint256 individualArtistShare,
-        uint256 participatingArtistsCount
-    ) internal returns (uint256) {
-        uint256 distributionId = uint256(keccak256(abi.encodePacked(
-            tokenId,
-            salePrice,
-            block.timestamp,
-            block.number
-        )));
-        
-        RoyaltyDistribution storage distribution = royaltyDistributions[distributionId];
-        distribution.dailyArtworkId = tokenId;
-        distribution.saleAmount = salePrice;
-        distribution.creatorRoyalty = creatorRoyalty;
-        distribution.artistPoolTotal = artistPoolTotal;
-        distribution.individualArtistShare = individualArtistShare;
-        distribution.participatingArtistsCount = participatingArtistsCount;
-        distribution.distributionTimestamp = block.timestamp;
-        distribution.isCompleted = false;
-        
-        return distributionId;
-    }
-    
-    /**
-     * @dev Pay creator royalty
-     */
-    function _payCreatorRoyalty(uint256 tokenId, uint256 amount, uint256 distributionId) internal {
-        require(tolaToken.transfer(creator, amount), "Creator royalty transfer failed");
-        
-        emit CreatorRoyaltyPaid(tokenId, creator, amount);
-    }
-    
-    /**
-     * @dev Pay artist royalties
-     */
-    function _payArtistRoyalties(uint256 tokenId, uint256 individualShare, uint256 distributionId) internal {
-        DailyArtwork storage artwork = dailyArtworks[tokenId];
-        
-        for (uint256 i = 0; i < artwork.participatingArtists.length; i++) {
-            address artist = artwork.participatingArtists[i];
-            
-            // Transfer TOLA to artist
-            require(tolaToken.transfer(artist, individualShare), "Artist royalty transfer failed");
-            
-            // Update artist participation
-            artistParticipations[artist].totalRoyaltiesEarned += individualShare;
-            artwork.artistRoyaltyPaid[artist] = individualShare;
-            
-            emit ArtistRoyaltyPaid(tokenId, artist, individualShare, distributionId);
+        if (isFirstSale) {
+            _processFirstSale(tokenId, seller, buyer, price);
+        } else {
+            _processResale(tokenId, seller, buyer, price);
         }
-    }
-    
-    // === VIEW FUNCTIONS ===
-    
-    /**
-     * @dev Get daily artwork information
-     */
-    function getDailyArtwork(uint256 tokenId) external view returns (
-        string memory ipfsHash,
-        string memory generationPrompt,
-        uint256 generationDate,
-        uint256 salePrice,
-        bool royaltiesDistributed,
-        address[] memory participatingArtists
-    ) {
-        DailyArtwork storage artwork = dailyArtworks[tokenId];
-        return (
-            artwork.ipfsHash,
-            artwork.generationPrompt,
-            artwork.generationDate,
-            artwork.salePrice,
-            artwork.royaltiesDistributed,
-            artwork.participatingArtists
-        );
+        
+        // Mark as sold and transfer ownership
+        hasBeenSold[tokenId] = true;
+        totalSales[tokenId] += price;
+        _transfer(seller, buyer, tokenId);
     }
     
     /**
-     * @dev Get artist participation info
+     * @dev Process first sale: 5% creator + 95% artists
      */
-    function getArtistParticipation(address artist) external view returns (
-        uint256 participationWeight,
-        uint256 totalRoyaltiesEarned,
-        uint256 participationCount,
-        bool isActive
-    ) {
-        ArtistParticipation storage participation = artistParticipations[artist];
-        return (
-            participation.participationWeight,
-            participation.totalRoyaltiesEarned,
-            participation.participationCount,
-            participation.isActive
-        );
+    function _processFirstSale(
+        uint256 tokenId,
+        address seller,
+        address buyer,
+        uint256 price
+    ) internal {
+        uint256 creatorAmount = (price * CREATOR_ROYALTY) / 10000;
+        uint256 artistPoolAmount = (price * FIRST_SALE_ARTIST_SHARE) / 10000;
+        
+        // Transfer creator royalty
+        require(tolaToken.transferFrom(buyer, creator, creatorAmount), "Creator payment failed");
+        creatorEarnings[tokenId] += creatorAmount;
+        emit RoyaltyDistributed(tokenId, creator, creatorAmount, "creator_first_sale");
+        
+        // Distribute to participating artists
+        uint256 artistCount = participatingArtistCount[tokenId];
+        if (artistCount > 0) {
+            uint256 perArtistAmount = artistPoolAmount / artistCount;
+            uint256 remainingAmount = artistPoolAmount;
+            
+            for (uint256 i = 0; i < artistCount; i++) {
+                address artist = participatingArtists[tokenId][i];
+                uint256 artistAmount = (i == artistCount - 1) ? remainingAmount : perArtistAmount;
+                
+                require(tolaToken.transferFrom(buyer, artist, artistAmount), "Artist payment failed");
+                artistEarnings[tokenId] += artistAmount;
+                remainingAmount -= artistAmount;
+                
+                emit RoyaltyDistributed(tokenId, artist, artistAmount, "artist_first_sale");
+            }
+        }
+        
+        emit FirstSaleCompleted(tokenId, price, creatorAmount, artistPoolAmount);
     }
     
     /**
-     * @dev Get royalty distribution details
+     * @dev Process resale: 5% creator + 15% artists + 80% owner/reseller
      */
-    function getRoyaltyDistribution(uint256 distributionId) external view returns (
-        uint256 dailyArtworkId,
-        uint256 saleAmount,
-        uint256 creatorRoyalty,
-        uint256 artistPoolTotal,
-        uint256 individualArtistShare,
-        uint256 participatingArtistsCount,
-        uint256 distributionTimestamp,
-        bool isCompleted
-    ) {
-        RoyaltyDistribution storage distribution = royaltyDistributions[distributionId];
-        return (
-            distribution.dailyArtworkId,
-            distribution.saleAmount,
-            distribution.creatorRoyalty,
-            distribution.artistPoolTotal,
-            distribution.individualArtistShare,
-            distribution.participatingArtistsCount,
-            distribution.distributionTimestamp,
-            distribution.isCompleted
-        );
+    function _processResale(
+        uint256 tokenId,
+        address seller,
+        address buyer,
+        uint256 price
+    ) internal {
+        uint256 creatorAmount = (price * CREATOR_ROYALTY) / 10000;
+        uint256 artistPoolAmount = (price * RESALE_ARTIST_SHARE) / 10000;
+        uint256 ownerAmount = (price * RESALE_OWNER_SHARE) / 10000;
+        
+        // Transfer creator royalty
+        require(tolaToken.transferFrom(buyer, creator, creatorAmount), "Creator payment failed");
+        creatorEarnings[tokenId] += creatorAmount;
+        emit RoyaltyDistributed(tokenId, creator, creatorAmount, "creator_resale");
+        
+        // Distribute to participating artists (15%)
+        uint256 artistCount = participatingArtistCount[tokenId];
+        if (artistCount > 0) {
+            uint256 perArtistAmount = artistPoolAmount / artistCount;
+            uint256 remainingArtistAmount = artistPoolAmount;
+            
+            for (uint256 i = 0; i < artistCount; i++) {
+                address artist = participatingArtists[tokenId][i];
+                uint256 artistAmount = (i == artistCount - 1) ? remainingArtistAmount : perArtistAmount;
+                
+                require(tolaToken.transferFrom(buyer, artist, artistAmount), "Artist payment failed");
+                artistEarnings[tokenId] += artistAmount;
+                remainingArtistAmount -= artistAmount;
+                
+                emit RoyaltyDistributed(tokenId, artist, artistAmount, "artist_resale");
+            }
+        }
+        
+        // Transfer to current owner/reseller (80%)
+        require(tolaToken.transferFrom(buyer, seller, ownerAmount), "Owner payment failed");
+        ownerEarnings[tokenId] += ownerAmount;
+        emit RoyaltyDistributed(tokenId, seller, ownerAmount, "owner_resale");
+        
+        emit ResaleCompleted(tokenId, price, creatorAmount, artistPoolAmount, ownerAmount);
     }
     
     /**
-     * @dev Check if artist is participating in specific artwork
+     * @dev Add artist to existing token (only before first sale)
      */
-    function isArtistParticipating(uint256 tokenId, address artist) external view returns (bool) {
-        return dailyArtworks[tokenId].isParticipatingArtist[artist];
+    function addParticipatingArtist(uint256 tokenId, address artist) external onlyOwner {
+        require(_exists(tokenId), "Token does not exist");
+        require(!hasBeenSold[tokenId], "Cannot add artists after first sale");
+        require(!isParticipatingArtist[tokenId][artist], "Artist already participating");
+        
+        participatingArtists[tokenId].push(artist);
+        isParticipatingArtist[tokenId][artist] = true;
+        participatingArtistCount[tokenId]++;
+        
+        emit ArtistAdded(tokenId, artist);
     }
     
     /**
-     * @dev Get artwork by date
+     * @dev Update marketplace address
      */
-    function getArtworkByDate(string memory date) external view returns (uint256) {
-        return dateToArtworkId[date];
-    }
-    
-    /**
-     * @dev Get total participating artists for artwork
-     */
-    function getParticipatingArtistsCount(uint256 tokenId) external view returns (uint256) {
-        return dailyArtworks[tokenId].participatingArtists.length;
-    }
-    
-    /**
-     * @dev Get current token ID counter
-     */
-    function getCurrentTokenId() external view returns (uint256) {
-        return _tokenIdCounter.current();
-    }
-    
-    // === ADMIN FUNCTIONS ===
-    
-    /**
-     * @dev Update marketplace address (only owner)
-     */
-    function setMarketplace(address _marketplace) external onlyOwner {
-        require(_marketplace != address(0), "Invalid marketplace address");
+    function updateMarketplace(address _marketplace) external onlyOwner {
         marketplace = _marketplace;
     }
     
     /**
-     * @dev Update VORTEX admin address (only owner)
+     * @dev Get participating artists for a token
      */
-    function setVortexAdmin(address _vortexAdmin) external onlyOwner {
-        require(_vortexAdmin != address(0), "Invalid admin address");
-        vortexAdmin = _vortexAdmin;
+    function getParticipatingArtists(uint256 tokenId) external view returns (address[] memory) {
+        return participatingArtists[tokenId];
     }
     
     /**
-     * @dev Emergency function to recover stuck TOLA tokens (only owner)
+     * @dev Get royalty breakdown for a potential sale
      */
-    function emergencyRecoverTola(uint256 amount) external onlyOwner {
-        require(tolaToken.transfer(owner(), amount), "Recovery transfer failed");
-    }
-    
-    /**
-     * @dev Update artist participation status (only VORTEX admin)
-     */
-    function updateArtistParticipation(address artist, bool isActive) external onlyVortexAdmin {
-        artistParticipations[artist].isActive = isActive;
+    function getRoyaltyBreakdown(uint256 tokenId, uint256 price) external view returns (
+        uint256 creatorAmount,
+        uint256 artistAmount,
+        uint256 ownerAmount,
+        bool isFirstSale
+    ) {
+        require(_exists(tokenId), "Token does not exist");
         
-        emit ArtistParticipationUpdated(
-            artist,
-            isActive,
-            artistParticipations[artist].totalRoyaltiesEarned
+        isFirstSale = !hasBeenSold[tokenId];
+        creatorAmount = (price * CREATOR_ROYALTY) / 10000;
+        
+        if (isFirstSale) {
+            artistAmount = (price * FIRST_SALE_ARTIST_SHARE) / 10000;
+            ownerAmount = 0;
+        } else {
+            artistAmount = (price * RESALE_ARTIST_SHARE) / 10000;
+            ownerAmount = (price * RESALE_OWNER_SHARE) / 10000;
+        }
+    }
+    
+    /**
+     * @dev Get token information
+     */
+    function getTokenInfo(uint256 tokenId) external view returns (
+        string memory date,
+        string memory prompt,
+        uint256 _dailyArtId,
+        address[] memory artists,
+        bool sold,
+        uint256 sales,
+        address originalOwnerAddress
+    ) {
+        require(_exists(tokenId), "Token does not exist");
+        
+        return (
+            generationDate[tokenId],
+            artworkPrompt[tokenId],
+            dailyArtId[tokenId],
+            participatingArtists[tokenId],
+            hasBeenSold[tokenId],
+            totalSales[tokenId],
+            originalOwner[tokenId]
         );
     }
     
-    // === TOKEN URI ===
-    
-    /**
-     * @dev Returns the token URI for metadata
-     */
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "Token does not exist");
-        
-        DailyArtwork storage artwork = dailyArtworks[tokenId];
-        
-        return string(abi.encodePacked(
-            "https://ipfs.io/ipfs/",
-            artwork.ipfsHash
-        ));
+    // Override functions
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+        super._burn(tokenId);
     }
     
-    // === INTERFACE SUPPORT ===
+    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
+        return super.tokenURI(tokenId);
+    }
     
-    /**
-     * @dev See {IERC165-supportsInterface}.
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 } 

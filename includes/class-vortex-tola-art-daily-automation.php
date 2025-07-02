@@ -37,11 +37,17 @@ class Vortex_TOLA_Art_Daily_Automation {
     private $tola_contract_address = '0x9F2E4B7A1D5C8E3F6A9B2D5E8C1F4A7B9E2C5D8F';
     
     /**
-     * Royalty distribution percentages
+     * Updated royalty distribution percentages for dual structure
      */
-    private $creator_royalty_percentage = 5; // 5% to Marianne Nems
-    private $artist_pool_percentage = 80; // 80% to participating artists
-    private $marketplace_fee_percentage = 15; // 15% marketplace fee
+    private $creator_royalty_percentage = 5; // 5% to Marianne Nems (all sales)
+    
+    // First sale structure (5% creator + 95% artists)
+    private $first_sale_artist_percentage = 95; // 95% to participating artists
+    private $first_sale_marketplace_fee = 0; // No marketplace fee on first sale
+    
+    // Resale structure (5% creator + 15% artists + 80% owner/reseller)
+    private $resale_artist_percentage = 15; // 15% to participating artists
+    private $resale_owner_percentage = 80; // 80% to owner/reseller
     
     /**
      * Database tables
@@ -118,7 +124,7 @@ class Vortex_TOLA_Art_Daily_Automation {
         add_action('wp_ajax_vortex_get_daily_art_stats', array($this, 'get_daily_art_stats'));
         
         // Marketplace hooks
-        add_action('vortex_artwork_sold', array($this, 'handle_artwork_sale'), 10, 3);
+        add_action('vortex_artwork_sold', array($this, 'handle_artwork_sale'), 10, 4);
         
         // Smart contract hooks
         add_action('vortex_deploy_royalty_contract', array($this, 'deploy_royalty_contract'));
@@ -186,8 +192,10 @@ class Vortex_TOLA_Art_Daily_Automation {
             creator_royalty decimal(18,8) UNSIGNED NOT NULL,
             artist_pool decimal(18,8) UNSIGNED NOT NULL,
             marketplace_fee decimal(18,8) UNSIGNED NOT NULL,
+            owner_amount decimal(18,8) UNSIGNED DEFAULT 0,
             participating_artists int UNSIGNED NOT NULL,
             individual_artist_share decimal(18,8) UNSIGNED NOT NULL,
+            sale_type enum('first_sale','resale') DEFAULT 'first_sale',
             distribution_status enum('pending','processing','completed','failed') DEFAULT 'pending',
             distribution_transaction_hash varchar(66) DEFAULT NULL,
             block_number bigint(20) UNSIGNED DEFAULT NULL,
@@ -196,6 +204,7 @@ class Vortex_TOLA_Art_Daily_Automation {
             PRIMARY KEY (id),
             UNIQUE KEY unique_sale (sale_transaction_hash),
             KEY daily_art_id (daily_art_id),
+            KEY sale_type (sale_type),
             KEY distribution_status (distribution_status)
         ) $charset_collate;";
         
@@ -448,8 +457,8 @@ class Vortex_TOLA_Art_Daily_Automation {
                 'is_nft' => true,
                 'blockchain_verified' => false,
                 'generation_metadata' => json_encode($generation_result['metadata']),
-                'artist_pool_percentage' => $this->artist_pool_percentage,
-                'marketplace_fee_percentage' => $this->marketplace_fee_percentage
+                'artist_pool_percentage' => $this->first_sale_artist_percentage,
+                'marketplace_fee_percentage' => $this->first_sale_marketplace_fee
             )
         );
         
@@ -486,7 +495,7 @@ class Vortex_TOLA_Art_Daily_Automation {
             'creator_address' => $this->creator_wallet,
             'creator_royalty_percentage' => $this->creator_royalty_percentage,
             'participating_artists_count' => $participating_artists,
-            'artist_pool_percentage' => $this->artist_pool_percentage,
+            'artist_pool_percentage' => $this->first_sale_artist_percentage,
             'tola_token_address' => $this->tola_contract_address,
             'marketplace_address' => get_option('vortex_marketplace_contract_address')
         );
@@ -645,12 +654,12 @@ class Vortex_TOLA_Art_Daily_Automation {
     }
     
     /**
-     * Handle artwork sale
+     * Handle artwork sale with dual royalty structure
      */
-    public function handle_artwork_sale($artwork_id, $sale_amount, $transaction_hash) {
+    public function handle_artwork_sale($artwork_id, $sale_amount, $transaction_hash, $is_first_sale = true) {
         global $wpdb;
         
-        // Check if this is a daily art piece
+        // Check if this is a TOLA-ART daily piece
         $daily_art_id = get_post_meta($artwork_id, 'daily_art_id', true);
         
         if (!$daily_art_id) {
@@ -668,13 +677,26 @@ class Vortex_TOLA_Art_Daily_Automation {
             return;
         }
         
-        // Calculate royalty distribution with new percentages
+        if ($is_first_sale) {
+            $this->process_first_sale($daily_art_id, $sale_amount, $transaction_hash, $participating_artists);
+        } else {
+            $this->process_resale($daily_art_id, $sale_amount, $transaction_hash, $participating_artists);
+        }
+    }
+    
+    /**
+     * Process first sale: 5% creator + 95% artists
+     */
+    private function process_first_sale($daily_art_id, $sale_amount, $transaction_hash, $participating_artists) {
+        global $wpdb;
+        
+        // Calculate first sale distribution
         $creator_royalty = $sale_amount * ($this->creator_royalty_percentage / 100); // 5% to Marianne Nems
-        $artist_pool = $sale_amount * ($this->artist_pool_percentage / 100); // 80% to artists
-        $marketplace_fee = $sale_amount * ($this->marketplace_fee_percentage / 100); // 15% marketplace fee
+        $artist_pool = $sale_amount * ($this->first_sale_artist_percentage / 100); // 95% to artists
+        $marketplace_fee = 0; // No marketplace fee on first sale
         $individual_artist_share = $artist_pool / $participating_artists;
         
-        // Record royalty distribution
+        // Record first sale distribution
         $distribution_id = $wpdb->insert(
             $this->royalty_distribution_table,
             array(
@@ -684,23 +706,65 @@ class Vortex_TOLA_Art_Daily_Automation {
                 'creator_royalty' => $creator_royalty,
                 'artist_pool' => $artist_pool,
                 'marketplace_fee' => $marketplace_fee,
+                'owner_amount' => 0,
                 'participating_artists' => $participating_artists,
                 'individual_artist_share' => $individual_artist_share,
+                'sale_type' => 'first_sale',
                 'distribution_status' => 'pending'
             ),
-            array('%d', '%s', '%f', '%f', '%f', '%f', '%d', '%f', '%s')
+            array('%d', '%s', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%s', '%s')
         );
         
         if ($distribution_id) {
-            // Execute distribution
-            $this->execute_royalty_distribution($wpdb->insert_id);
+            $this->execute_first_sale_distribution($wpdb->insert_id);
         }
+        
+        error_log("TOLA-ART: First sale processed - Creator: {$creator_royalty} TOLA, Artists: {$artist_pool} TOLA (95% pool)");
     }
     
     /**
-     * Execute royalty distribution
+     * Process resale: 5% creator + 15% artists + 80% owner/reseller
      */
-    private function execute_royalty_distribution($distribution_id) {
+    private function process_resale($daily_art_id, $sale_amount, $transaction_hash, $participating_artists, $current_owner) {
+        global $wpdb;
+        
+        // Calculate resale distribution
+        $creator_royalty = $sale_amount * ($this->creator_royalty_percentage / 100); // 5% to Marianne Nems
+        $artist_pool = $sale_amount * ($this->resale_artist_percentage / 100); // 15% to artists
+        $owner_amount = $sale_amount * ($this->resale_owner_percentage / 100); // 80% to current owner/reseller
+        $marketplace_fee = 0; // No marketplace fee
+        $individual_artist_share = $artist_pool / $participating_artists;
+        
+        // Record resale distribution
+        $distribution_id = $wpdb->insert(
+            $this->royalty_distribution_table,
+            array(
+                'daily_art_id' => $daily_art_id,
+                'sale_transaction_hash' => $transaction_hash,
+                'sale_amount' => $sale_amount,
+                'creator_royalty' => $creator_royalty,
+                'artist_pool' => $artist_pool,
+                'marketplace_fee' => $marketplace_fee,
+                'owner_amount' => $owner_amount,
+                'participating_artists' => $participating_artists,
+                'individual_artist_share' => $individual_artist_share,
+                'sale_type' => 'resale',
+                'distribution_status' => 'pending'
+            ),
+            array('%d', '%s', '%f', '%f', '%f', '%f', '%f', '%d', '%f', '%s', '%s')
+        );
+        
+        if ($distribution_id) {
+            $this->execute_resale_distribution($wpdb->insert_id, $current_owner);
+        }
+        
+        error_log("TOLA-ART: Resale processed - Creator: {$creator_royalty} TOLA, Artists: {$artist_pool} TOLA, Owner: {$owner_amount} TOLA");
+    }
+    
+    /**
+     * Execute first sale distribution (5% + 95%)
+     */
+    private function execute_first_sale_distribution($distribution_id) {
         global $wpdb;
         
         // Get distribution record
@@ -722,14 +786,14 @@ class Vortex_TOLA_Art_Daily_Automation {
             array('%d')
         );
         
-        // Pay creator royalty
+        // Pay creator royalty (5%)
         $creator_payment = $this->send_tola_payment(
             $this->creator_wallet,
             $distribution->creator_royalty,
-            "TOLA-ART Creator Royalty - " . date('Y-m-d')
+            "TOLA-ART Creator Royalty (5%) - First Sale - " . date('Y-m-d')
         );
         
-        // Pay participating artists
+        // Pay participating artists (95% pool)
         $artists = $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM {$this->artist_participation_table} WHERE daily_art_id = %d",
             $distribution->daily_art_id
@@ -741,7 +805,7 @@ class Vortex_TOLA_Art_Daily_Automation {
             $payment_result = $this->send_tola_payment(
                 $artist->wallet_address,
                 $distribution->individual_artist_share,
-                "TOLA-ART Artist Share - " . date('Y-m-d')
+                "TOLA-ART Artist Share (95% pool) - First Sale - " . date('Y-m-d')
             );
             
             if ($payment_result) {
@@ -758,14 +822,6 @@ class Vortex_TOLA_Art_Daily_Automation {
                 );
                 
                 $successful_payments++;
-            } else {
-                $wpdb->update(
-                    $this->artist_participation_table,
-                    array('payment_status' => 'failed'),
-                    array('id' => $artist->id),
-                    array('%s'),
-                    array('%d')
-                );
             }
         }
         
@@ -783,7 +839,83 @@ class Vortex_TOLA_Art_Daily_Automation {
             array('%d')
         );
         
-        error_log("TOLA-ART: Royalty distribution {$final_status} - {$successful_payments}/{$distribution->participating_artists} artist payments successful");
+        error_log("TOLA-ART: First sale distribution {$final_status} - Creator: 5%, Artists: 95% ({$successful_payments}/{$distribution->participating_artists})");
+    }
+    
+    /**
+     * Execute resale distribution (5% + 15% + 80%)
+     */
+    private function execute_resale_distribution($distribution_id, $current_owner) {
+        global $wpdb;
+        
+        // Get distribution record
+        $distribution = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$this->royalty_distribution_table} WHERE id = %d",
+            $distribution_id
+        ));
+        
+        if (!$distribution) {
+            return;
+        }
+        
+        // Update status to processing
+        $wpdb->update(
+            $this->royalty_distribution_table,
+            array('distribution_status' => 'processing'),
+            array('id' => $distribution_id),
+            array('%s'),
+            array('%d')
+        );
+        
+        // Pay creator royalty (5%)
+        $creator_payment = $this->send_tola_payment(
+            $this->creator_wallet,
+            $distribution->creator_royalty,
+            "TOLA-ART Creator Royalty (5%) - Resale - " . date('Y-m-d')
+        );
+        
+        // Pay participating artists (15% pool)
+        $artists = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM {$this->artist_participation_table} WHERE daily_art_id = %d",
+            $distribution->daily_art_id
+        ));
+        
+        $successful_artist_payments = 0;
+        
+        foreach ($artists as $artist) {
+            $payment_result = $this->send_tola_payment(
+                $artist->wallet_address,
+                $distribution->individual_artist_share,
+                "TOLA-ART Artist Share (15% pool) - Resale - " . date('Y-m-d')
+            );
+            
+            if ($payment_result) {
+                $successful_artist_payments++;
+            }
+        }
+        
+        // Pay current owner/reseller (80%)
+        $owner_payment = $this->send_tola_payment(
+            $current_owner,
+            $distribution->owner_amount,
+            "TOLA-ART Owner/Reseller Payment (80%) - Resale - " . date('Y-m-d')
+        );
+        
+        // Update distribution status
+        $final_status = ($successful_artist_payments == count($artists) && $creator_payment && $owner_payment) ? 'completed' : 'failed';
+        
+        $wpdb->update(
+            $this->royalty_distribution_table,
+            array(
+                'distribution_status' => $final_status,
+                'distribution_transaction_hash' => $creator_payment['transaction_hash'] ?? null
+            ),
+            array('id' => $distribution_id),
+            array('%s', '%s'),
+            array('%d')
+        );
+        
+        error_log("TOLA-ART: Resale distribution {$final_status} - Creator: 5%, Artists: 15%, Owner: 80%");
     }
     
     /**
