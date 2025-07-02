@@ -207,22 +207,22 @@ class Vortex_AI_Marketplace {
 
         // Individual API handlers - only register if classes exist
         $api_handlers = array(
-            'Vortex_Plans_API' => 'plans_api',
-            'Vortex_Wallet_API' => 'wallet_api',
-            'Vortex_Quiz_API' => 'quiz_api',
-            'Vortex_Milestones_API' => 'milestones_api',
-            'Vortex_Collections_API' => 'collections_api',
-            'Vortex_Listings_API' => 'listings_api',
-            'Vortex_Chloe_API' => 'chloe_api',
-            'Vortex_Generate_API' => 'generate_api',
-            'Vortex_NFT_API' => 'nft_api'
+            'Vortex_Plans_API',
+            'Vortex_Wallet_API',
+            'Vortex_Quiz_API',
+            'Vortex_Milestones_API',
+            'Vortex_Collections_API',
+            'Vortex_Listings_API',
+            'Vortex_Chloe_API',
+            'Vortex_Generate_API',
+            'Vortex_NFT_API'
         );
 
-        foreach ($api_handlers as $class_name => $var_name) {
+        foreach ($api_handlers as $class_name) {
             if (class_exists($class_name)) {
-                $$var_name = new $class_name();
-                if ($this->loader) {
-                    $this->loader->add_action('rest_api_init', $$var_name, 'register_routes');
+                $api_instance = new $class_name();
+                if ($this->loader && method_exists($api_instance, 'register_routes')) {
+                    $this->loader->add_action('rest_api_init', $api_instance, 'register_routes');
                 }
             }
         }
