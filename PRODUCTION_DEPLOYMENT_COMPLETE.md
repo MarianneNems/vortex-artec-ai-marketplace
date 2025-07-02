@@ -57,8 +57,8 @@ Registration → Quiz → Terms → Upload → AI Analysis → Wallet → NFT Mi
 ### **Subscription Plans Active**
 | Plan | Price | Features |
 |------|-------|----------|
-| **Starter** | $19.99/month | Basic AI tools, marketplace access |
-| **Pro** | $39.99/month | + Horas business quiz, advanced analytics |
+| **Starter** | $29/month | Basic AI tools, marketplace access |
+| **Pro** | $59.99/month | + Horas business quiz, advanced analytics |
 | **Studio** | $99.99/month | + Full suite, priority support |
 
 ### **Artist Verification Process**

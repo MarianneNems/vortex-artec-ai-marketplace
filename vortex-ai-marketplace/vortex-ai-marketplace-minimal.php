@@ -327,13 +327,13 @@ class Vortex_AI_Marketplace_Minimal {
                     <tbody>
                         <tr>
                             <td><strong>Starter</strong></td>
-                            <td>$19.99/month</td>
+                            <td>$29/month</td>
                             <td>Basic AI tools, marketplace access</td>
                             <td><span style="color: green;">✅ Active</span></td>
                         </tr>
                         <tr>
                             <td><strong>Pro</strong></td>
-                            <td>$39.99/month</td>
+                            <td>$59.99/month</td>
                             <td>+ Horas business quiz, advanced analytics</td>
                             <td><span style="color: green;">✅ Active</span></td>
                         </tr>
@@ -431,12 +431,12 @@ add_shortcode('vortex_artist_journey', function($atts) {
                 <h3>Step 1: Choose Your Plan</h3>
                 <div class="plans">
                     <div class="plan">
-                        <h4>Starter - $19.99/month</h4>
+                        <h4>Starter - $29/month</h4>
                         <p>Basic AI tools and marketplace access</p>
                         <button>Select Plan</button>
                     </div>
                     <div class="plan">
-                        <h4>Pro - $39.99/month</h4>
+                        <h4>Pro - $59.99/month</h4>
                         <p>Advanced features + Horas business quiz</p>
                         <button>Select Plan</button>
                     </div>

@@ -104,8 +104,8 @@ VORTEX AI MARKETPLACE
 ## 🎨 **ARTIST JOURNEY ACTIVATION**
 
 ### **Subscription Plans (Auto-Active):**
-- **✅ Starter Plan**: $19.99/month
-- **✅ Pro Plan**: $39.99/month (includes Horas business quiz)
+- **✅ Starter Plan**: $29/month
+- **✅ Pro Plan**: $59.99/month (includes Horas business quiz)
 - **✅ Studio Plan**: $99.99/month
 
 ### **Journey Flow:**
