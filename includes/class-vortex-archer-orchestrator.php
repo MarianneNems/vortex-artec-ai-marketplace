@@ -26,7 +26,7 @@ class VORTEX_ARCHER_Orchestrator {
      */
     private $agents = array(
         'HURAII' => array('status' => 'initializing', 'learning_active' => false),
-        'CHLOE' => array('status' => 'initializing', 'learning_active' => false),
+        'CLOE' => array('status' => 'initializing', 'learning_active' => false),
         'HORACE' => array('status' => 'initializing', 'learning_active' => false),
         'THORIUS' => array('status' => 'initializing', 'learning_active' => false)
     );
@@ -89,9 +89,9 @@ class VORTEX_ARCHER_Orchestrator {
             'profile_access' => 'artwork_preferences'
         ));
         
-        // Register CHLOE - Market analysis and user behavior
-        $this->register_agent('CHLOE', array(
-            'class' => 'VORTEX_CHLOE',
+        // Register CLOE - Market analysis and user behavior
+        $this->register_agent('CLOE', array(
+            'class' => 'VORTEX_CLOE',
             'responsibilities' => array('market_analysis', 'trend_prediction', 'user_behavior'),
             'continuous_learning' => true,
             'cloud_required' => true,

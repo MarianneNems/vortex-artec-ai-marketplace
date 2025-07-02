@@ -72,11 +72,11 @@ Upon activation, the system will automatically:
 - Configure TOLA blockchain integration
 
 ### **🤖 Phase 2: AI Agent Deployment (45 seconds)**
-- **HURAII** - Learning & recommendations
-- **CHLOE** - Trend analysis & matching  
-- **HORACE** - Content curation
-- **THORIUS** - Platform guide & security
-- **ARCHER** - Orchestration & synchronization
+- **HURAII** - GPU-powered generative AI engine
+- **CLOE** - CPU-optimized trend analysis & matching  
+- **HORACE** - CPU-optimized content curation
+- **THORIUS** - CPU-optimized platform guide & security
+- **ARCHER** - CPU-optimized orchestration & synchronization
 
 ### **🔐 Phase 3: Security Configuration (15 seconds)**
 - RunPod Vault connection
@@ -97,13 +97,14 @@ Upon activation, the system will automatically:
 │        VORTEX SYSTEM STATUS         │
 ├─────────────────────────────────────┤
 │ ✅ ARCHER Orchestrator: ACTIVE      │
-│ ✅ HURAII Agent: LEARNING           │
-│ ✅ CHLOE Agent: ANALYZING           │
-│ ✅ HORACE Agent: CURATING           │
-│ ✅ THORIUS Guide: MONITORING        │
+│ 🚀 HURAII Agent: GPU GENERATING     │
+│ ✅ CLOE Agent: CPU ANALYZING        │
+│ ✅ HORACE Agent: CPU CURATING       │
+│ ✅ THORIUS Guide: CPU MONITORING    │
 │ ✅ SECRET SAUCE: VAULT SECURED      │
 │ ✅ Smart Contracts: DEPLOYED        │
 │ ✅ Database: 12 TABLES READY        │
+│ 💻 Hardware: GPU + CPU OPTIMIZED   │
 └─────────────────────────────────────┘
 ```
 

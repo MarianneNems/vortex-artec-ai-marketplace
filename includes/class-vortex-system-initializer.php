@@ -46,11 +46,12 @@ class VORTEX_System_Initializer {
         $this->component_dependencies = array(
             'system_base' => array(),
             'database' => array('system_base'),
-            'huraii' => array('database'),
-            'chloe' => array('database'),
-            'horace' => array('database'),
-            'thorius' => array('database'),
-            'archer' => array('huraii', 'chloe', 'horace', 'thorius'),
+            'gradio_client' => array('database'),
+            'huraii' => array('gradio_client'),
+            'cloe' => array('gradio_client'),
+            'horace' => array('gradio_client'),
+            'thorius' => array('gradio_client'),
+            'archer' => array('huraii', 'cloe', 'horace', 'thorius'),
             'secret_sauce' => array('archer'),
             'smart_contracts' => array('database'),
             'artist_swapping' => array('smart_contracts'),
@@ -124,12 +125,16 @@ class VORTEX_System_Initializer {
                 $loaded = $this->load_database_components();
                 break;
                 
+            case 'gradio_client':
+                $loaded = $this->load_gradio_client();
+                break;
+                
             case 'huraii':
                 $loaded = $this->load_huraii_agent();
                 break;
                 
-            case 'chloe':
-                $loaded = $this->load_chloe_agent();
+            case 'cloe':
+                $loaded = $this->load_cloe_agent();
                 break;
                 
             case 'horace':
@@ -206,6 +211,24 @@ class VORTEX_System_Initializer {
     }
     
     /**
+     * Load Gradio client for AI model communication
+     */
+    private function load_gradio_client() {
+        $class_file = VORTEX_PLUGIN_DIR . 'includes/class-vortex-gradio-client.php';
+        
+        if (file_exists($class_file)) {
+            require_once $class_file;
+            
+            if (class_exists('VORTEX_Gradio_Client')) {
+                VORTEX_Gradio_Client::get_instance();
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * Load HURAII agent
      */
     private function load_huraii_agent() {
@@ -224,9 +247,9 @@ class VORTEX_System_Initializer {
     }
     
     /**
-     * Load CHLOE agent
+     * Load CLOE agent
      */
-    private function load_chloe_agent() {
+    private function load_cloe_agent() {
         $class_file = VORTEX_PLUGIN_DIR . 'class-vortex-cloe.php';
         
         if (file_exists($class_file)) {
@@ -567,21 +590,13 @@ class VORTEX_System_Initializer {
         );
         
         // Check agent status
-        $agents = array('HURAII', 'CHLOE', 'HORACE', 'THORIUS');
+        $agents = array('HURAII', 'CLOE', 'HORACE', 'THORIUS');
+        
         foreach ($agents as $agent) {
-            $class_name = 'VORTEX_' . $agent;
-            if ($agent === 'CHLOE') {
-                $class_name = 'VORTEX_CLOE';
-            }
-            $is_active = class_exists($class_name);
-            
-            $status['agents_status'][$agent] = array(
-                'status' => $is_active ? 'active' : 'inactive',
-                'last_activity' => get_option("vortex_{$agent}_last_activity", 'Never')
-            );
-            
-            if ($is_active) {
-                $status['agents_active']++;
+            if ($agent === 'CLOE') {
+                $agent_status[$agent] = class_exists('VORTEX_CLOE') ? 'active' : 'inactive';
+            } else {
+                $agent_status[$agent] = class_exists("VORTEX_{$agent}") ? 'active' : 'inactive';
             }
         }
         
