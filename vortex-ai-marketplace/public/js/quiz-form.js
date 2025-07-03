@@ -3,136 +3,138 @@
  * Monitors confirmation checkboxes and required DOB field
  */
 
-(function($) {
-    'use strict';
+(function ($) {
+  'use strict';
 
-    $(document).ready(function() {
-        const form = $('#vortex-business-quiz-form');
-        const submitBtn = $('#submit-quiz-btn');
-        const dobField = $('#dob');
-        const confirmCheckboxes = $('.question-confirm');
-        
-        if (!form.length) return;
+  $(document).ready(() => {
+    const form = $('#vortex-business-quiz-form');
+    const submitBtn = $('#submit-quiz-btn');
+    const dobField = $('#dob');
+    const confirmCheckboxes = $('.question-confirm');
 
-        // Initialize form state
-        updateSubmitButton();
+    if (!form.length) {
+      return;
+    }
 
-        // Monitor DOB field changes
-        dobField.on('change input', function() {
-            updateSubmitButton();
-        });
+    // Initialize form state
+    updateSubmitButton();
 
-        // Monitor confirmation checkboxes
-        confirmCheckboxes.on('change', function() {
-            updateSubmitButton();
-        });
+    // Monitor DOB field changes
+    dobField.on('change input', () => {
+      updateSubmitButton();
+    });
 
-        // Update submit button state
-        function updateSubmitButton() {
-            const dobFilled = dobField.val() && dobField.val().trim() !== '';
-            const allConfirmed = confirmCheckboxes.length === confirmCheckboxes.filter(':checked').length;
-            
-            const canSubmit = dobFilled && allConfirmed;
-            
-            submitBtn.prop('disabled', !canSubmit);
-            
-            if (canSubmit) {
-                submitBtn.removeClass('disabled').addClass('enabled');
-            } else {
-                submitBtn.removeClass('enabled').addClass('disabled');
-            }
-        }
+    // Monitor confirmation checkboxes
+    confirmCheckboxes.on('change', () => {
+      updateSubmitButton();
+    });
 
-        // Handle form submission
-        form.on('submit', function(e) {
-            e.preventDefault();
-            
-            if (submitBtn.prop('disabled')) {
-                return false;
-            }
+    // Update submit button state
+    function updateSubmitButton() {
+      const dobFilled = dobField.val() && dobField.val().trim() !== '';
+      const allConfirmed = confirmCheckboxes.length === confirmCheckboxes.filter(':checked').length;
 
-            // Show loading state
-            submitBtn.prop('disabled', true).text('Submitting...');
-            
-            // Collect form data
-            const formData = {
-                dob: dobField.val(),
-                pob: $('#pob').val(),
-                tob: $('#tob').val(),
-                answers: {},
-                nonce: VortexQuiz.nonce
-            };
+      const canSubmit = dobFilled && allConfirmed;
 
-            // Collect all question answers
-            $('input[type="radio"]:checked').each(function() {
-                const questionName = $(this).attr('name');
-                formData.answers[questionName] = $(this).val();
-            });
+      submitBtn.prop('disabled', !canSubmit);
 
-            // Submit via REST API
-            $.ajax({
-                url: '/wp-json/vortex/v1/business-quiz',
-                method: 'POST',
-                data: JSON.stringify(formData),
-                contentType: 'application/json',
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-WP-Nonce', VortexQuiz.nonce);
-                },
-                success: function(response) {
-                    if (response.success) {
-                        showMessage(response.message, 'success');
-                        form.fadeOut();
-                        setTimeout(function() {
-                            showSuccessPage();
-                        }, 1000);
-                    } else {
-                        showMessage(response.message || 'An error occurred', 'error');
-                        resetSubmitButton();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    let errorMessage = 'An error occurred while submitting your quiz.';
-                    
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    } else if (xhr.status === 403) {
-                        errorMessage = 'Permission denied. Please refresh and try again.';
-                    }
-                    
-                    showMessage(errorMessage, 'error');
-                    resetSubmitButton();
-                }
-            });
-        });
+      if (canSubmit) {
+        submitBtn.removeClass('disabled').addClass('enabled');
+      } else {
+        submitBtn.removeClass('enabled').addClass('disabled');
+      }
+    }
 
-        // Reset submit button to normal state
-        function resetSubmitButton() {
-            submitBtn.prop('disabled', false).text('Submit Quiz');
-            updateSubmitButton();
-        }
+    // Handle form submission
+    form.on('submit', e => {
+      e.preventDefault();
 
-        // Show message to user
-        function showMessage(message, type) {
-            const messageClass = type === 'success' ? 'success-message' : 'error-message';
-            const messageHtml = `<div class="${messageClass}" style="padding: 15px; margin: 15px 0; border-radius: 5px; ${type === 'success' ? 'background: #d4edda; color: #155724; border: 1px solid #c3e6cb;' : 'background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;'}">${message}</div>`;
-            
-            // Remove existing messages
-            $('.success-message, .error-message').remove();
-            
-            // Add new message
-            form.before(messageHtml);
-            
-            // Auto-remove error messages after 5 seconds
-            if (type === 'error') {
-                setTimeout(function() {
-                    $('.error-message').fadeOut();
-                }, 5000);
-            }
-        }
+      if (submitBtn.prop('disabled')) {
+        return false;
+      }
 
-        // Show success page
-        function showSuccessPage() {
-            const successHtml = `
+      // Show loading state
+      submitBtn.prop('disabled', true).text('Submitting...');
+
+      // Collect form data
+      const formData = {
+        dob: dobField.val(),
+        pob: $('#pob').val(),
+        tob: $('#tob').val(),
+        answers: {},
+        nonce: VortexQuiz.nonce,
+      };
+
+      // Collect all question answers
+      $('input[type="radio"]:checked').each(function () {
+        const questionName = $(this).attr('name');
+        formData.answers[questionName] = $(this).val();
+      });
+
+      // Submit via REST API
+      $.ajax({
+        url: '/wp-json/vortex/v1/business-quiz',
+        method: 'POST',
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-WP-Nonce', VortexQuiz.nonce);
+        },
+        success: function (response) {
+          if (response.success) {
+            showMessage(response.message, 'success');
+            form.fadeOut();
+            setTimeout(() => {
+              showSuccessPage();
+            }, 1000);
+          } else {
+            showMessage(response.message || 'An error occurred', 'error');
+            resetSubmitButton();
+          }
+        },
+        error: function (xhr, status, error) {
+          let errorMessage = 'An error occurred while submitting your quiz.';
+
+          if (xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage = xhr.responseJSON.message;
+          } else if (xhr.status === 403) {
+            errorMessage = 'Permission denied. Please refresh and try again.';
+          }
+
+          showMessage(errorMessage, 'error');
+          resetSubmitButton();
+        },
+      });
+    });
+
+    // Reset submit button to normal state
+    function resetSubmitButton() {
+      submitBtn.prop('disabled', false).text('Submit Quiz');
+      updateSubmitButton();
+    }
+
+    // Show message to user
+    function showMessage(message, type) {
+      const messageClass = type === 'success' ? 'success-message' : 'error-message';
+      const messageHtml = `<div class="${messageClass}" style="padding: 15px; margin: 15px 0; border-radius: 5px; ${type === 'success' ? 'background: #d4edda; color: #155724; border: 1px solid #c3e6cb;' : 'background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;'}">${message}</div>`;
+
+      // Remove existing messages
+      $('.success-message, .error-message').remove();
+
+      // Add new message
+      form.before(messageHtml);
+
+      // Auto-remove error messages after 5 seconds
+      if (type === 'error') {
+        setTimeout(() => {
+          $('.error-message').fadeOut();
+        }, 5000);
+      }
+    }
+
+    // Show success page
+    function showSuccessPage() {
+      const successHtml = `
                 <div class="quiz-success-page" style="text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px; margin: 20px 0;">
                     <h2 style="margin-bottom: 20px; font-size: 2em;">🎉 Quiz Submitted Successfully!</h2>
                     <p style="font-size: 1.2em; margin-bottom: 25px;">Thank you for completing the Artist Business Quiz!</p>
@@ -166,37 +168,38 @@
                     </div>
                 </div>
             `;
-            
-            form.closest('.quiz-container').html(successHtml);
+
+      form.closest('.quiz-container').html(successHtml);
+    }
+
+    // Add visual feedback for checkbox interactions
+    confirmCheckboxes.each(function () {
+      const checkbox = $(this);
+      const questionBlock = checkbox.closest('.question-block');
+
+      checkbox.on('change', function () {
+        if (this.checked) {
+          questionBlock.addClass('confirmed');
+        } else {
+          questionBlock.removeClass('confirmed');
         }
-
-        // Add visual feedback for checkbox interactions
-        confirmCheckboxes.each(function() {
-            const checkbox = $(this);
-            const questionBlock = checkbox.closest('.question-block');
-            
-            checkbox.on('change', function() {
-                if (this.checked) {
-                    questionBlock.addClass('confirmed');
-                } else {
-                    questionBlock.removeClass('confirmed');
-                }
-            });
-        });
-
-        // Add visual feedback for DOB field
-        dobField.on('focus', function() {
-            $(this).closest('.input-group').addClass('focused');
-        }).on('blur', function() {
-            $(this).closest('.input-group').removeClass('focused');
-        });
+      });
     });
 
+    // Add visual feedback for DOB field
+    dobField
+      .on('focus', function () {
+        $(this).closest('.input-group').addClass('focused');
+      })
+      .on('blur', function () {
+        $(this).closest('.input-group').removeClass('focused');
+      });
+  });
 })(jQuery);
 
 // Add some basic styles
-jQuery(document).ready(function($) {
-    const styles = `
+jQuery(document).ready($ => {
+  const styles = `
         <style>
         .question-block {
             transition: all 0.3s ease;
@@ -248,6 +251,6 @@ jQuery(document).ready(function($) {
         }
         </style>
     `;
-    
-    $('head').append(styles);
-}); 
+
+  $('head').append(styles);
+});

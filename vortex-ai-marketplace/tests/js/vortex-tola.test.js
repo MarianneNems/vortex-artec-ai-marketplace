@@ -42,7 +42,7 @@ describe('VORTEX TOLA Integration', () => {
         json: async () => ({ success: true, balance: mockBalance }),
       });
 
-      const getTolaBalance = async (userId) => {
+      const getTolaBalance = async userId => {
         const response = await fetch(`${vortexAjax.restUrl}balance/${userId}`, {
           headers: {
             'X-WP-Nonce': vortexAjax.nonce,
@@ -67,7 +67,7 @@ describe('VORTEX TOLA Integration', () => {
     test('should handle balance fetch error', async () => {
       global.fetch.mockRejectedValueOnce(new Error('Network error'));
 
-      const getTolaBalance = async (userId) => {
+      const getTolaBalance = async userId => {
         try {
           const response = await fetch(`${vortexAjax.restUrl}balance/${userId}`, {
             headers: {
@@ -145,11 +145,7 @@ describe('VORTEX TOLA Integration', () => {
         });
       };
 
-      const result = await sendTransaction(
-        '0x123',
-        '0x456',
-        '1'
-      );
+      const result = await sendTransaction('0x123', '0x456', '1');
 
       expect(result.transactionHash).toBe('0xtest123');
       expect(web3.eth.sendTransaction).toHaveBeenCalled();
@@ -165,26 +161,26 @@ describe('VORTEX TOLA Integration', () => {
       };
 
       // Test storing data
-      localStorage.setItem('vortex_wallet', JSON.stringify(walletData));
-      expect(localStorage.setItem).toHaveBeenCalledWith(
+      global.localStorage.setItem('vortex_wallet', JSON.stringify(walletData));
+      expect(global.localStorage.setItem).toHaveBeenCalledWith(
         'vortex_wallet',
         JSON.stringify(walletData)
       );
 
       // Mock the return value for getItem
-      localStorage.getItem.mockReturnValue(JSON.stringify(walletData));
+      global.localStorage.getItem.mockReturnValue(JSON.stringify(walletData));
 
       // Test retrieving data
-      const retrievedData = JSON.parse(localStorage.getItem('vortex_wallet'));
+      const retrievedData = JSON.parse(global.localStorage.getItem('vortex_wallet'));
       expect(retrievedData).toEqual(walletData);
-      expect(localStorage.getItem).toHaveBeenCalledWith('vortex_wallet');
+      expect(global.localStorage.getItem).toHaveBeenCalledWith('vortex_wallet');
     });
 
     test('should handle missing wallet data', () => {
-      localStorage.getItem.mockReturnValue(null);
+      global.localStorage.getItem.mockReturnValue(null);
 
       const getWalletData = () => {
-        const data = localStorage.getItem('vortex_wallet');
+        const data = global.localStorage.getItem('vortex_wallet');
         return data ? JSON.parse(data) : null;
       };
 
@@ -192,4 +188,4 @@ describe('VORTEX TOLA Integration', () => {
       expect(result).toBeNull();
     });
   });
-}); 
+});

@@ -4,18 +4,15 @@ module.exports = {
       '@babel/preset-env',
       {
         targets: {
-          browsers: ['> 1%', 'last 2 versions', 'not dead', 'ie >= 11']
+          browsers: ['> 1%', 'last 2 versions', 'not dead', 'ie >= 11'],
         },
         useBuiltIns: 'entry',
         corejs: 3,
-        modules: false
-      }
-    ]
+        modules: false,
+      },
+    ],
   ],
-  plugins: [
-    '@babel/plugin-proposal-class-properties',
-    '@babel/plugin-syntax-dynamic-import'
-  ],
+  plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-syntax-dynamic-import'],
   env: {
     test: {
       presets: [
@@ -23,14 +20,12 @@ module.exports = {
           '@babel/preset-env',
           {
             targets: {
-              node: 'current'
-            }
-          }
-        ]
+              node: 'current',
+            },
+          },
+        ],
       ],
-      plugins: [
-        '@babel/plugin-proposal-class-properties'
-      ]
-    }
-  }
-}; 
+      plugins: ['@babel/plugin-proposal-class-properties'],
+    },
+  },
+};
