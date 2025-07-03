@@ -1,244 +1,282 @@
 # VORTEX AI Marketplace
+*WordPress Plugin for AI-Powered Art Creation & Blockchain Marketplace*
 
-A comprehensive WordPress plugin for AI-powered art creation, curation, and marketplace with blockchain integration.
+[![License](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
+[![WordPress](https://img.shields.io/badge/WordPress-5.8%2B-blue.svg)](https://wordpress.org)
+[![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net)
 
-## Description
+## Overview
 
-VORTEX AI Marketplace is an all-in-one platform that combines three powerful AI agents (HURAII, CLOE, and BusinessStrategist) with blockchain technology to create a complete ecosystem for digital art creation, distribution, and monetization.
+VORTEX AI Marketplace is a comprehensive WordPress plugin that combines AI-powered art creation tools with blockchain technology to create a complete ecosystem for digital art creation, curation, and marketplace transactions. The platform serves artists, collectors, and art enthusiasts with professional-grade tools and a secure trading environment.
 
-### Key Features
+## Key Features
 
-- **HURAII AI Art Generation**: Create 2D, 3D, 4D, and multimedia content with advanced AI
-- **CLOE Curation Engine**: Personalized recommendations and trend analysis
-- **BusinessStrategist**: Career guidance for artists with 30-day challenges
-- **TOLA Blockchain Integration**: Token-based marketplace with smart contracts
-- **Creator Royalties**: 5% for HURAII creator + up to 15% for artists
-- **Comprehensive Analytics**: Track user behavior and market trends
-- **Multi-Format Support**: Generate, manipulate and sell various file formats
-- **Deep Learning**: AI agents that continuously learn and improve
+🎨 **AI-Powered Art Creation**
+- Advanced AI art generation tools
+- Multiple format support (2D, 3D, video, audio)
+- Customizable generation parameters
+- Professional-grade output quality
+
+🔗 **Blockchain Integration**
+- TOLA token integration for secure transactions
+- Smart contract-based royalty distribution
+- NFT minting and authentication
+- Multi-chain compatibility
+
+📈 **Marketplace Features**
+- Comprehensive artwork listing system
+- Advanced search and filtering
+- Real-time market analytics
+- Secure payment processing
+
+👥 **Community Platform**
+- Artist and collector profiles
+- Social features and forums
+- Collaboration tools
+- Educational resources
 
 ## Requirements
 
-- WordPress 5.8+
-- PHP 7.4+
-- MySQL 5.7+ or MariaDB 10.3+
-- Web server with at least 2GB memory limit
+- **WordPress**: 5.8 or higher
+- **PHP**: 7.4 or higher  
+- **MySQL**: 5.7+ or MariaDB 10.3+
+- **Memory**: 2GB RAM minimum
+- **Storage**: 1GB available space
 
 ## Installation
 
-1. Upload the `vortex-ai-marketplace` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to VORTEX > Settings to configure the plugin
-4. Set up your TOLA wallet connection in the Blockchain settings tab
+### Quick Installation
+
+1. Download the plugin from the [releases page](https://github.com/your-repo/vortex-ai-marketplace/releases)
+2. Upload to `/wp-content/plugins/` directory
+3. Activate the plugin through WordPress admin
+4. Complete the setup wizard
+
+### Manual Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/your-repo/vortex-ai-marketplace.git
+
+# Navigate to WordPress plugins directory
+cd /path/to/wordpress/wp-content/plugins/
+
+# Copy plugin files
+cp -r vortex-ai-marketplace ./
+
+# Set proper permissions
+chmod -R 755 vortex-ai-marketplace
+```
+
+## Configuration
+
+### Initial Setup
+
+1. **Navigate to Settings**: Go to `VORTEX > Settings` in WordPress admin
+2. **Configure API Keys**: Set up your external service API keys
+3. **Blockchain Settings**: Configure your blockchain connection
+4. **Payment Gateway**: Set up payment processing options
+
+### Environment Variables
+
+Create a `.env` file in your plugin directory:
+
+```env
+# API Configuration
+OPENAI_API_KEY=your_openai_api_key
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_S3_BUCKET=your_s3_bucket_name
+
+# Blockchain Configuration
+BLOCKCHAIN_RPC_URL=your_blockchain_rpc_url
+SMART_CONTRACT_ADDRESS=your_contract_address
+```
 
 ## Usage
 
 ### For Artists
 
-1. Register and select "Artist" role
-2. Complete the BusinessStrategist's onboarding quiz
-3. Commit to uploading at least 2 artworks per week
-4. Follow your personalized 30-day business plan
-5. Use HURAII to generate various art formats
-6. Earn TOLA tokens and build your collector base
+1. **Register**: Create an account and select "Artist" role
+2. **Profile Setup**: Complete your artist profile and portfolio
+3. **Create Artwork**: Use AI tools to generate or upload artwork
+4. **List for Sale**: Set pricing and royalty preferences
+5. **Manage Sales**: Track earnings and manage your inventory
 
 ### For Collectors
 
-1. Browse AI-curated artwork recommendations
-2. Use the swipe interface to refine your preferences
-3. Purchase artwork with TOLA tokens
-4. Manage your digital art collection
-5. Engage with artists and community
+1. **Browse Artwork**: Explore the marketplace and discover new pieces
+2. **Use Filters**: Find specific types of artwork using advanced search
+3. **Make Purchases**: Buy artwork using TOLA tokens or traditional payment
+4. **Manage Collection**: Track your portfolio and artwork history
+5. **Engage Community**: Participate in forums and social features
 
 ### For Administrators
 
-1. Access analytics and reports in the Admin dashboard
-2. Monitor platform activity and sales
-3. Configure royalty settings and marketplace fees
-4. Manage AI agent settings and learning parameters
+1. **Dashboard**: Access comprehensive analytics and reports
+2. **User Management**: Manage artists, collectors, and permissions
+3. **Marketplace Settings**: Configure fees, royalties, and policies
+4. **Content Moderation**: Review and approve user-generated content
 
-## AI Agents
+## AI Features
 
-### HURAII
+### Art Generation
+- **Text-to-Image**: Generate artwork from text descriptions
+- **Style Transfer**: Apply artistic styles to existing images
+- **Format Conversion**: Convert between different art formats
+- **Batch Processing**: Generate multiple variations efficiently
 
-HURAII specializes in content generation across multiple formats:
+### Curation & Recommendations
+- **Personalized Recommendations**: AI-powered artwork suggestions
+- **Trend Analysis**: Identify emerging styles and popular themes
+- **Quality Assessment**: Automated quality scoring and categorization
+- **SEO Optimization**: Automatic metadata and description generation
 
-- 2D images (JPG, PNG, WEBP)
-- 3D models (OBJ, GLB, GLTF, FBX)
-- Video content (MP4, GIF, MOV)
-- Audio creation (MP3, WAV)
-- Interactive formats (HTML5, SVG)
-- 4D time-based content
-
-HURAII also analyzes artwork using the Seed Art technique with seven components:
-1. Color harmony
-2. Composition
-3. Depth and perspective
-4. Texture
-5. Light and shadow
-6. Emotion and narrative
-7. Movement and layering
-
-### CLOE
-
-CLOE learns from user behavior to provide:
-
-- Personalized recommendations
-- Trend analysis and predictions
-- SEO optimization for artwork
-- Content curation and discovery
-- Demographic insights
-- Temporal pattern recognition
-
-CLOE greets users with personalized, motivational messages based on their activity patterns and preferences.
-
-### BusinessStrategist
-
-BusinessStrategist provides career guidance:
-
-- Artist onboarding and business planning
-- 30-day challenges with milestone tracking
-- Production commitment monitoring (2 artworks/week)
-- Market strategy and pricing recommendations
-- Career development pathways
-- Business opportunity identification
+### Business Intelligence
+- **Market Analytics**: Real-time market data and trends
+- **Price Recommendations**: AI-suggested pricing strategies
+- **Performance Metrics**: Track artwork and artist performance
+- **Audience Insights**: Understand collector preferences and behavior
 
 ## Blockchain Integration
 
-- **TOLA Token**: Platform utility token for transactions
-- **Smart Contracts**: Automatically enforce royalties and agreements
+### TOLA Token
+- **Utility Token**: Platform's native cryptocurrency
+- **Governance**: Community voting and decision-making
+- **Staking**: Earn rewards by holding and staking tokens
+- **Payments**: Primary payment method for transactions
+
+### Smart Contracts
+- **Royalty Distribution**: Automated royalty payments to artists
+- **Escrow Services**: Secure transaction processing
 - **NFT Minting**: Create verifiable digital assets
-- **Royalty System**: 5% creator royalty + up to 15% artist royalty
+- **Governance**: Decentralized platform governance
 
-## Deep Learning Pipeline
+## API Documentation
 
-The plugin implements a comprehensive deep learning pipeline:
+### REST API Endpoints
 
-1. User interaction events trigger learning across all AI agents
-2. Cross-agent communication shares insights between HURAII, CLOE, and BusinessStrategist
-3. Continuous model training improves recommendations and generation
-4. Behavioral pattern recognition enhances user experience
-5. External data sources enrich the learning process
+```bash
+# Get artwork listings
+GET /wp-json/vortex/v1/marketplace/artwork
 
-## Learning Contexts
+# Generate AI artwork
+POST /wp-json/vortex/v1/ai/generate
 
-The pipeline processes data from various contexts:
+# Get user recommendations
+GET /wp-json/vortex/v1/recommendations/{user_id}
 
-1. **User Interaction**: Direct user actions on the platform
-2. **Content Analysis**: Analysis of uploaded and generated content
-3. **Market Activity**: Sales, pricing, and transaction patterns
-4. **Temporal Patterns**: Time-based user behavior
-5. **Demographic Insights**: User characteristics and preferences
-6. **External Sources**: Art market trends and external data
+# Process blockchain transaction
+POST /wp-json/vortex/v1/blockchain/transaction
+```
 
-## Pipeline Components
+### Authentication
 
-### 1. Event Tracking
+```bash
+# Using API key
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+     https://yoursite.com/wp-json/vortex/v1/endpoint
 
-- **User Actions**: Captures views, likes, purchases, creation, and other interactions
-- **System Events**: Records system-level events like generation quality, transaction success
-- **Temporal Data**: Timestamps all events for temporal pattern analysis
-- **Contextual Metadata**: Associates relevant metadata with each event
+# Using OAuth 2.0
+curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+     https://yoursite.com/wp-json/vortex/v1/endpoint
+```
 
-### 2. Context Extraction
+## Security
 
-- **Feature Extraction**: Identifies key features from raw event data
-- **Context Categorization**: Categorizes events into learning contexts
-- **Relevance Scoring**: Scores data relevance for different learning models
-- **Privacy Filtering**: Filters sensitive data according to privacy settings
+### Data Protection
+- **Encryption**: End-to-end encryption for sensitive data
+- **Privacy Controls**: GDPR-compliant data handling
+- **Secure Storage**: Encrypted database and file storage
+- **Access Control**: Role-based permission system
 
-### 3. Agent-Specific Learning
+### Platform Security
+- **Multi-Factor Authentication**: Enhanced account security
+- **Regular Audits**: Third-party security assessments
+- **Vulnerability Management**: Continuous security monitoring
+- **Incident Response**: 24/7 security monitoring
 
-#### HURAII Learning
+## Support
 
-- **Visual Preference Analysis**: Learns user aesthetic preferences
-- **Generation Parameter Optimization**: Refines generation parameters
-- **Style Recognition**: Improves style recognition and reproduction
-- **Format Handling Optimization**: Enhances capabilities across formats
+### Documentation
+- **User Guides**: Comprehensive documentation for all user types
+- **API Reference**: Complete API documentation
+- **Video Tutorials**: Step-by-step video guides
+- **FAQs**: Frequently asked questions and troubleshooting
 
-#### CLOE Learning
+### Community Support
+- **Discord Server**: Real-time community chat
+- **Forums**: Community discussion and support
+- **Knowledge Base**: Searchable help articles
+- **Bug Reports**: Issue tracking and resolution
 
-- **User Preference Modeling**: Builds detailed user preference profiles
-- **Trend Identification**: Identifies emerging trends and patterns
-- **Recommendation Refinement**: Improves recommendation accuracy
-- **Content Categorization**: Enhances content categorization systems
+### Professional Support
+- **Email Support**: Direct support via email
+- **Priority Support**: Premium support for enterprise users
+- **Custom Development**: Tailored solutions for specific needs
+- **Training**: Professional training and onboarding
 
-#### BusinessStrategist Learning
+## Contributing
 
-- **Business Plan Optimization**: Refines business plan structures
-- **Success Pattern Recognition**: Identifies patterns in successful artists
-- **Market Opportunity Detection**: Improves detection of market opportunities
-- **Commitment Motivation**: Optimizes motivation strategies
+We welcome contributions from the community! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
 
-### 4. Cross-Agent Integration
+### Development Setup
 
-- **Shared Insights**: Distributes relevant insights across agents
-- **Complementary Learning**: Integrates complementary knowledge
-- **Conflict Resolution**: Resolves conflicting insights between agents
-- **Synergy Detection**: Identifies opportunities for agent collaboration
+```bash
+# Clone the repository
+git clone https://github.com/your-repo/vortex-ai-marketplace.git
+cd vortex-ai-marketplace
 
-### 5. Model Training & Updates
+# Install dependencies
+composer install
+npm install
 
-- **Batch Training**: Regular batch training of agent models
-- **Incremental Updates**: Real-time incremental updates for critical learning
-- **Model Validation**: Validates model improvements before deployment
-- **Version Control**: Manages model versions and rollback capabilities
+# Run tests
+npm test
+phpunit
+```
 
-### 6. Enhanced User Experience
+## Roadmap
 
-- **Personalization**: Delivers increasingly personalized experiences
-- **Adaptive Interfaces**: Adapts interfaces based on user preferences
-- **Predictive Features**: Enables predictive features and suggestions
-- **Continuous Improvement**: Provides continuously improving AI experiences
+### Version 2.0 (Q1 2025)
+- [ ] Enhanced AI art generation capabilities
+- [ ] Mobile app integration
+- [ ] Advanced marketplace features
+- [ ] Multi-language support
 
-## Learning Schedule
+### Version 2.1 (Q2 2025)
+- [ ] VR/AR integration
+- [ ] Advanced analytics dashboard
+- [ ] Social media integration
+- [ ] Enterprise features
 
-The learning pipeline operates on multiple timescales:
-
-- **Real-time Learning**: Immediate updates for critical user interactions
-- **Daily Processing**: Daily batch processing for aggregate insights
-- **Weekly Analysis**: Weekly deep analysis for pattern recognition
-- **Monthly Refinement**: Monthly model refinements and major updates
-
-## Performance Metrics
-
-The pipeline effectiveness is measured through:
-
-- **Recommendation Accuracy**: Percentage of recommendations resulting in engagement
-- **Generation Quality**: User satisfaction with generated content
-- **Business Plan Success**: Success rate of artist business plans
-- **Model Convergence**: Stability and convergence of learning models
-- **User Satisfaction**: Overall user satisfaction metrics
-
-## Implementation Details
-
-The learning pipeline is implemented in the `class-vortex-ai-learning.php` file, with agent-specific learning handled in their respective class files. Cross-agent communication is facilitated by the `class-vortex-ai-communications.php` component.
-
-Key technical aspects:
-
-1. **Data Storage**: Learning data is stored in the `vortex_ai_learning_data` table
-2. **Model Storage**: Models are stored in the `/models/` directory by agent
-3. **Training Process**: Training runs as scheduled WordPress cron jobs
-4. **API Integration**: External data is gathered through API integrations
-
-## Extension Points
-
-The learning pipeline provides several extension points:
-
-- **Custom Learning Contexts**: Register custom learning contexts
-- **External Data Sources**: Add new external data sources
-- **Model Customization**: Customize or replace learning models
-- **Monitoring Hooks**: Add custom monitoring and reporting
-
-## Support and Documentation
-
-- For detailed documentation, visit [docs.vortex-marketplace.com](https://docs.vortex-marketplace.com)
-- Submit support tickets at [support.vortex-marketplace.com](https://support.vortex-marketplace.com)
-- Join our community forum at [community.vortex-marketplace.com](https://community.vortex-marketplace.com)
+### Version 2.2 (Q3 2025)
+- [ ] Advanced blockchain features
+- [ ] Cross-chain compatibility
+- [ ] Institutional tools
+- [ ] API marketplace
 
 ## License
 
-GPL v2 or later 
+This project is licensed under the GPL v2 License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- OpenAI for AI generation capabilities
+- Solana blockchain for TOLA token infrastructure
+- WordPress community for platform foundation
+- Contributors and beta testers
+
+## Contact
+
+- **Website**: https://vortexartec.com
+- **Email**: info@vortexartec.com
+- **Discord**: [Join our community](https://discord.gg/vortex)
+- **Twitter**: [@VortexArtec](https://twitter.com/VortexArtec)
+
+---
+
+*Built with ❤️ by the VORTEX team*
 
 ## Core Component Interactions
 

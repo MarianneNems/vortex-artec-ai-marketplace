@@ -20,7 +20,7 @@ VORTEX AI MARKETPLACE PRODUCTION STACK:
 │  • WordPress 5.6+ with PHP 8.1+                           │
 │  • VORTEX AI Marketplace Plugin                            │
 │  • WooCommerce Integration                                 │
-│  • User Authentication & Role Management                   │
+│  • User Authentication and Role Management                 │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -34,7 +34,7 @@ VORTEX AI MARKETPLACE PRODUCTION STACK:
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    EXTERNAL SERVICES                        │
-│  • AWS S3 (File Storage & CDN)                            │
+│  • AWS S3 (File Storage and CDN)                          │
 │  • RunPod (AI Model Processing)                           │
 │  • Solana Blockchain (TOLA Token)                         │
 │  • OpenAI API (AI Agent Intelligence)                     │
