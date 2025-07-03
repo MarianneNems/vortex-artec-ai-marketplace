@@ -10,19 +10,24 @@
         }
     ],
     "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    },
     "require": {
-        "php": ">=7.4",
-        "ext-gd": "*",
-        "ext-cuda": "*",
-        "tensorflow/tensorflow": "^2.12",
-        "pytorch/pytorch": "^1.13",
-        "huggingface/transformers": "^4.28",
-        "intervention/image": "^2.7",
-        "php-ffmpeg/php-ffmpeg": "^1.0",
-        "react/websocket": "^1.7",
-        "webonyx/graphql-php": "^14.11",
-        "google/cloud-vision": "^1.5",
-        "aws/aws-sdk-php": "^3.209"
+        "php": ">=8.1",
+        "aws/aws-sdk-php": "3.349.1",
+        "composer/installers": "^2.2",
+        "deliciousbrains/wp-background-processing": "1.4.0",
+        "dompdf/dompdf": "2.0.8",
+        "firebase/php-jwt": "6.11.1",
+        "guzzlehttp/guzzle": "7.9.3",
+        "kornrunner/solana-php": "^1.0",
+        "monolog/monolog": "3.9.0",
+        "phpseclib/phpseclib": "3.0.46",
+        "ramsey/uuid": "^4.9.0",
+        "tecnickcom/tcpdf": "6.10.0"
     },
     "autoload": {
         "psr-4": {

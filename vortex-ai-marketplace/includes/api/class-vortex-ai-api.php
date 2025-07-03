@@ -315,7 +315,7 @@ private function forward_to_ai_server($generation_data) {
  * @return   bool    Permission status
  */
 public function check_user_permissions() {
-    return is_user_logged_in();
+    return current_user_can('edit_posts');
 }
 
 /**

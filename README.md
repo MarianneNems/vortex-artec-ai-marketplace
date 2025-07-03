@@ -115,11 +115,108 @@ GET /vortex-ai/v1/artist-insights/{id}
 ```
 Get insights for a specific artist.
 
-## Installation
+## Production Installation
+
+### Prerequisites
+
+- **WordPress**: 5.6 or higher
+- **PHP**: 8.1 or higher
+- **Node.js**: 18+ (for frontend build)
+- **Python**: 3.9+ (for AI server)
+- **Docker**: For containerized deployment
+
+### Step 1: WordPress Plugin Installation
 
 1. Upload the `vortex-ai-marketplace` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Configure the plugin settings in the VORTEX AI Marketplace admin panel
+2. Run composer dependencies:
+   ```bash
+   cd wp-content/plugins/vortex-ai-marketplace
+   composer install --no-dev --optimize-autoloader
+   ```
+3. Activate the plugin through the 'Plugins' menu in WordPress
+4. Configure the plugin settings in the VORTEX AI Marketplace admin panel
+
+### Step 2: Frontend Build Pipeline
+
+Install and build frontend assets:
+
+```bash
+# Install Node.js dependencies
+npm ci
+
+# Lint JavaScript code
+npm run lint
+
+# Build production assets
+npm run build
+```
+
+### Step 3: Python AI Server Setup
+
+#### Option A: Docker Deployment (Recommended)
+
+```bash
+# Build Docker image
+docker build -t vortex-ai-server .
+
+# Run container
+docker run -d -p 8000:8000 \
+  -e AWS_ACCESS_KEY_ID=your_key \
+  -e AWS_SECRET_ACCESS_KEY=your_secret \
+  -e SOLANA_RPC_URL=your_solana_rpc \
+  --name vortex-ai vortex-ai-server
+```
+
+#### Option B: Manual Installation
+
+```bash
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Start AI server
+uvicorn server.main:app --host 0.0.0.0 --port 8000
+```
+
+## Environment Variables
+
+Configure these environment variables for production:
+
+### AWS Configuration
+```bash
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_S3_BUCKET=your_s3_bucket_name
+AWS_REGION=us-east-1
+```
+
+### Solana Blockchain
+```bash
+SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+SOLANA_PRIVATE_KEY=your_wallet_private_key
+TOLA_TOKEN_MINT=your_tola_token_mint_address
+```
+
+### AI Server Configuration
+```bash
+AI_SERVER_URL=https://your-ai-server.com
+AI_SERVER_API_KEY=your_api_key
+OPENAI_API_KEY=your_openai_key
+STABILITY_API_KEY=your_stability_ai_key
+```
+
+## Building the Production ZIP
+
+To create a deployment-ready plugin ZIP:
+
+```bash
+# Run build script
+npm run build
+
+# Create production ZIP (excludes dev files)
+zip -r vortex-ai-marketplace-production.zip . \
+  -x "node_modules/*" "tests/*" ".git/*" "*.md" \
+  "package*.json" "composer.json" "composer.lock"
+```
 
 ## Configuration
 

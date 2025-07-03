@@ -61,6 +61,91 @@ function activate_vortex_ai_marketplace() {
     // Run database migrations
     require_once VORTEX_PLUGIN_DIR . 'includes/class-vortex-db-migrations.php';
     Vortex_DB_Migrations::migrate_to_current_version();
+    
+    // Schedule daily events
+    vortex_schedule_daily_events();
+}
+
+/**
+ * Schedule daily cron events
+ */
+function vortex_schedule_daily_events() {
+    // Clear existing schedules
+    wp_clear_scheduled_hook('vortex_daily_masterwork');
+    wp_clear_scheduled_hook('vortex_daily_milestone_reminder');
+    wp_clear_scheduled_hook('vortex_daily_admin_analysis');
+    
+    // Schedule TOLA Masterwork at midnight ET (UTC-5 or UTC-4 depending on DST)
+    $et_timezone = new DateTimeZone('America/New_York');
+    $midnight_et = new DateTime('tomorrow midnight', $et_timezone);
+    wp_schedule_event($midnight_et->getTimestamp(), 'daily', 'vortex_daily_masterwork');
+    
+    // Schedule milestone reminders at 8am user timezone (default to UTC for now)
+    $eight_am_utc = strtotime('tomorrow 8:00');
+    wp_schedule_event($eight_am_utc, 'daily', 'vortex_daily_milestone_reminder');
+    
+    // Schedule admin analysis at 6am server time
+    $six_am_server = strtotime('tomorrow 6:00');
+    wp_schedule_event($six_am_server, 'daily', 'vortex_daily_admin_analysis');
+}
+
+// Hook cron event handlers
+add_action('vortex_daily_masterwork', 'vortex_handle_daily_masterwork');
+add_action('vortex_daily_milestone_reminder', 'vortex_handle_milestone_reminders');
+add_action('vortex_daily_admin_analysis', 'vortex_handle_admin_analysis');
+
+/**
+ * Handle daily TOLA Masterwork generation
+ */
+function vortex_handle_daily_masterwork() {
+    if (class_exists('Vortex_TOLA_Art_Daily_Automation')) {
+        $automation = new Vortex_TOLA_Art_Daily_Automation();
+        $automation->process_daily_generation();
+    }
+}
+
+/**
+ * Handle daily milestone reminders
+ */
+function vortex_handle_milestone_reminders() {
+    // Send milestone reminders to users
+    $users = get_users(array('meta_key' => 'vortex_plan'));
+    
+    foreach ($users as $user) {
+        $milestones = get_user_meta($user->ID, 'vortex_pending_milestones', true);
+        if (!empty($milestones)) {
+            // Send reminder email
+            wp_mail(
+                $user->user_email,
+                'VORTEX: Daily Milestone Reminder',
+                "You have pending milestones to complete. Visit your dashboard to continue your artistic journey."
+            );
+        }
+    }
+}
+
+/**
+ * Handle daily admin analysis
+ */
+function vortex_handle_admin_analysis() {
+    // Generate daily analytics for admin
+    $analytics_data = array(
+        'daily_registrations' => count(get_users(array('date_query' => array('after' => '1 day ago')))),
+        'daily_generations' => get_option('vortex_daily_generation_count', 0),
+        'daily_revenue' => get_option('vortex_daily_revenue', 0),
+    );
+    
+    // Send to admin
+    $admin_email = get_option('admin_email');
+    wp_mail(
+        $admin_email,
+        'VORTEX: Daily Performance Report',
+        "Daily Analytics:\n" . print_r($analytics_data, true)
+    );
+    
+    // Reset daily counters
+    update_option('vortex_daily_generation_count', 0);
+    update_option('vortex_daily_revenue', 0);
 }
 
 /**
