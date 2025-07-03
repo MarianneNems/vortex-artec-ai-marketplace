@@ -1,0 +1,18 @@
+config:
+  target: "http://localhost"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+scenarios:
+  - flow:
+      - get:
+          url: "/wp-json/vortex/v1/generate"
+      - post:
+          url: "/wp-json/vortex/v1/optimized-quiz"
+          json:
+            dob: "1990-01-01"
+            pob: "City, Country"
+            tob: "12:00"
+            answers:
+              q1: "a"
+              q2: "b" 

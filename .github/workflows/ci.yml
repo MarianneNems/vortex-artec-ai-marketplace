@@ -7,6 +7,29 @@ on:
     branches: [ main ]
 
 jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run npm security audit
+      run: npm audit --audit-level=high
+      continue-on-error: false
+    
+    - name: Check for known vulnerabilities
+      run: npm audit --audit-level=moderate
+      continue-on-error: true
+
   php-tests:
     runs-on: ubuntu-latest
     
@@ -26,6 +49,10 @@ jobs:
     
     - name: Install Composer dependencies
       run: composer install --no-dev --optimize-autoloader
+    
+    - name: Run Composer security audit
+      run: composer audit --locked
+      continue-on-error: false
     
     - name: Run PHP CodeSniffer
       run: vendor/bin/phpcs --standard=WordPress includes/ admin/ public/
@@ -57,6 +84,10 @@ jobs:
 
     - name: Build frontend assets
       run: npm run build
+    
+    - name: Run performance load test
+      run: npx artillery run tests/performance/load-test.yml
+      continue-on-error: true
     
     - name: Security audit (production dependencies only)
       run: |
@@ -91,6 +122,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install flake8 black
+    
+    - name: Run Python security audit
+      run: |
+        pip install safety
+        safety check --json
+      continue-on-error: false
     
     - name: Code formatting check with Black
       run: |
@@ -140,7 +177,7 @@ jobs:
         safety check --json
         bandit -r server/ -f json
     
-    continue-on-error: true
+    continue-on-error: false
 
   docs:
     runs-on: ubuntu-latest

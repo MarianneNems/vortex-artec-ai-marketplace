@@ -288,6 +288,19 @@ else
 fi
 
 echo ""
+echo "13. 🚀 Load Testing (Artillery)"
+echo "------------------------------"
+
+# Run Artillery load test
+if command -v npx >/dev/null 2>&1; then
+    echo "Running load test (Artillery)..."
+    npx artillery run tests/performance/load-test.yml
+    log_test $? "Artillery load test completed"
+else
+    log_test 1 "npx not available for Artillery load test"
+fi
+
+echo ""
 echo "🏁 Test Summary"
 echo "==============="
 echo -e "Tests Passed: ${GREEN}$TESTS_PASSED${NC}"
