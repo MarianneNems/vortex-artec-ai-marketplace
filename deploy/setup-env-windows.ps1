@@ -1,0 +1,14 @@
+# PowerShell Environment Setup for VORTEX AI Marketplace
+
+Write-Host "Setting up environment variables..." -ForegroundColor Green
+
+$env:AWS_ACCESS_KEY_ID = "AKIAEXAMPLEKEYID12345"
+$env:AWS_SECRET_ACCESS_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+$env:AWS_DEFAULT_REGION = "us-east-1"
+$env:AWS_S3_BUCKET = "vortexartec.com-client-art"
+
+$env:RUNPOD_API_KEY = "your-runpod-api-key-here"
+$env:RUNPOD_VAULT_ID = "your-vault-id-here"
+
+Write-Host "Environment variables set successfully!" -ForegroundColor Green
+Write-Host "AWS_S3_BUCKET: $env:AWS_S3_BUCKET" -ForegroundColor Cyan 
