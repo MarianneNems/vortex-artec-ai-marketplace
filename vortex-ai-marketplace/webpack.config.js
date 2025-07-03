@@ -11,23 +11,12 @@ module.exports = (env, argv) => {
 
   return {
     entry: {
-      // Main frontend scripts
-      'vortex-marketplace': './public/js/vortex-marketplace.js',
+      // Main frontend scripts (only existing files)
       'vortex-tola': './public/js/vortex-tola.js',
       'quiz-optimizer': './public/js/quiz-optimizer.js',
+      'quiz-optimizer-enhanced': './public/js/quiz-optimizer-enhanced.js',
       'quiz-enhanced': './public/js/quiz-enhanced.js',
-      
-      // Admin scripts
-      'vortex-admin': './admin/js/vortex-admin.js',
-      'thorius-admin': './admin/js/thorius-admin.js',
-      
-      // AI components
-      'ai-terminal': './public/js/ai-terminal.js',
-      'huraii-components': './public/js/huraii-components/index.js',
-      
-      // Blockchain components
-      'blockchain-wallet': './public/js/blockchain/wallet-connect.js',
-      'tola-integration': './public/js/blockchain/tola-integration.js'
+      'quiz-form': './public/js/quiz-form.js',
     },
 
     output: {
@@ -35,7 +24,7 @@ module.exports = (env, argv) => {
       filename: 'js/[name].[contenthash].js',
       chunkFilename: 'js/[name].[contenthash].chunk.js',
       publicPath: './',
-      clean: true
+      clean: true,
     },
 
     module: {
@@ -48,9 +37,9 @@ module.exports = (env, argv) => {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env'],
-              plugins: ['@babel/plugin-proposal-class-properties']
-            }
-          }
+              plugins: ['@babel/plugin-proposal-class-properties'],
+            },
+          },
         },
 
         // CSS/SCSS processing
@@ -64,11 +53,11 @@ module.exports = (env, argv) => {
               options: {
                 implementation: require('sass'),
                 sassOptions: {
-                  outputStyle: 'compressed'
-                }
-              }
-            }
-          ]
+                  outputStyle: 'compressed',
+                },
+              },
+            },
+          ],
         },
 
         // Images
@@ -76,8 +65,8 @@ module.exports = (env, argv) => {
           test: /\.(png|jpg|jpeg|gif|svg)$/i,
           type: 'asset/resource',
           generator: {
-            filename: 'images/[name].[hash][ext]'
-          }
+            filename: 'images/[name].[hash][ext]',
+          },
         },
 
         // Fonts
@@ -85,10 +74,10 @@ module.exports = (env, argv) => {
           test: /\.(woff|woff2|eot|ttf|otf)$/i,
           type: 'asset/resource',
           generator: {
-            filename: 'fonts/[name].[hash][ext]'
-          }
-        }
-      ]
+            filename: 'fonts/[name].[hash][ext]',
+          },
+        },
+      ],
     },
 
     plugins: [
@@ -97,7 +86,7 @@ module.exports = (env, argv) => {
       // Extract CSS into separate files
       new MiniCssExtractPlugin({
         filename: 'css/[name].[contenthash].css',
-        chunkFilename: 'css/[name].[contenthash].chunk.css'
+        chunkFilename: 'css/[name].[contenthash].chunk.css',
       }),
 
       // Copy static assets
@@ -106,21 +95,21 @@ module.exports = (env, argv) => {
           {
             from: 'public/images',
             to: 'images',
-            noErrorOnMissing: true
+            noErrorOnMissing: true,
           },
           {
             from: 'public/fonts',
             to: 'fonts',
-            noErrorOnMissing: true
-          }
-        ]
+            noErrorOnMissing: true,
+          },
+        ],
       }),
 
       // ESLint integration
       new ESLintPlugin({
         extensions: ['js'],
-        exclude: ['node_modules', 'vendor']
-      })
+        exclude: ['node_modules', 'vendor'],
+      }),
     ],
 
     optimization: {
@@ -129,11 +118,11 @@ module.exports = (env, argv) => {
         new TerserPlugin({
           terserOptions: {
             compress: {
-              drop_console: isProduction
-            }
-          }
+              drop_console: isProduction,
+            },
+          },
         }),
-        new CssMinimizerPlugin()
+        new CssMinimizerPlugin(),
       ],
 
       splitChunks: {
@@ -144,23 +133,23 @@ module.exports = (env, argv) => {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
             chunks: 'all',
-            priority: 10
+            priority: 10,
           },
-          
+
           // Common VORTEX utilities
           common: {
             name: 'common',
             minChunks: 2,
             chunks: 'all',
             priority: 5,
-            enforce: true
-          }
-        }
+            enforce: true,
+          },
+        },
       },
 
       runtimeChunk: {
-        name: 'runtime'
-      }
+        name: 'runtime',
+      },
     },
 
     resolve: {
@@ -168,14 +157,14 @@ module.exports = (env, argv) => {
         '@': path.resolve(__dirname, 'public/js'),
         '@admin': path.resolve(__dirname, 'admin/js'),
         '@components': path.resolve(__dirname, 'public/js/components'),
-        '@utils': path.resolve(__dirname, 'public/js/utils')
+        '@utils': path.resolve(__dirname, 'public/js/utils'),
       },
-      extensions: ['.js', '.json']
+      extensions: ['.js', '.json'],
     },
 
     devServer: {
       static: {
-        directory: path.join(__dirname, 'dist')
+        directory: path.join(__dirname, 'dist'),
       },
       compress: true,
       port: 3000,
@@ -183,8 +172,8 @@ module.exports = (env, argv) => {
       open: false,
       proxy: {
         '/wp-admin': 'http://localhost',
-        '/wp-json': 'http://localhost'
-      }
+        '/wp-json': 'http://localhost',
+      },
     },
 
     devtool: isProduction ? 'source-map' : 'eval-source-map',
@@ -192,7 +181,7 @@ module.exports = (env, argv) => {
     performance: {
       hints: isProduction ? 'warning' : false,
       maxEntrypointSize: 512000,
-      maxAssetSize: 512000
+      maxAssetSize: 512000,
     },
 
     stats: {
@@ -200,7 +189,7 @@ module.exports = (env, argv) => {
       modules: false,
       children: false,
       chunks: false,
-      chunkModules: false
-    }
+      chunkModules: false,
+    },
   };
-}; 
+};

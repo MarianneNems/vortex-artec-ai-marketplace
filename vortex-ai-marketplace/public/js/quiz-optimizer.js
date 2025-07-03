@@ -3,156 +3,167 @@
  * Monitors form validation and handles submission
  */
 
-(function($) {
-    'use strict';
+(function ($) {
+  'use strict';
 
-    $(document).ready(function() {
-        const form = $('#vortex-strategic-quiz-form');
-        const submitBtn = $('#submit-quiz-btn');
-        const dobField = $('#dob');
-        const pobField = $('#pob');
-        const tobField = $('#tob');
-        const confirmCheckboxes = $('.question-confirm');
-        
-        if (!form.length) return;
+  $(document).ready(() => {
+    const form = $('#vortex-strategic-quiz-form');
+    const submitBtn = $('#submit-quiz-btn');
+    const dobField = $('#dob');
+    const pobField = $('#pob');
+    const tobField = $('#tob');
+    const confirmCheckboxes = $('.question-confirm');
 
-        // Initialize form state
+    if (!form.length) {
+      return;
+    }
+
+    // Initialize form state
+    updateSubmitButton();
+
+    // Monitor required fields
+    dobField
+      .add(pobField)
+      .add(tobField)
+      .on('change input', () => {
         updateSubmitButton();
+      });
 
-        // Monitor required fields
-        dobField.add(pobField).add(tobField).on('change input', function() {
-            updateSubmitButton();
-        });
+    // Monitor confirmation checkboxes
+    confirmCheckboxes.on('change', () => {
+      updateSubmitButton();
+    });
 
-        // Monitor confirmation checkboxes
-        confirmCheckboxes.on('change', function() {
-            updateSubmitButton();
-        });
+    // Update submit button state
+    function updateSubmitButton() {
+      const dobFilled = dobField.val() && dobField.val().trim() !== '';
+      const pobFilled = pobField.val() && pobField.val().trim() !== '';
+      const tobFilled = tobField.val() && tobField.val().trim() !== '';
+      const allConfirmed = confirmCheckboxes.length === confirmCheckboxes.filter(':checked').length;
 
-        // Update submit button state
-        function updateSubmitButton() {
-            const dobFilled = dobField.val() && dobField.val().trim() !== '';
-            const pobFilled = pobField.val() && pobField.val().trim() !== '';
-            const tobFilled = tobField.val() && tobField.val().trim() !== '';
-            const allConfirmed = confirmCheckboxes.length === confirmCheckboxes.filter(':checked').length;
-            
-            const canSubmit = dobFilled && pobFilled && tobFilled && allConfirmed;
-            
-            submitBtn.prop('disabled', !canSubmit);
-            
-            if (canSubmit) {
-                submitBtn.removeClass('disabled').addClass('enabled');
-            } else {
-                submitBtn.removeClass('enabled').addClass('disabled');
-            }
-            
-            // Update progress indicator
-            updateProgressIndicator();
+      const canSubmit = dobFilled && pobFilled && tobFilled && allConfirmed;
+
+      submitBtn.prop('disabled', !canSubmit);
+
+      if (canSubmit) {
+        submitBtn.removeClass('disabled').addClass('enabled');
+      } else {
+        submitBtn.removeClass('enabled').addClass('disabled');
+      }
+
+      // Update progress indicator
+      updateProgressIndicator();
+    }
+
+    // Update visual progress indicator
+    function updateProgressIndicator() {
+      const totalRequirements = 3 + confirmCheckboxes.length; // DOB, POB, TOB + confirmations
+      let completedRequirements = 0;
+
+      if (dobField.val()) {
+        completedRequirements++;
+      }
+      if (pobField.val()) {
+        completedRequirements++;
+      }
+      if (tobField.val()) {
+        completedRequirements++;
+      }
+      completedRequirements += confirmCheckboxes.filter(':checked').length;
+
+      const progressPercent = (completedRequirements / totalRequirements) * 100;
+
+      // Update any progress indicators in the UI
+      $('.progress-indicator').css('width', `${progressPercent}%`);
+    }
+
+    // Handle form submission
+    form.on('submit', e => {
+      e.preventDefault();
+
+      if (submitBtn.prop('disabled')) {
+        return false;
+      }
+
+      // Show loading state
+      submitBtn.prop('disabled', true).text('Processing Assessment...');
+
+      // Collect form data
+      const formData = {
+        dob: dobField.val(),
+        pob: pobField.val(),
+        tob: tobField.val(),
+        answers: {},
+        notes: {},
+      };
+
+      // Collect all question answers
+      $('input[type="radio"]:checked').each(function () {
+        const questionName = $(this).attr('name');
+        formData.answers[questionName] = $(this).val();
+      });
+
+      // Collect all additional notes
+      $('textarea[name$="_notes"]').each(function () {
+        const noteName = $(this).attr('name');
+        const noteValue = $(this).val().trim();
+        if (noteValue) {
+          formData.notes[noteName] = noteValue;
         }
+      });
 
-        // Update visual progress indicator
-        function updateProgressIndicator() {
-            const totalRequirements = 3 + confirmCheckboxes.length; // DOB, POB, TOB + confirmations
-            let completedRequirements = 0;
-            
-            if (dobField.val()) completedRequirements++;
-            if (pobField.val()) completedRequirements++;
-            if (tobField.val()) completedRequirements++;
-            completedRequirements += confirmCheckboxes.filter(':checked').length;
-            
-            const progressPercent = (completedRequirements / totalRequirements) * 100;
-            
-            // Update any progress indicators in the UI
-            $('.progress-indicator').css('width', progressPercent + '%');
-        }
+      // Submit via REST API
+      $.ajax({
+        url: '/wp-json/vortex/v1/optimized-quiz',
+        method: 'POST',
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-WP-Nonce', VortexQuizOptimizer.nonce);
+        },
+        success: function (response) {
+          if (response.success) {
+            showMessage(response.message, 'success');
+            form.fadeOut(500);
+            setTimeout(() => {
+              showSuccessPage();
+            }, 800);
+          } else {
+            showMessage(response.message || 'An error occurred during assessment', 'error');
+            resetSubmitButton();
+          }
+        },
+        error: function (xhr, status, error) {
+          let errorMessage = 'Assessment submission failed. Please try again.';
 
-        // Handle form submission
-        form.on('submit', function(e) {
-            e.preventDefault();
-            
-            if (submitBtn.prop('disabled')) {
-                return false;
-            }
+          if (xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage = xhr.responseJSON.message;
+          } else if (xhr.status === 403) {
+            errorMessage = 'Permission denied. Please refresh the page and try again.';
+          } else if (xhr.status === 400) {
+            errorMessage = 'Invalid assessment data. Please check your responses and try again.';
+          }
 
-            // Show loading state
-            submitBtn.prop('disabled', true).text('Processing Assessment...');
-            
-            // Collect form data
-            const formData = {
-                dob: dobField.val(),
-                pob: pobField.val(),
-                tob: tobField.val(),
-                answers: {},
-                notes: {}
-            };
+          showMessage(errorMessage, 'error');
+          resetSubmitButton();
+        },
+      });
+    });
 
-            // Collect all question answers
-            $('input[type="radio"]:checked').each(function() {
-                const questionName = $(this).attr('name');
-                formData.answers[questionName] = $(this).val();
-            });
+    // Reset submit button to normal state
+    function resetSubmitButton() {
+      submitBtn.prop('disabled', false).text('Complete Assessment');
+      updateSubmitButton();
+    }
 
-            // Collect all additional notes
-            $('textarea[name$="_notes"]').each(function() {
-                const noteName = $(this).attr('name');
-                const noteValue = $(this).val().trim();
-                if (noteValue) {
-                    formData.notes[noteName] = noteValue;
-                }
-            });
+    // Show message to user
+    function showMessage(message, type) {
+      const messageClass = type === 'success' ? 'success-message' : 'error-message';
+      const backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+      const textColor = type === 'success' ? '#155724' : '#721c24';
+      const borderColor = type === 'success' ? '#c3e6cb' : '#f5c6cb';
 
-            // Submit via REST API
-            $.ajax({
-                url: '/wp-json/vortex/v1/optimized-quiz',
-                method: 'POST',
-                data: JSON.stringify(formData),
-                contentType: 'application/json',
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-WP-Nonce', VortexQuizOptimizer.nonce);
-                },
-                success: function(response) {
-                    if (response.success) {
-                        showMessage(response.message, 'success');
-                        form.fadeOut(500);
-                        setTimeout(function() {
-                            showSuccessPage();
-                        }, 800);
-                    } else {
-                        showMessage(response.message || 'An error occurred during assessment', 'error');
-                        resetSubmitButton();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    let errorMessage = 'Assessment submission failed. Please try again.';
-                    
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    } else if (xhr.status === 403) {
-                        errorMessage = 'Permission denied. Please refresh the page and try again.';
-                    } else if (xhr.status === 400) {
-                        errorMessage = 'Invalid assessment data. Please check your responses and try again.';
-                    }
-                    
-                    showMessage(errorMessage, 'error');
-                    resetSubmitButton();
-                }
-            });
-        });
-
-        // Reset submit button to normal state
-        function resetSubmitButton() {
-            submitBtn.prop('disabled', false).text('Complete Assessment');
-            updateSubmitButton();
-        }
-
-        // Show message to user
-        function showMessage(message, type) {
-            const messageClass = type === 'success' ? 'success-message' : 'error-message';
-            const backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
-            const textColor = type === 'success' ? '#155724' : '#721c24';
-            const borderColor = type === 'success' ? '#c3e6cb' : '#f5c6cb';
-            
-            const messageHtml = `
+      const messageHtml = `
                 <div class="${messageClass}" style="
                     padding: 15px; 
                     margin: 15px 0; 
@@ -167,29 +178,32 @@
                     ${message}
                 </div>
             `;
-            
-            // Remove existing messages
-            $('.success-message, .error-message').remove();
-            
-            // Add new message at top of form
-            form.before(messageHtml);
-            
-            // Auto-remove error messages after 6 seconds
-            if (type === 'error') {
-                setTimeout(function() {
-                    $('.error-message').fadeOut(300);
-                }, 6000);
-            }
 
-            // Scroll to message
-            $('html, body').animate({
-                scrollTop: $('.' + messageClass).offset().top - 100
-            }, 500);
-        }
+      // Remove existing messages
+      $('.success-message, .error-message').remove();
 
-        // Show success page
-        function showSuccessPage() {
-            const successHtml = `
+      // Add new message at top of form
+      form.before(messageHtml);
+
+      // Auto-remove error messages after 6 seconds
+      if (type === 'error') {
+        setTimeout(() => {
+          $('.error-message').fadeOut(300);
+        }, 6000);
+      }
+
+      // Scroll to message
+      $('html, body').animate(
+        {
+          scrollTop: $(`.${messageClass}`).offset().top - 100,
+        },
+        500
+      );
+    }
+
+    // Show success page
+    function showSuccessPage() {
+      const successHtml = `
                 <div class="assessment-success-page" style="
                     text-align: center; 
                     padding: 50px 30px; 
@@ -271,77 +285,92 @@
                     </div>
                 </div>
             `;
-            
-            form.closest('.quiz-container').html(successHtml);
-            
-            // Scroll to top of success page
-            $('html, body').animate({
-                scrollTop: $('.assessment-success-page').offset().top - 50
-            }, 800);
+
+      form.closest('.quiz-container').html(successHtml);
+
+      // Scroll to top of success page
+      $('html, body').animate(
+        {
+          scrollTop: $('.assessment-success-page').offset().top - 50,
+        },
+        800
+      );
+    }
+
+    // Add visual feedback for form interactions
+    confirmCheckboxes.each(function () {
+      const checkbox = $(this);
+      const questionBlock = checkbox.closest('.question-block');
+
+      checkbox.on('change', function () {
+        if (this.checked) {
+          questionBlock.addClass('confirmed');
+          questionBlock
+            .find('.question-content h4')
+            .prepend(
+              '<span class="check-icon" style="color: #28a745; margin-right: 8px;">✓</span>'
+            );
+        } else {
+          questionBlock.removeClass('confirmed');
+          questionBlock.find('.check-icon').remove();
+        }
+      });
+    });
+
+    // Add visual feedback for required fields
+    dobField
+      .add(pobField)
+      .add(tobField)
+      .on('focus', function () {
+        $(this).closest('.input-group').addClass('focused');
+      })
+      .on('blur', function () {
+        $(this).closest('.input-group').removeClass('focused');
+
+        // Validate field on blur
+        if ($(this).val().trim() !== '') {
+          $(this).addClass('completed');
+        } else {
+          $(this).removeClass('completed');
+        }
+      });
+
+    // Add character counter for text areas
+    $('textarea[name$="_notes"]').each(function () {
+      const textarea = $(this);
+      const maxLength = 500;
+
+      // Add character counter
+      const counter = $(
+        `<div class="char-counter" style="text-align: right; font-size: 0.8em; color: #666; margin-top: 5px;">0/${
+          maxLength
+        } characters</div>`
+      );
+      textarea.after(counter);
+
+      textarea.on('input', function () {
+        const currentLength = $(this).val().length;
+        counter.text(`${currentLength}/${maxLength} characters`);
+
+        if (currentLength > maxLength * 0.9) {
+          counter.css('color', '#ff6b6b');
+        } else if (currentLength > maxLength * 0.7) {
+          counter.css('color', '#ffa726');
+        } else {
+          counter.css('color', '#666');
         }
 
-        // Add visual feedback for form interactions
-        confirmCheckboxes.each(function() {
-            const checkbox = $(this);
-            const questionBlock = checkbox.closest('.question-block');
-            
-            checkbox.on('change', function() {
-                if (this.checked) {
-                    questionBlock.addClass('confirmed');
-                    questionBlock.find('.question-content h4').prepend('<span class="check-icon" style="color: #28a745; margin-right: 8px;">✓</span>');
-                } else {
-                    questionBlock.removeClass('confirmed');
-                    questionBlock.find('.check-icon').remove();
-                }
-            });
-        });
+        // Limit to max length
+        if (currentLength > maxLength) {
+          $(this).val($(this).val().substring(0, maxLength));
+          counter.text(`${maxLength}/${maxLength} characters (limit reached)`);
+        }
+      });
+    });
 
-        // Add visual feedback for required fields
-        dobField.add(pobField).add(tobField).on('focus', function() {
-            $(this).closest('.input-group').addClass('focused');
-        }).on('blur', function() {
-            $(this).closest('.input-group').removeClass('focused');
-            
-            // Validate field on blur
-            if ($(this).val().trim() !== '') {
-                $(this).addClass('completed');
-            } else {
-                $(this).removeClass('completed');
-            }
-        });
-
-        // Add character counter for text areas
-        $('textarea[name$="_notes"]').each(function() {
-            const textarea = $(this);
-            const maxLength = 500;
-            
-            // Add character counter
-            const counter = $('<div class="char-counter" style="text-align: right; font-size: 0.8em; color: #666; margin-top: 5px;">0/' + maxLength + ' characters</div>');
-            textarea.after(counter);
-            
-            textarea.on('input', function() {
-                const currentLength = $(this).val().length;
-                counter.text(currentLength + '/' + maxLength + ' characters');
-                
-                if (currentLength > maxLength * 0.9) {
-                    counter.css('color', '#ff6b6b');
-                } else if (currentLength > maxLength * 0.7) {
-                    counter.css('color', '#ffa726');
-                } else {
-                    counter.css('color', '#666');
-                }
-                
-                // Limit to max length
-                if (currentLength > maxLength) {
-                    $(this).val($(this).val().substring(0, maxLength));
-                    counter.text(maxLength + '/' + maxLength + ' characters (limit reached)');
-                }
-            });
-        });
-
-        // Add smooth animations
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = `
+    // Add smooth animations
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
             @keyframes slideIn {
                 from { opacity: 0; transform: translateY(-20px); }
                 to { opacity: 1; transform: translateY(0); }
@@ -377,43 +406,43 @@
                 z-index: 1000;
             }
         `;
-        document.head.appendChild(styleSheet);
+    document.head.appendChild(styleSheet);
 
-        // Add fixed progress indicator
-        const progressBar = $('<div class="progress-indicator"></div>');
-        $('body').prepend(progressBar);
+    // Add fixed progress indicator
+    const progressBar = $('<div class="progress-indicator"></div>');
+    $('body').prepend(progressBar);
 
-        // Add milestone completion tracking functionality
-        window.VortexMilestones = {
-            completeMilestone: function(dayNumber, rating, feedback) {
-                $.ajax({
-                    url: '/wp-json/vortex/v1/milestone/complete',
-                    method: 'POST',
-                    data: JSON.stringify({
-                        day_number: dayNumber,
-                        rating: rating || 0,
-                        feedback: feedback || ''
-                    }),
-                    contentType: 'application/json',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('X-WP-Nonce', VortexQuizOptimizer.nonce);
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            console.log('Milestone ' + dayNumber + ' completed successfully');
-                            // Trigger completion celebration
-                            window.VortexMilestones.celebrateCompletion(dayNumber);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Failed to record milestone completion:', error);
-                    }
-                });
-            },
+    // Add milestone completion tracking functionality
+    window.VortexMilestones = {
+      completeMilestone: function (dayNumber, rating, feedback) {
+        $.ajax({
+          url: '/wp-json/vortex/v1/milestone/complete',
+          method: 'POST',
+          data: JSON.stringify({
+            day_number: dayNumber,
+            rating: rating || 0,
+            feedback: feedback || '',
+          }),
+          contentType: 'application/json',
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-WP-Nonce', VortexQuizOptimizer.nonce);
+          },
+          success: function (response) {
+            if (response.success) {
+              console.log(`Milestone ${dayNumber} completed successfully`);
+              // Trigger completion celebration
+              window.VortexMilestones.celebrateCompletion(dayNumber);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error('Failed to record milestone completion:', error);
+          },
+        });
+      },
 
-            celebrateCompletion: function(dayNumber) {
-                // Create celebration animation
-                const celebration = $(`
+      celebrateCompletion: function (dayNumber) {
+        // Create celebration animation
+        const celebration = $(`
                     <div class="milestone-celebration" style="
                         position: fixed;
                         top: 50%;
@@ -434,18 +463,18 @@
                     </div>
                 `);
 
-                $('body').append(celebration);
+        $('body').append(celebration);
 
-                // Auto-remove after 3 seconds
-                setTimeout(function() {
-                    celebration.fadeOut(500, function() {
-                        celebration.remove();
-                    });
-                }, 3000);
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+          celebration.fadeOut(500, () => {
+            celebration.remove();
+          });
+        }, 3000);
 
-                // Add milestone animation styles
-                if (!$('#milestone-styles').length) {
-                    $('head').append(`
+        // Add milestone animation styles
+        if (!$('#milestone-styles').length) {
+          $('head').append(`
                         <style id="milestone-styles">
                         @keyframes milestonePopIn {
                             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
@@ -453,39 +482,38 @@
                         }
                         </style>
                     `);
-                }
-            },
+        }
+      },
 
-            trackEngagement: function() {
-                // Track user engagement patterns for adaptive learning
-                const engagementData = {
-                    timeOnPage: Date.now() - window.vortexStartTime,
-                    scrollDepth: $(window).scrollTop() / ($(document).height() - $(window).height()),
-                    interactionCount: window.vortexInteractionCount || 0
-                };
-
-                // Store engagement data for analysis
-                if (typeof(Storage) !== "undefined") {
-                    localStorage.setItem('vortex_engagement', JSON.stringify(engagementData));
-                }
-            }
+      trackEngagement: function () {
+        // Track user engagement patterns for adaptive learning
+        const engagementData = {
+          timeOnPage: Date.now() - window.vortexStartTime,
+          scrollDepth: $(window).scrollTop() / ($(document).height() - $(window).height()),
+          interactionCount: window.vortexInteractionCount || 0,
         };
 
-        // Initialize engagement tracking
-        window.vortexStartTime = Date.now();
-        window.vortexInteractionCount = 0;
+        // Store engagement data for analysis
+        if (typeof Storage !== 'undefined') {
+          localStorage.setItem('vortex_engagement', JSON.stringify(engagementData));
+        }
+      },
+    };
 
-        // Track user interactions
-        $(document).on('click change input', function() {
-            window.vortexInteractionCount++;
-        });
+    // Initialize engagement tracking
+    window.vortexStartTime = Date.now();
+    window.vortexInteractionCount = 0;
 
-        // Track engagement on page unload
-        $(window).on('beforeunload', function() {
-            if (window.VortexMilestones) {
-                window.VortexMilestones.trackEngagement();
-            }
-        });
+    // Track user interactions
+    $(document).on('click change input', () => {
+      window.vortexInteractionCount++;
     });
 
-})(jQuery); 
+    // Track engagement on page unload
+    $(window).on('beforeunload', () => {
+      if (window.VortexMilestones) {
+        window.VortexMilestones.trackEngagement();
+      }
+    });
+  });
+})(jQuery);
