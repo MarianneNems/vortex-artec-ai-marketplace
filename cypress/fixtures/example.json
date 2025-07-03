@@ -1,0 +1,27 @@
+{
+  "artist_profile": {
+    "name": "Test Artist",
+    "email": "test@example.com",
+    "experience_level": "beginner",
+    "art_style": "digital",
+    "goals": "sell artwork online"
+  },
+  "quiz_answers": {
+    "business_experience": "none",
+    "time_commitment": "part-time",
+    "budget": "under-500",
+    "technical_skills": "basic"
+  },
+  "api_responses": {
+    "success": {
+      "status": "success",
+      "data": {
+        "message": "Operation completed successfully"
+      }
+    },
+    "error": {
+      "status": "error",
+      "message": "Something went wrong"
+    }
+  }
+} 

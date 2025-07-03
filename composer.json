@@ -1,4 +1,4 @@
-﻿{
+{
     "name": "vortex/vortex-ai-agents",
     "description": "VORTEX AI AGENTS Plugin for WordPress",
     "type": "wordpress-plugin",
@@ -23,15 +23,21 @@
         "dompdf/dompdf": "2.0.8",
         "firebase/php-jwt": "6.11.1",
         "guzzlehttp/guzzle": "7.9.3",
-        "kornrunner/solana-php": "^1.0",
         "monolog/monolog": "3.9.0",
         "phpseclib/phpseclib": "3.0.46",
         "ramsey/uuid": "^4.9.0",
         "tecnickcom/tcpdf": "6.10.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "wp-coding-standards/wpcs": "^3.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "mockery/mockery": "^1.6",
+        "10up/wp_mock": "^0.5"
     },
     "autoload": {
         "psr-4": {
             "Vortex\\": "includes/"
         }
     }
-}
+} 

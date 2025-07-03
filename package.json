@@ -30,10 +30,19 @@
     "devDependencies": {
         "@testing-library/jest-dom": "^6.6.0",
         "@testing-library/react": "^16.0.0",
-        "@wordpress/scripts": "^19.2.4",
-        "concurrently": "^9.0.0",
+        "@wordpress/scripts": "^30.3.0",
+        "concurrently": "^9.1.0",
+        "cypress": "^12.17.4",
         "eslint-plugin-react": "^7.37.0",
-        "nodemon": "^3.1.0",
-        "sass": "^1.80.0"
+        "nodemon": "^3.1.7",
+        "sass": "^1.82.0"
+    },
+    "overrides": {
+        "@babel/runtime": "^7.26.0",
+        "braces": "^3.0.3",
+        "cross-spawn": "^7.0.6",
+        "ws": "^8.18.0",
+        "axios": "^1.7.0",
+        "node-fetch": "^3.3.2"
     }
 }
