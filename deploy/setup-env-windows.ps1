@@ -11,4 +11,31 @@ $env:RUNPOD_API_KEY = "your-runpod-api-key-here"
 $env:RUNPOD_VAULT_ID = "your-vault-id-here"
 
 Write-Host "Environment variables set successfully!" -ForegroundColor Green
-Write-Host "AWS_S3_BUCKET: $env:AWS_S3_BUCKET" -ForegroundColor Cyan 
+Write-Host "AWS_S3_BUCKET: $env:AWS_S3_BUCKET" -ForegroundColor Cyan
+
+VORTEX AI MARKETPLACE PRODUCTION STACK:
+
+┌─────────────────────────────────────────────────────────────┐
+│                     FRONTEND (WordPress)                    │
+│  • WordPress 5.6+ with PHP 8.1+                           │
+│  • VORTEX AI Marketplace Plugin                            │
+│  • WooCommerce Integration                                 │
+│  • User Authentication & Role Management                   │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   CONFIGURATION LAYER                       │
+│  • aws-config.php (S3 Bucket: vortexartec.com-client-art) │
+│  • runpod-config.php (AI Processing Vault)                │
+│  • Environment Variables (Secure Key Management)           │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    EXTERNAL SERVICES                        │
+│  • AWS S3 (File Storage & CDN)                            │
+│  • RunPod (AI Model Processing)                           │
+│  • Solana Blockchain (TOLA Token)                         │
+│  • OpenAI API (AI Agent Intelligence)                     │
+└─────────────────────────────────────────────────────────────┘ 
