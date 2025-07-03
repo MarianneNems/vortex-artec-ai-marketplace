@@ -1,23 +1,34 @@
 ﻿<?php
 /**
- * PHPUnit bootstrap file
+ * PHPUnit bootstrap file for VORTEX AI MARKETPLACE tests
  */
-$_tests_dir = getenv('WP_TESTS_DIR');
 
-if (!$_tests_dir) {
-    $_tests_dir = rtrim(sys_get_temp_dir(), '/\\') . '/wordpress-tests-lib';
+// Composer autoloader
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// Initialize WP_Mock
+\WP_Mock::bootstrap();
+
+// Define WordPress constants for testing
+if (!defined('ABSPATH')) {
+    define('ABSPATH', __DIR__ . '/');
 }
 
-if (!file_exists($_tests_dir . '/includes/functions.php')) {
-    echo "Could not find $_tests_dir/includes/functions.php\n";
-    exit(1);
+if (!defined('WP_DEBUG')) {
+    define('WP_DEBUG', true);
 }
 
-require_once $_tests_dir . '/includes/functions.php';
-
-function _manually_load_plugin() {
-    require dirname(dirname(__FILE__)) . '/vortex-ai-agents.php';
+// Mock WordPress plugin functions
+if (!function_exists('plugin_dir_path')) {
+    function plugin_dir_path($file) {
+        return dirname($file) . '/';
+    }
 }
-tests_add_filter('muplugins_loaded', '_manually_load_plugin');
 
-require $_tests_dir . '/includes/bootstrap.php';
+if (!function_exists('plugin_dir_url')) {
+    function plugin_dir_url($file) {
+        return 'http://localhost/wp-content/plugins/' . basename(dirname($file)) . '/';
+    }
+}
+
+echo "VORTEX AI MARKETPLACE Test Suite Bootstrap Loaded\n";

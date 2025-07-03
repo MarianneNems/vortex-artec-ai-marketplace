@@ -53,10 +53,15 @@ jobs:
       run: npm ci
     
     - name: Run JavaScript linting
-      run: npm run lint
-    
+      run: npm run lint:js
+
     - name: Build frontend assets
       run: npm run build
+    
+    - name: Security audit (production dependencies only)
+      run: |
+        npm ci --omit=dev
+        npm audit --audit-level=high
 
   python-tests:
     runs-on: ubuntu-latest
@@ -148,4 +153,4 @@ jobs:
         # Check that API docs exist and are not empty
         test -f docs/api-documentation.md
         test -s docs/api-documentation.md
-        echo "✅ API documentation validation passed" 
+        echo "✅ API documentation validation passed"

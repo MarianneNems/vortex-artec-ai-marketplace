@@ -97,3 +97,13 @@ For security concerns or questions about these fixes:
 **Last Updated**: January 2025  
 **Applied By**: Horace (VORTEX AI Security Audit)  
 **Verification Status**: Pending Composer availability for final validation 
+
+# ✅ Security audit (high-severity only)
+npm audit --audit-level=high
+
+# ✅ Production security check
+npm audit --omit=dev --audit-level=high
+
+# ✅ CI/CD will run these automatically
+npm ci --omit=dev
+npm audit --audit-level=high 
