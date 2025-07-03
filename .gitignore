@@ -24,3 +24,6 @@ npm-debug.log*
 # Tests
 /coverage/
 .phpunit.result.cache
+
+# Track composer.lock for dependency reproducibility
+# /composer.lock
