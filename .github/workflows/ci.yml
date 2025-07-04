@@ -177,6 +177,25 @@ jobs:
         safety check --json
         bandit -r server/ -f json
     
+    - name: Secret scanning
+      uses: trufflesecurity/trufflehog@main
+      with:
+        path: ./
+        base: main
+        head: HEAD
+        extra_args: --debug --only-verified
+    
+    - name: SAST scan
+      uses: github/codeql-action/init@v2
+      with:
+        languages: 'javascript,python'
+    
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+    
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+    
     continue-on-error: false
 
   docs:
@@ -191,3 +210,35 @@ jobs:
         test -f docs/api-documentation.md
         test -s docs/api-documentation.md
         echo "✅ API documentation validation passed"
+
+  penetration-testing:
+    runs-on: ubuntu-latest
+    needs: [php-tests, frontend-tests, python-tests]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+    
+    - name: Install OWASP ZAP
+      run: |
+        wget -N https://github.com/zaproxy/zaproxy/releases/download/v2.14.0/ZAP_2_14_0_unix.sh
+        chmod +x ZAP_2_14_0_unix.sh
+        sudo ./ZAP_2_14_0_unix.sh -q
+    
+    - name: Start test server
+      run: |
+        cd server
+        pip install -r requirements.txt
+        uvicorn main:app --host 0.0.0.0 --port 8000 &
+        sleep 10
+      continue-on-error: false
+    
+    - name: Run penetration tests
+      run: |
+        chmod +x tests/pen-test/run-pen-test.sh
+        ./tests/pen-test/run-pen-test.sh
+      continue-on-error: true

@@ -1,0 +1,51 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running secret scanning on staged files..."
+
+# Check if trufflehog is installed
+if ! command -v trufflehog &> /dev/null; then
+    echo "⚠️  trufflehog not found, installing..."
+    if command -v go &> /dev/null; then
+        go install github.com/trufflesecurity/trufflehog/v3@latest
+    else
+        echo "❌ Go not found. Please install Go and trufflehog manually:"
+        echo "   go install github.com/trufflesecurity/trufflehog/v3@latest"
+        exit 1
+    fi
+fi
+
+# Get staged files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+if [ -n "$STAGED_FILES" ]; then
+    echo "📝 Scanning staged files for secrets..."
+    
+    # Run trufflehog on staged files
+    for file in $STAGED_FILES; do
+        if [ -f "$file" ]; then
+            echo "  🔍 Scanning: $file"
+            trufflehog filesystem --directory="$file" --only-verified=false --json 2>/dev/null | \
+            jq -r 'select(.Verified == true or .Raw != null) | "⚠️  SECRET FOUND in \(.SourceMetadata.Data.Filesystem.file): \(.DetectorName)"' 2>/dev/null
+            
+            if [ $? -eq 0 ]; then
+                echo "❌ Secrets detected in $file"
+                echo "🚫 COMMIT BLOCKED: Remove secrets before committing"
+                exit 1
+            fi
+        fi
+    done
+fi
+
+# Additional patterns to check
+PATTERNS=("password" "secret" "token" "key" "api_key" "private_key" "access_key" "secret_key")
+
+for pattern in "${PATTERNS[@]}"; do
+    if git diff --cached --name-only | xargs grep -i "$pattern" 2>/dev/null; then
+        echo "⚠️  Warning: '$pattern' found in staged files"
+        echo "🔍 Please review the following matches:"
+        git diff --cached --name-only | xargs grep -i -n "$pattern" 2>/dev/null || true
+    fi
+done
+
+echo "✅ Secret scanning completed - no issues found" 

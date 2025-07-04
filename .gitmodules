@@ -1,0 +1,4 @@
+[submodule "private-core"]
+	path = private-core
+	url = https://github.com/private-repo/vortex-private-core.git
+	branch = main 

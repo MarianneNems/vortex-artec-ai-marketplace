@@ -9,7 +9,8 @@
         "lint:js": "wp-scripts lint-js",
         "lint:css": "wp-scripts lint-style",
         "server": "node server.js",
-        "dev": "concurrently \"npm run start\" \"npm run server\""
+        "dev": "concurrently \"npm run start\" \"npm run server\"",
+        "prepare": "husky install"
     },
     "dependencies": {
         "@mui/icons-material": "^6.1.0",
@@ -35,6 +36,7 @@
         "concurrently": "^9.1.0",
         "cypress": "^13.17.0",
         "eslint-plugin-react": "^7.37.0",
+        "husky": "^8.0.3",
         "nodemon": "^3.1.7",
         "sass": "^1.82.0"
     },

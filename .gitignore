@@ -27,3 +27,8 @@ npm-debug.log*
 
 # Track composer.lock for dependency reproducibility
 # /composer.lock
+
+# Private/Proprietary Code
+/private-core/
+encrypted-params.bin
+params.json
