@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX SVG to PNG Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .diagram {
+            margin: 30px 0;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .diagram h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        svg {
+            max-width: 100%;
+            height: auto;
+            background: white;
+        }
+        .instructions {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .download-btn {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 14px;
+        }
+        .download-btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 VORTEX AI Marketplace - SVG to PNG Conversion</h1>
+        
+        <div class="instructions">
+            <h3>📋 Instructions for PNG Conversion:</h3>
+            <ol>
+                <li><strong>Browser Screenshot:</strong> Right-click on each diagram → "Take screenshot" or use browser developer tools</li>
+                <li><strong>High-Resolution:</strong> Set browser zoom to 100% for best quality</li>
+                <li><strong>Background:</strong> Ensure white background is captured</li>
+                <li><strong>Crop:</strong> Use image editor to crop to diagram boundaries</li>
+            </ol>
+        </div>
+
+        <div class="diagram" id="architecture-section">
+            <h2>🏗️ System Architecture Diagram</h2>
+            <button class="download-btn" onclick="downloadSVG('architecture')">Download Architecture SVG</button>
+            <div id="architecture-container">
+                <!-- Architecture SVG will be loaded here -->
+            </div>
+        </div>
+
+        <div class="diagram" id="mindmap-section">
+            <h2>🗺️ Platform Ecosystem Mindmap</h2>
+            <button class="download-btn" onclick="downloadSVG('mindmap')">Download Mindmap SVG</button>
+            <div id="mindmap-container">
+                <!-- Mindmap SVG will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load SVG files
+        async function loadSVG() {
+            try {
+                // Load Architecture SVG
+                const archResponse = await fetch('architecture.svg');
+                const archSVG = await archResponse.text();
+                document.getElementById('architecture-container').innerHTML = archSVG;
+
+                // Load Mindmap SVG
+                const mindmapResponse = await fetch('vortex-mindmap.svg');
+                const mindmapSVG = await mindmapResponse.text();
+                document.getElementById('mindmap-container').innerHTML = mindmapSVG;
+            } catch (error) {
+                console.error('Error loading SVG files:', error);
+                document.getElementById('architecture-container').innerHTML = 
+                    '<p style="color: #e74c3c;">⚠️ Architecture SVG not found. Make sure architecture.svg is in the same directory.</p>';
+                document.getElementById('mindmap-container').innerHTML = 
+                    '<p style="color: #e74c3c;">⚠️ Mindmap SVG not found. Make sure vortex-mindmap.svg is in the same directory.</p>';
+            }
+        }
+
+        function downloadSVG(type) {
+            const filename = type === 'architecture' ? 'architecture.svg' : 'vortex-mindmap.svg';
+            const link = document.createElement('a');
+            link.href = filename;
+            link.download = filename;
+            link.click();
+        }
+
+        // Convert SVG to PNG using canvas (fallback method)
+        function svgToPNG(svgElement, filename) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const data = new XMLSerializer().serializeToString(svgElement);
+            const DOMURL = window.URL || window.webkitURL || window;
+
+            const img = new Image();
+            const svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+            const url = DOMURL.createObjectURL(svgBlob);
+
+            img.onload = function () {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                DOMURL.revokeObjectURL(url);
+
+                const imgURI = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+                const evt = new MouseEvent('click', {
+                    view: window,
+                    bubbles: false,
+                    cancelable: true
+                });
+
+                const a = document.createElement('a');
+                a.setAttribute('download', filename);
+                a.setAttribute('href', imgURI);
+                a.setAttribute('target', '_blank');
+                a.dispatchEvent(evt);
+            };
+
+            img.src = url;
+        }
+
+        // Load SVGs when page loads
+        window.addEventListener('load', loadSVG);
+    </script>
+</body>
+</html> 

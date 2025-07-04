@@ -1,9 +1,15 @@
 # VORTEX AI Marketplace - WordPress Plugin
 
+[![CI/CD](https://github.com/MarianneNems/vortex-artec-ai-marketplace/actions/workflows/ci.yml/badge.svg)](https://github.com/MarianneNems/vortex-artec-ai-marketplace/actions/workflows/ci.yml)
+[![E2E Tests](https://img.shields.io/badge/cypress-passing-brightgreen.svg)](https://github.com/MarianneNems/vortex-artec-ai-marketplace/actions)
+[![Performance](https://img.shields.io/badge/artillery-load%20tested-orange.svg)](https://github.com/MarianneNems/vortex-artec-ai-marketplace/actions)
+[![License](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/MarianneNems/vortex-artec-ai-marketplace)](https://github.com/MarianneNems/vortex-artec-ai-marketplace/releases)
+[![Dependencies](https://img.shields.io/librariesio/github/MarianneNems/vortex-artec-ai-marketplace)](https://libraries.io/github/MarianneNems/vortex-artec-ai-marketplace)
+
 ![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)
 ![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)
 ![PHP](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)
-![License](https://img.shields.io/badge/license-Proprietary-red.svg)
 ![WooCommerce](https://img.shields.io/badge/WooCommerce-5.0%2B-purple.svg)
 
 **The complete AI-powered marketplace solution for WordPress with WooCommerce integration, blockchain technology, and automated artist royalty distribution.**
@@ -120,6 +126,38 @@ vortex-ai-marketplace/
 - **vortex_daily_art**: Daily TOLA Masterwork generation records
 - **vortex_artist_participation**: Royalty distribution participants
 - **vortex_royalty_distribution**: Sale proceeds allocation tracking
+
+### Platform Ecosystem
+
+The VORTEX AI Marketplace is a comprehensive ecosystem connecting AI, blockchain, and digital art creation:
+
+![VORTEX Ecosystem Mindmap](assets/vortex-mindmap.svg)
+
+#### Core User Interfaces
+
+**🎨 Artist Dashboard**
+- AI art generation with HURAII engine
+- Upload & manage artwork portfolio
+- Real-time sales analytics and performance metrics
+- Royalty tracking and payment history
+
+**💎 Collector Dashboard**  
+- Portfolio management and collection analytics
+- Advanced marketplace browsing with AI recommendations
+- Purchase history and investment tracking
+- Community features and social interactions
+
+**🛒 Marketplace UI**
+- Browse & buy artwork with smart search
+- AI-powered curation and recommendations
+- Social features and artist profiles
+- Integrated payment processing
+
+**⚙️ WordPress Admin**
+- Platform administration and configuration
+- User management and role assignment
+- Analytics dashboard and reporting
+- Plugin settings and API configuration
 
 ---
 

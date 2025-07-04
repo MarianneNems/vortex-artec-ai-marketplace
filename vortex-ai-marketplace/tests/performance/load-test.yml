@@ -1,0 +1,119 @@
+config:
+  target: 'http://localhost:8080'
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      name: "Warm up"
+    - duration: 120
+      arrivalRate: 50
+      name: "Load test"
+    - duration: 60
+      arrivalRate: 100
+      name: "Stress test"
+  defaults:
+    headers:
+      Content-Type: 'application/json'
+      User-Agent: 'Artillery/VORTEX-Load-Test'
+
+scenarios:
+  - name: "API Health Check"
+    weight: 10
+    flow:
+      - get:
+          url: "/wp-json/vortex/v1/health"
+          capture:
+            - json: "$.status"
+              as: "health_status"
+
+  - name: "AI Generation Flow"
+    weight: 30
+    flow:
+      - post:
+          url: "/wp-json/vortex/v1/generate"
+          json:
+            prompt: "abstract digital art"
+            style: "modern"
+            dimensions: "512x512"
+          capture:
+            - json: "$.generation_id"
+              as: "generation_id"
+      - think: 2
+      - get:
+          url: "/wp-json/vortex/v1/generate/{{ generation_id }}"
+          capture:
+            - json: "$.status"
+              as: "generation_status"
+
+  - name: "Marketplace Browse"
+    weight: 25
+    flow:
+      - get:
+          url: "/wp-json/vortex/v1/marketplace/artwork"
+          qs:
+            per_page: 20
+            page: 1
+          capture:
+            - json: "$.data[0].id"
+              as: "artwork_id"
+      - think: 1
+      - get:
+          url: "/wp-json/vortex/v1/marketplace/artwork/{{ artwork_id }}"
+
+  - name: "User Authentication"
+    weight: 15
+    flow:
+      - post:
+          url: "/wp-json/jwt-auth/v1/token"
+          json:
+            username: "test_user"
+            password: "test_password"
+          capture:
+            - json: "$.token"
+              as: "jwt_token"
+      - get:
+          url: "/wp-json/vortex/v1/user/profile"
+          headers:
+            Authorization: "Bearer {{ jwt_token }}"
+
+  - name: "TOLA Balance Check"
+    weight: 10
+    flow:
+      - get:
+          url: "/wp-json/vortex/v1/balance/1"
+          capture:
+            - json: "$.balance"
+              as: "tola_balance"
+
+  - name: "Database Intensive Operations"
+    weight: 10
+    flow:
+      - get:
+          url: "/wp-json/vortex/v1/analytics/sales"
+          qs:
+            start_date: "2024-01-01"
+            end_date: "2024-12-31"
+      - get:
+          url: "/wp-json/vortex/v1/recommendations/1"
+          qs:
+            limit: 10
+
+# Performance thresholds
+expectations:
+  - http.response_time:
+      p95: 2000  # 95% of requests should complete within 2 seconds
+      p99: 5000  # 99% of requests should complete within 5 seconds
+  - http.response_time.median: 500  # Median response time should be under 500ms
+  - http.codes.200: 90  # 90% of requests should return 200 OK
+  - http.codes.500: 0   # No 500 errors allowed
+
+# Metrics to collect
+metrics:
+  - name: "generation_requests"
+    type: "counter"
+    path: "/wp-json/vortex/v1/generate"
+  - name: "marketplace_views"
+    type: "counter"
+    path: "/wp-json/vortex/v1/marketplace/artwork"
+  - name: "auth_requests"
+    type: "counter"
+    path: "/wp-json/jwt-auth/v1/token" 

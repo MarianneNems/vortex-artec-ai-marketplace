@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .central-node { fill: #2c3e50; stroke: #34495e; stroke-width: 3; }
+      .main-branch { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .ai-branch { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .blockchain-branch { fill: #27ae60; stroke: #229954; stroke-width: 2; }
+      .user-branch { fill: #f39c12; stroke: #e67e22; stroke-width: 2; }
+      .tech-branch { fill: #9b59b6; stroke: #8e44ad; stroke-width: 2; }
+      .business-branch { fill: #1abc9c; stroke: #16a085; stroke-width: 2; }
+      
+      .central-text { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle; fill: white; }
+      .main-text { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-anchor: middle; fill: white; }
+      .sub-text { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; fill: #2c3e50; }
+      .feature-text { font-family: Arial, sans-serif; font-size: 10px; text-anchor: middle; fill: #34495e; }
+      
+      .connection { stroke: #7f8c8d; stroke-width: 2; opacity: 0.6; }
+      .ai-connection { stroke: #e74c3c; stroke-width: 2; opacity: 0.6; }
+      .blockchain-connection { stroke: #27ae60; stroke-width: 2; opacity: 0.6; }
+      .user-connection { stroke: #f39c12; stroke-width: 2; opacity: 0.6; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#ecf0f1"/>
+  
+  <!-- Title -->
+  <text x="600" y="30" class="central-text" fill="#2c3e50">VORTEX AI Marketplace - Platform Ecosystem</text>
+  
+  <!-- Central Node -->
+  <circle cx="600" cy="450" r="80" class="central-node"/>
+  <text x="600" y="440" class="central-text">VORTEX AI</text>
+  <text x="600" y="460" class="central-text">Marketplace</text>
+  <text x="600" y="480" class="central-text">WordPress Plugin</text>
+  
+  <!-- AI Services Branch (Top Left) -->
+  <circle cx="300" cy="200" r="50" class="ai-branch"/>
+  <text x="300" y="195" class="main-text">AI Services</text>
+  <text x="300" y="210" class="main-text">Engine</text>
+  <line x1="600" y1="450" x2="300" y2="200" class="ai-connection"/>
+  
+  <!-- AI Sub-nodes -->
+  <circle cx="180" cy="120" r="30" class="ai-branch"/>
+  <text x="180" y="120" class="sub-text">HURAII</text>
+  <text x="180" y="135" class="feature-text">Art Generation</text>
+  <line x1="300" y1="200" x2="180" y2="120" class="connection"/>
+  
+  <circle cx="420" cy="120" r="30" class="ai-branch"/>
+  <text x="420" y="120" class="sub-text">CLOE</text>
+  <text x="420" y="135" class="feature-text">Curation Engine</text>
+  <line x1="300" y1="200" x2="420" y2="120" class="connection"/>
+  
+  <circle cx="150" cy="280" r="25" class="ai-branch"/>
+  <text x="150" y="280" class="sub-text">Business AI</text>
+  <text x="150" y="295" class="feature-text">Strategy</text>
+  <line x1="300" y1="200" x2="150" y2="280" class="connection"/>
+  
+  <circle cx="450" cy="280" r="25" class="ai-branch"/>
+  <text x="450" y="280" class="sub-text">ML Pipeline</text>
+  <text x="450" y="295" class="feature-text">Learning</text>
+  <line x1="300" y1="200" x2="450" y2="280" class="connection"/>
+  
+  <!-- Blockchain Branch (Top Right) -->
+  <circle cx="900" cy="200" r="50" class="blockchain-branch"/>
+  <text x="900" y="195" class="main-text">Blockchain</text>
+  <text x="900" y="210" class="main-text">Layer</text>
+  <line x1="600" y1="450" x2="900" y2="200" class="blockchain-connection"/>
+  
+  <!-- Blockchain Sub-nodes -->
+  <circle cx="1020" cy="120" r="30" class="blockchain-branch"/>
+  <text x="1020" y="120" class="sub-text">TOLA Token</text>
+  <text x="1020" y="135" class="feature-text">Utility Currency</text>
+  <line x1="900" y1="200" x2="1020" y2="120" class="connection"/>
+  
+  <circle cx="780" cy="120" r="30" class="blockchain-branch"/>
+  <text x="780" y="120" class="sub-text">Smart Contracts</text>
+  <text x="780" y="135" class="feature-text">Automation</text>
+  <line x1="900" y1="200" x2="780" y2="120" class="connection"/>
+  
+  <circle cx="1050" cy="280" r="25" class="blockchain-branch"/>
+  <text x="1050" y="280" class="sub-text">NFT Minting</text>
+  <text x="1050" y="295" class="feature-text">Digital Assets</text>
+  <line x1="900" y1="200" x2="1050" y2="280" class="connection"/>
+  
+  <circle cx="750" cy="280" r="25" class="blockchain-branch"/>
+  <text x="750" y="280" class="sub-text">Royalties</text>
+  <text x="750" y="295" class="feature-text">Distribution</text>
+  <line x1="900" y1="200" x2="750" y2="280" class="connection"/>
+  
+  <!-- User Interfaces Branch (Left) -->
+  <circle cx="200" cy="450" r="50" class="user-branch"/>
+  <text x="200" y="445" class="main-text">User</text>
+  <text x="200" y="460" class="main-text">Interfaces</text>
+  <line x1="600" y1="450" x2="200" y2="450" class="user-connection"/>
+  
+  <!-- User Interface Sub-nodes -->
+  <circle cx="80" cy="350" r="30" class="user-branch"/>
+  <text x="80" y="345" class="sub-text">Artist</text>
+  <text x="80" y="360" class="sub-text">Dashboard</text>
+  <text x="80" y="375" class="feature-text">Creation Tools</text>
+  <line x1="200" y1="450" x2="80" y2="350" class="connection"/>
+  
+  <circle cx="80" cy="550" r="30" class="user-branch"/>
+  <text x="80" y="545" class="sub-text">Collector</text>
+  <text x="80" y="560" class="sub-text">Dashboard</text>
+  <text x="80" y="575" class="feature-text">Portfolio Mgmt</text>
+  <line x1="200" y1="450" x2="80" y2="550" class="connection"/>
+  
+  <circle cx="320" cy="380" r="25" class="user-branch"/>
+  <text x="320" y="380" class="sub-text">Marketplace</text>
+  <text x="320" y="395" class="feature-text">Browse & Buy</text>
+  <line x1="200" y1="450" x2="320" y2="380" class="connection"/>
+  
+  <circle cx="320" cy="520" r="25" class="user-branch"/>
+  <text x="320" y="520" class="sub-text">Admin Panel</text>
+  <text x="320" y="535" class="feature-text">WordPress</text>
+  <line x1="200" y1="450" x2="320" y2="520" class="connection"/>
+  
+  <!-- Business Logic Branch (Right) -->
+  <circle cx="1000" cy="450" r="50" class="business-branch"/>
+  <text x="1000" y="445" class="main-text">Business</text>
+  <text x="1000" y="460" class="main-text">Logic</text>
+  <line x1="600" y1="450" x2="1000" y2="450" class="user-connection"/>
+  
+  <!-- Business Logic Sub-nodes -->
+  <circle cx="1120" cy="380" r="25" class="business-branch"/>
+  <text x="1120" y="380" class="sub-text">Payments</text>
+  <text x="1120" y="395" class="feature-text">WooCommerce</text>
+  <line x1="1000" y1="450" x2="1120" y2="380" class="connection"/>
+  
+  <circle cx="1120" cy="520" r="25" class="business-branch"/>
+  <text x="1120" y="520" class="sub-text">Analytics</text>
+  <text x="1120" y="535" class="feature-text">Metrics</text>
+  <line x1="1000" y1="450" x2="1120" y2="520" class="connection"/>
+  
+  <circle cx="880" cy="380" r="25" class="business-branch"/>
+  <text x="880" y="380" class="sub-text">User Mgmt</text>
+  <text x="880" y="395" class="feature-text">Roles & Perms</text>
+  <line x1="1000" y1="450" x2="880" y2="380" class="connection"/>
+  
+  <circle cx="880" cy="520" r="25" class="business-branch"/>
+  <text x="880" y="520" class="sub-text">Gamification</text>
+  <text x="880" y="535" class="feature-text">Achievements</text>
+  <line x1="1000" y1="450" x2="880" y2="520" class="connection"/>
+  
+  <!-- Technology Stack Branch (Bottom Left) -->
+  <circle cx="300" cy="700" r="50" class="tech-branch"/>
+  <text x="300" y="695" class="main-text">Technology</text>
+  <text x="300" y="710" class="main-text">Stack</text>
+  <line x1="600" y1="450" x2="300" y2="700" class="connection"/>
+  
+  <!-- Technology Sub-nodes -->
+  <circle cx="180" cy="780" r="30" class="tech-branch"/>
+  <text x="180" y="780" class="sub-text">WordPress</text>
+  <text x="180" y="795" class="feature-text">CMS Platform</text>
+  <line x1="300" y1="700" x2="180" y2="780" class="connection"/>
+  
+  <circle cx="420" cy="780" r="30" class="tech-branch"/>
+  <text x="420" y="780" class="sub-text">React/JS</text>
+  <text x="420" y="795" class="feature-text">Frontend</text>
+  <line x1="300" y1="700" x2="420" y2="780" class="connection"/>
+  
+  <circle cx="150" cy="620" r="25" class="tech-branch"/>
+  <text x="150" y="620" class="sub-text">PHP/MySQL</text>
+  <text x="150" y="635" class="feature-text">Backend</text>
+  <line x1="300" y1="700" x2="150" y2="620" class="connection"/>
+  
+  <circle cx="450" cy="620" r="25" class="tech-branch"/>
+  <text x="450" y="620" class="sub-text">AWS/S3</text>
+  <text x="450" y="635" class="feature-text">Storage</text>
+  <line x1="300" y1="700" x2="450" y2="620" class="connection"/>
+  
+  <!-- External Services Branch (Bottom Right) -->
+  <circle cx="900" cy="700" r="50" class="main-branch"/>
+  <text x="900" y="695" class="main-text">External</text>
+  <text x="900" y="710" class="main-text">Services</text>
+  <line x1="600" y1="450" x2="900" y2="700" class="connection"/>
+  
+  <!-- External Services Sub-nodes -->
+  <circle cx="780" cy="780" r="30" class="main-branch"/>
+  <text x="780" y="780" class="sub-text">Solana RPC</text>
+  <text x="780" y="795" class="feature-text">Blockchain</text>
+  <line x1="900" y1="700" x2="780" y2="780" class="connection"/>
+  
+  <circle cx="1020" cy="780" r="30" class="main-branch"/>
+  <text x="1020" y="780" class="sub-text">AI APIs</text>
+  <text x="1020" y="795" class="feature-text">Generation</text>
+  <line x1="900" y1="700" x2="1020" y2="780" class="connection"/>
+  
+  <circle cx="750" cy="620" r="25" class="main-branch"/>
+  <text x="750" y="620" class="sub-text">Payment</text>
+  <text x="750" y="635" class="feature-text">Gateways</text>
+  <line x1="900" y1="700" x2="750" y2="620" class="connection"/>
+  
+  <circle cx="1050" cy="620" r="25" class="main-branch"/>
+  <text x="1050" y="620" class="sub-text">CDN/Cache</text>
+  <text x="1050" y="635" class="feature-text">Performance</text>
+  <line x1="900" y1="700" x2="1050" y2="620" class="connection"/>
+  
+  <!-- Key Features Annotations -->
+  <rect x="450" y="320" width="300" height="160" fill="rgba(255,255,255,0.9)" stroke="#95a5a6" stroke-width="1" rx="10"/>
+  <text x="600" y="340" class="sub-text" fill="#2c3e50">🎯 Key Features</text>
+  <text x="470" y="360" class="feature-text">• AI-Powered Art Generation (HURAII)</text>
+  <text x="470" y="375" class="feature-text">• Smart Curation Engine (CLOE)</text>
+  <text x="470" y="390" class="feature-text">• Artist & Collector Dashboards</text>
+  <text x="470" y="405" class="feature-text">• TOLA Token Economy</text>
+  <text x="470" y="420" class="feature-text">• NFT Minting & Royalties</text>
+  <text x="470" y="435" class="feature-text">• Marketplace with WooCommerce</text>
+  <text x="470" y="450" class="feature-text">• Gamification & Achievements</text>
+  <text x="470" y="465" class="feature-text">• WordPress Plugin Architecture</text>
+  
+  <!-- Collector Dashboard Details -->
+  <rect x="20" y="590" width="140" height="80" fill="rgba(243,156,18,0.1)" stroke="#f39c12" stroke-width="2" rx="5"/>
+  <text x="90" y="610" class="sub-text">Collector Dashboard</text>
+  <text x="30" y="625" class="feature-text">• Portfolio Management</text>
+  <text x="30" y="640" class="feature-text">• Collection Analytics</text>
+  <text x="30" y="655" class="feature-text">• Marketplace Browsing</text>
+  <text x="30" y="670" class="feature-text">• Purchase History</text>
+  
+  <!-- Artist Dashboard Details -->
+  <rect x="20" y="290" width="140" height="80" fill="rgba(243,156,18,0.1)" stroke="#f39c12" stroke-width="2" rx="5"/>
+  <text x="90" y="310" class="sub-text">Artist Dashboard</text>
+  <text x="30" y="325" class="feature-text">• AI Art Generation</text>
+  <text x="30" y="340" class="feature-text">• Upload & Manage</text>
+  <text x="30" y="355" class="feature-text">• Sales Analytics</text>
+  <text x="30" y="370" class="feature-text">• Royalty Tracking</text>
+  
+</svg> 

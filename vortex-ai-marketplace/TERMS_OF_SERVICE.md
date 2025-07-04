@@ -115,7 +115,7 @@ By uploading content, you grant us:
 
 ### 5.4 DMCA Compliance
 We respond to valid DMCA takedown notices:
-- Report infringement to: legal@vortexartec.com
+- Report infringement to: info@vortexartec.com
 - Include all required DMCA elements
 - Counter-notifications accepted per DMCA procedures
 - Repeat infringers face account termination
@@ -317,7 +317,7 @@ Upon termination:
 
 ### 13.1 Informal Resolution
 Before formal proceedings:
-- **Contact support** at support@vortexartec.com
+- **Contact support** at info@vortexartec.com
 - **30-day resolution** period for good faith negotiations
 - **Escalation procedures** for unresolved disputes
 - **Documentation requirements** for all communications

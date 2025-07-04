@@ -16,7 +16,7 @@ jobs:
         wordpress-version: [6.0, 6.4, 6.5]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -25,27 +25,61 @@ jobs:
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
         coverage: none
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
     - name: Cache Composer dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: /tmp/composer-cache
         key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
 
     - name: Install dependencies
       run: |
-        composer install --prefer-dist --no-progress
+        composer install --no-dev --prefer-dist --no-progress
+
+    - name: Install NPM dependencies
+      run: |
+        npm ci
 
     - name: WordPress Coding Standards
       run: |
         vendor/bin/phpcs --standard=WordPress --extensions=php --ignore=*/vendor/*,*/node_modules/* .
 
+    - name: ESLint & Frontend Lint
+      run: |
+        npm run lint
+
+    - name: Build Assets
+      run: |
+        npm run build
+
     - name: PHPUnit Tests
       run: |
         vendor/bin/phpunit --configuration phpunit.xml
 
+    - name: Cypress E2E Tests
+      run: |
+        npx cypress run
+
+    - name: Performance Tests
+      run: |
+        npx artillery run tests/performance/load-test.yml
+
     - name: Security Scan
       run: |
         vendor/bin/psalm --show-info=true
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: javascript, php
+
+    - name: CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
 
   deploy:
     needs: test
@@ -53,14 +87,14 @@ jobs:
     if: github.ref == 'refs/heads/main'
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Build deployment package
       run: |
         zip -r vortex-ai-marketplace.zip . -x "*.git*" "node_modules/*" "tests/*" "*.md"
     
     - name: Upload to releases
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: vortex-ai-marketplace-${{ github.sha }}
         path: vortex-ai-marketplace.zip 

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1000" height="700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 20px; font-weight: bold; text-anchor: middle; }
+      .layer-title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; text-anchor: middle; fill: white; }
+      .component-title { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; text-anchor: middle; }
+      .feature-text { font-family: Arial, sans-serif; font-size: 10px; text-anchor: middle; fill: #2c3e50; }
+      .sub-feature { font-family: Arial, sans-serif; font-size: 9px; text-anchor: start; fill: #34495e; }
+      
+      .frontend-box { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .api-box { fill: #9b59b6; stroke: #8e44ad; stroke-width: 2; }
+      .business-box { fill: #34495e; stroke: #2c3e50; stroke-width: 2; }
+      .ai-box { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .blockchain-box { fill: #27ae60; stroke: #229954; stroke-width: 2; }
+      .data-box { fill: #f39c12; stroke: #e67e22; stroke-width: 2; }
+      .external-box { fill: #1abc9c; stroke: #16a085; stroke-width: 2; }
+      .component-box { fill: #ecf0f1; stroke: #bdc3c7; stroke-width: 1; }
+      
+      .arrow { stroke: #7f8c8d; stroke-width: 2; marker-end: url(#arrowhead); }
+      .data-flow { stroke: #e67e22; stroke-width: 2; marker-end: url(#arrowhead); stroke-dasharray: 3,3; }
+    </style>
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+              refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#7f8c8d" />
+      </marker>
+    </defs>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1000" height="700" fill="#ffffff"/>
+  
+  <!-- Title -->
+  <text x="500" y="25" class="title" fill="#2c3e50">VORTEX AI Marketplace - System Architecture</text>
+  
+  <!-- Frontend Layer -->
+  <rect x="50" y="60" width="900" height="90" class="frontend-box" rx="8"/>
+  <text x="500" y="80" class="layer-title">Frontend Layer - User Interfaces</text>
+  
+  <!-- Frontend Components -->
+  <rect x="70" y="90" width="160" height="50" class="component-box" rx="5"/>
+  <text x="150" y="110" class="component-title">WordPress Admin</text>
+  <text x="75" y="125" class="sub-feature">• Plugin Management</text>
+  <text x="75" y="135" class="sub-feature">• System Settings</text>
+  
+  <rect x="250" y="90" width="160" height="50" class="component-box" rx="5"/>
+  <text x="330" y="110" class="component-title">Artist Dashboard</text>
+  <text x="255" y="125" class="sub-feature">• AI Art Generation</text>
+  <text x="255" y="135" class="sub-feature">• Portfolio Management</text>
+  
+  <rect x="430" y="90" width="160" height="50" class="component-box" rx="5"/>
+  <text x="510" y="110" class="component-title">Collector Dashboard</text>
+  <text x="435" y="125" class="sub-feature">• Collection Analytics</text>
+  <text x="435" y="135" class="sub-feature">• Portfolio Tracking</text>
+  
+  <rect x="610" y="90" width="160" height="50" class="component-box" rx="5"/>
+  <text x="690" y="110" class="component-title">Marketplace UI</text>
+  <text x="615" y="125" class="sub-feature">• Browse & Purchase</text>
+  <text x="615" y="135" class="sub-feature">• Search & Filter</text>
+  
+  <rect x="790" y="90" width="140" height="50" class="component-box" rx="5"/>
+  <text x="860" y="110" class="component-title">Mobile App</text>
+  <text x="795" y="125" class="sub-feature">• iOS & Android</text>
+  <text x="795" y="135" class="sub-feature">• PWA Support</text>
+  
+  <!-- API Layer -->
+  <rect x="50" y="180" width="900" height="70" class="api-box" rx="8"/>
+  <text x="500" y="205" class="layer-title">API Layer - Communication Hub</text>
+  
+  <rect x="150" y="215" width="140" height="25" class="component-box" rx="3"/>
+  <text x="220" y="230" class="feature-text">WordPress REST API</text>
+  
+  <rect x="310" y="215" width="140" height="25" class="component-box" rx="3"/>
+  <text x="380" y="230" class="feature-text">GraphQL Endpoint</text>
+  
+  <rect x="470" y="215" width="140" height="25" class="component-box" rx="3"/>
+  <text x="540" y="230" class="feature-text">WebSocket Real-time</text>
+  
+  <rect x="630" y="215" width="140" height="25" class="component-box" rx="3"/>
+  <text x="700" y="230" class="feature-text">Authentication JWT</text>
+  
+  <!-- Business Logic Layer -->
+  <rect x="50" y="280" width="200" height="120" class="business-box" rx="8"/>
+  <text x="150" y="305" class="layer-title">Core Business Logic</text>
+  <text x="70" y="325" class="sub-feature">• User Management & Roles</text>
+  <text x="70" y="340" class="sub-feature">• Marketplace Operations</text>
+  <text x="70" y="355" class="sub-feature">• Payment Processing</text>
+  <text x="70" y="370" class="sub-feature">• Subscription Management</text>
+  <text x="70" y="385" class="sub-feature">• Analytics & Reporting</text>
+  
+  <!-- AI Services Layer -->
+  <rect x="270" y="280" width="200" height="120" class="ai-box" rx="8"/>
+  <text x="370" y="305" class="layer-title">AI Services Engine</text>
+  <text x="290" y="325" class="sub-feature">• HURAII Art Generation</text>
+  <text x="290" y="340" class="sub-feature">• CLOE Curation Engine</text>
+  <text x="290" y="355" class="sub-feature">• Business Strategy AI</text>
+  <text x="290" y="370" class="sub-feature">• ML Learning Pipeline</text>
+  <text x="290" y="385" class="sub-feature">• Computer Vision AI</text>
+  
+  <!-- Blockchain Layer -->
+  <rect x="490" y="280" width="200" height="120" class="blockchain-box" rx="8"/>
+  <text x="590" y="305" class="layer-title">Blockchain Layer</text>
+  <text x="510" y="325" class="sub-feature">• TOLA Token System</text>
+  <text x="510" y="340" class="sub-feature">• Smart Contracts</text>
+  <text x="510" y="355" class="sub-feature">• NFT Minting Engine</text>
+  <text x="510" y="370" class="sub-feature">• Royalty Distribution</text>
+  <text x="510" y="385" class="sub-feature">• Wallet Integration</text>
+  
+  <!-- WooCommerce Integration -->
+  <rect x="710" y="280" width="200" height="120" class="business-box" rx="8"/>
+  <text x="810" y="305" class="layer-title">E-Commerce Layer</text>
+  <text x="730" y="325" class="sub-feature">• WooCommerce Core</text>
+  <text x="730" y="340" class="sub-feature">• Subscription Billing</text>
+  <text x="730" y="355" class="sub-feature">• Payment Gateways</text>
+  <text x="730" y="370" class="sub-feature">• Order Management</text>
+  <text x="730" y="385" class="sub-feature">• Tax & Compliance</text>
+  
+  <!-- Data Layer -->
+  <rect x="50" y="430" width="420" height="80" class="data-box" rx="8"/>
+  <text x="260" y="455" class="layer-title">Data Storage Layer</text>
+  
+  <rect x="70" y="465" width="110" height="35" class="component-box" rx="3"/>
+  <text x="125" y="480" class="feature-text">WordPress DB</text>
+  <text x="75" y="493" class="sub-feature">Posts, Users, Meta</text>
+  
+  <rect x="200" y="465" width="110" height="35" class="component-box" rx="3"/>
+  <text x="255" y="480" class="feature-text">Custom Tables</text>
+  <text x="205" y="493" class="sub-feature">TOLA, Transactions</text>
+  
+  <rect x="330" y="465" width="110" height="35" class="component-box" rx="3"/>
+  <text x="385" y="480" class="feature-text">Redis Cache</text>
+  <text x="335" y="493" class="sub-feature">Session, Objects</text>
+  
+  <!-- External Services -->
+  <rect x="490" y="430" width="420" height="80" class="external-box" rx="8"/>
+  <text x="700" y="455" class="layer-title">External Services</text>
+  
+  <rect x="510" y="465" width="90" height="35" class="component-box" rx="3"/>
+  <text x="555" y="480" class="feature-text">AWS S3</text>
+  <text x="515" y="493" class="sub-feature">File Storage</text>
+  
+  <rect x="620" y="465" width="90" height="35" class="component-box" rx="3"/>
+  <text x="665" y="480" class="feature-text">Solana RPC</text>
+  <text x="625" y="493" class="sub-feature">Blockchain</text>
+  
+  <rect x="730" y="465" width="90" height="35" class="component-box" rx="3"/>
+  <text x="775" y="480" class="feature-text">AI APIs</text>
+  <text x="735" y="493" class="sub-feature">External AI</text>
+  
+  <rect x="840" y="465" width="90" height="35" class="component-box" rx="3"/>
+  <text x="885" y="480" class="feature-text">CDN</text>
+  <text x="845" y="493" class="sub-feature">Performance</text>
+  
+  <!-- Infrastructure Layer -->
+  <rect x="50" y="540" width="860" height="60" class="business-box" rx="8"/>
+  <text x="480" y="565" class="layer-title">Infrastructure & DevOps</text>
+  <text x="70" y="585" class="sub-feature">• WordPress Hosting (Cloud/VPS) • SSL/HTTPS Security • Load Balancing • Auto-scaling • Monitoring & Logging • CI/CD Pipeline • Backup & Recovery</text>
+  
+  <!-- Data Flow Arrows -->
+  <line x1="500" y1="150" x2="500" y2="180" class="arrow"/>
+  <line x1="500" y1="250" x2="500" y2="280" class="arrow"/>
+  
+  <!-- Horizontal connections -->
+  <line x1="150" y1="400" x2="150" y2="430" class="arrow"/>
+  <line x1="370" y1="400" x2="370" y2="430" class="data-flow"/>
+  <line x1="590" y1="400" x2="590" y2="430" class="data-flow"/>
+  <line x1="810" y1="400" x2="810" y2="430" class="arrow"/>
+  
+  <!-- Infrastructure connections -->
+  <line x1="260" y1="510" x2="260" y2="540" class="arrow"/>
+  <line x1="700" y1="510" x2="700" y2="540" class="arrow"/>
+  
+  <!-- Key Performance Indicators -->
+  <rect x="920" y="60" width="70" height="180" fill="rgba(52, 73, 94, 0.1)" stroke="#34495e" stroke-width="1" rx="5"/>
+  <text x="955" y="80" class="component-title">KPIs</text>
+  <text x="925" y="100" class="sub-feature">99.9% Uptime</text>
+  <text x="925" y="115" class="sub-feature">&lt;2s Response</text>
+  <text x="925" y="130" class="sub-feature">50+ Artists</text>
+  <text x="925" y="145" class="sub-feature">20+ Collectors</text>
+  <text x="925" y="160" class="sub-feature">$45K Revenue</text>
+  <text x="925" y="175" class="sub-feature">95% Satisfaction</text>
+  <text x="925" y="190" class="sub-feature">24/7 Support</text>
+  <text x="925" y="205" class="sub-feature">Auto-scaling</text>
+  <text x="925" y="220" class="sub-feature">Multi-region</text>
+  
+  <!-- Security Layer Annotation -->
+  <rect x="50" y="620" width="860" height="40" fill="rgba(231, 76, 60, 0.1)" stroke="#e74c3c" stroke-width="1" rx="5"/>
+  <text x="480" y="640" class="component-title">Security Layer: Multi-factor Auth • Role-based Access • Data Encryption • XSS/CSRF Protection • Rate Limiting • Audit Logging • GDPR Compliance</text>
+  
+</svg> 
