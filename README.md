@@ -1,218 +1,58 @@
-﻿# 🚀 VORTEX AI MARKETPLACE
-### Enterprise-Grade AI-Powered Art Marketplace with IP Protection
+﻿[![CI](https://github.com/MarianneNems/vortex-artec-ai-marketplace/actions/workflows/ci.yml/badge.svg)](https://github.com/MarianneNems/vortex-artec-ai-marketplace/actions/workflows/ci.yml)
+[![Secret Scanning](https://github.com/MarianneNems/vortex-artec-ai-marketplace/actions/workflows/secret_scanning.yml/badge.svg)](https://github.com/MarianneNems/vortex-artec-ai-marketplace/actions/workflows/secret_scanning.yml)
+[![License: GPL-2.0+](https://img.shields.io/badge/license-GPL--2.0%2B-blue)](LICENSE)
 
-[![License](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE)
-[![Security](https://img.shields.io/badge/security-enterprise-green.svg)](SECURITY.md)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](CHANGELOG.md)
-[![Commercial](https://img.shields.io/badge/status-commercial-gold.svg)](COMMERCIAL.md)
+# VORTEX Artec AI Marketplace
 
----
+**Elevator:** AI-powered art creation, coaching & Solana NFT marketplace.
 
-## 🎯 **Enterprise Solution for AI Art Marketplaces**
+## Why Now?
+- **Booming NFT & Creator Economy**: $1.2B AI art market by 2025, 40% annual growth
+- **Demand for Integrated AI Tools**: Artists need end-to-end AI-powered workflows
+- **Blockchain Infrastructure Ready**: Solana ecosystem mature for enterprise NFT drops
+- **Investment Momentum**: $2.3B venture capital flowing into AI art platforms
 
-VORTEX AI Marketplace is a **commercial-ready, enterprise-grade platform** that combines cutting-edge AI technology with robust intellectual property protection. Built for businesses ready to dominate the AI art market.
+## Features
+- 🎨 **Multi-agent AI**: HURAII (art generation), HORACE (business strategy), CLOE (curation), THORIUS (orchestration)
+- 🔗 **Solana Smart-Contract Drops**: TOLA token integration with automated royalty distribution
+- ☁️ **Private GPU & S3 Storage**: Secure RunPod vault for proprietary algorithms
+- 🛡️ **Enterprise Security**: Secret scanning, penetration testing, IP protection
+- 📊 **Real-time Analytics**: Performance tracking, user engagement metrics
 
-## 💡 **Why Now?**
-
-The AI art market is experiencing unprecedented growth, presenting a unique window of opportunity:
-
-- **🚀 Market Explosion**: AI art market growing 40% annually, reaching $1.2B by 2025
-- **🏛️ Institutional Adoption**: Major galleries and museums rapidly digitalizing their collections
-- **🤖 AI Advancement**: Latest AI models enabling unprecedented personalization and quality
-- **🔗 Blockchain Maturity**: Solana and other platforms now stable for enterprise deployment
-- **💰 Investment Flow**: $2.3B venture capital invested in AI art platforms in 2024
-- **🌍 Global Demand**: International expansion opportunities as digital art goes mainstream
-- **⚡ Technology Convergence**: Perfect storm of AI, blockchain, and cloud infrastructure maturity
-
-### 🔥 **Key Value Propositions**
-
-- **🛡️ IP Protection**: Enterprise-grade protection for proprietary algorithms
-- **🤖 AI Agents**: Advanced AI agents (THORIUS, HURAII, CLOE) for personalized experiences
-- **⚡ Scalable Architecture**: Cloud-native design supporting millions of users
-- **🔐 Security-First**: Built-in secret scanning, penetration testing, and compliance
-- **💼 Commercial-Ready**: Comprehensive legal framework and licensing
-
----
-
-## 🏢 **Commercial Features**
-
-### 🔒 **Enterprise IP Protection**
-- **Private Submodule Architecture**: Proprietary algorithms isolated from public code
-- **Automated Secret Scanning**: Pre-commit hooks and CI/CD integration
-- **Encrypted Parameter Management**: AWS KMS-based secrets management
-- **Legal Framework**: CLA, NDA, and proprietary licensing templates
-- **Runtime Isolation**: Microservice architecture for sensitive operations
-
-### 🎨 **AI-Powered Marketplace**
-- **Personalized Art Generation**: Zodiac-based AI personalization
-- **Smart Curation**: AI-driven content curation and recommendation
-- **Blockchain Integration**: Solana-based NFT minting and trading
-- **Multi-Agent System**: Coordinated AI agents for complex workflows
-- **Real-time Analytics**: Advanced metrics and performance tracking
-
-### 🚀 **Enterprise Infrastructure**
-- **Cloud-Native**: AWS, Docker, and Kubernetes ready
-- **High Availability**: Multi-region deployment support
-- **Auto-scaling**: Dynamic resource allocation
-- **Monitoring & Alerting**: Comprehensive observability stack
-- **CI/CD Pipeline**: Automated testing and deployment
-
----
-
-## 📋 **Architecture Overview**
-
-```mermaid
-graph TD
-    A[WordPress Frontend] --> B[API Gateway]
-    B --> C[AI Agent Orchestrator]
-    C --> D[THORIUS - Ethical AI]
-    C --> E[HURAII - Art Generator]
-    C --> F[CLOE - Curator]
-    
-    G[Private Submodule] --> H[Secret Sauce APIs]
-    H --> I[RunPod Vault]
-    
-    J[Blockchain Layer] --> K[Solana Network]
-    K --> L[TOLA Token]
-    
-    M[Security Layer] --> N[Secret Scanning]
-    M --> O[Penetration Testing]
-    M --> P[Compliance Monitoring]
-```
-
----
-
-## 🛠️ **Quick Start for Enterprise**
-
-### Prerequisites
-- **WordPress**: 6.0+ with enterprise hosting
-- **PHP**: 8.1+ with enterprise extensions
-- **Node.js**: 18+ for frontend development
-- **AWS Account**: For cloud services and KMS
-- **Docker**: For containerized deployment
-
-### 1. **Installation**
+## Quick Start
 ```bash
-# Clone the repository
-git clone https://github.com/your-org/vortex-ai-marketplace.git
-cd vortex-ai-marketplace
-
-# Install dependencies
-npm install
-composer install
-
-# Set up environment
-cp .env.example .env
-# Configure your enterprise settings
+git clone https://github.com/MarianneNems/vortex-artec-ai-marketplace.git
+cd vortex-artec-ai-marketplace
+composer install --no-dev
+npm ci && npm run build
+wp plugin activate vortex-ai-marketplace
 ```
 
-### 2. **Security Setup**
+## Environment Variables
 ```bash
-# Initialize IP protection
-npx husky install
-./deploy/encrypt-params.sh
-
-# Run security audit
-npm run security-audit
-```
-
-### 3. **Enterprise Configuration**
-```php
-// wp-config.php
-define('VORTEX_ENTERPRISE_MODE', true);
-define('VORTEX_SECRET_SAUCE_API_URL', 'https://api.your-domain.com/secret-sauce');
-define('VORTEX_IP_PROTECTION_ENABLED', true);
-```
-
-### 4. **Deploy to Production**
-```bash
-# Deploy with enterprise settings
-./deploy/deploy-enterprise.sh
-
-# Run penetration tests
-./tests/pen-test/run-pen-test.sh
-```
-
-### 5. **Environment Variables**
-```bash
-# Core Configuration
-VORTEX_ENTERPRISE_MODE=true
-VORTEX_DEBUG=false
-VORTEX_API_RATE_LIMIT=100
-
 # AI Service Configuration
 VORTEX_OPENAI_API_KEY=your-openai-key
 VORTEX_STABILITY_API_KEY=your-stability-key
-VORTEX_HUGGINGFACE_API_KEY=your-huggingface-key
 
 # Blockchain Configuration
-VORTEX_BLOCKCHAIN_PROVIDER=solana
-VORTEX_BLOCKCHAIN_NETWORK=mainnet-beta
 VORTEX_BLOCKCHAIN_RPC_URL=https://api.mainnet-beta.solana.com
 VORTEX_TOLA_TOKEN_MINT=your-token-mint-address
-
-# Security & Encryption
-VORTEX_ENCRYPTION_KEY=your-256-bit-key
-VORTEX_JWT_SECRET=your-jwt-secret
-VORTEX_SECRET_SAUCE_API_URL=https://api.vortexartec.com/secret-sauce
-VORTEX_SECRET_SAUCE_API_KEY=your-secret-sauce-key
 
 # AWS Configuration
 AWS_ACCESS_KEY_ID=your-aws-access-key
 AWS_SECRET_ACCESS_KEY=your-aws-secret-key
 AWS_S3_BUCKET=your-s3-bucket
-AWS_REGION=us-east-1
-
-# Database Configuration
-DB_HOST=localhost
-DB_NAME=vortex_marketplace
-DB_USER=vortex_user
-DB_PASSWORD=secure-password
 ```
 
----
+## Architecture
+- **Multi-Agent AI System**: THORIUS orchestrates HURAII, CLOE, and HORACE agents
+- **Blockchain Integration**: Solana smart contracts with TOLA token economics
+- **Private GPU Compute**: RunPod vault for proprietary algorithms
+- **Enterprise Security**: Secret scanning, IP protection, compliance monitoring
 
-## 🔐 **Security & Compliance**
-
-### **Built-in Security Features**
-- ✅ **Secret Scanning**: Automated detection of credentials and keys
-- ✅ **SAST/DAST**: Static and dynamic application security testing
-- ✅ **Penetration Testing**: OWASP ZAP integration
-- ✅ **Dependency Scanning**: Automated vulnerability detection
-- ✅ **Compliance Monitoring**: SOC 2, GDPR, and PCI DSS ready
-
-### **IP Protection Strategy**
-- ✅ **Private Submodules**: Proprietary code isolation
-- ✅ **Runtime Isolation**: Microservice architecture
-- ✅ **Encrypted Storage**: AWS KMS parameter encryption
-- ✅ **Legal Protection**: Comprehensive legal framework
-- ✅ **Access Control**: Role-based access management
-
----
-
-## 📊 **Performance & Scalability**
-
-### **Benchmark Results**
-- **Response Time**: <200ms average API response
-- **Throughput**: 10,000+ concurrent users
-- **Availability**: 99.9% uptime SLA
-- **Scalability**: Auto-scaling from 1 to 1000+ instances
-
-### **Enterprise Metrics**
-- **AI Generation**: 1M+ artworks generated daily
-- **User Engagement**: 85% retention rate
-- **Revenue**: $50M+ GMV supported
-- **Security**: Zero critical vulnerabilities
-
-### **Traction & Metrics**
-- **🎨 50 Artists**: Onboarded across digital and traditional mediums
-- **🏛️ 20 Collectors**: Active user base with $2M+ portfolio value
-- **🖼️ 3 Galleries**: Partner galleries using VORTEX for digital transformation
-- **🏛️ 1 Museum**: Museum partnership for AI art exhibitions
-- **💰 $15K Grant**: Received from arts innovation foundation
-- **🤝 $30K Sponsorship**: Corporate sponsorship from tech partners
-- **🚀 MVP Live**: Platform operational with real transactions
-- **📈 Pre-revenue**: Preparing for commercial launch Q1 2025
+## Traction & Metrics
+**50 artists onboarded** • **20 collectors** • **3 galleries** • **1 museum**  
+**$15K grant** • **$30K sponsorship** • **MVP live** • **pre-revenue**
 
 ---
 
