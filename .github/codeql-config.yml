@@ -1,0 +1,37 @@
+name: "VORTEX ARTEC Security Analysis"
+
+disable-default-queries: false
+
+queries:
+  - name: security-queries
+    uses: security-and-quality
+  - name: security-extended
+    uses: security-extended
+
+paths:
+  - "**/*.php"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.ts"
+  - "**/*.tsx"
+
+paths-ignore:
+  - "**/node_modules/**"
+  - "**/vendor/**"
+  - "**/tests/**"
+  - "**/cypress/**"
+  - "**/*.min.js"
+  - "**/*.min.css"
+  - "**/build/**"
+  - "**/dist/**"
+  - "**/.git/**"
+
+# Proprietary code exclusions (these should be moved to private repo)
+proprietary-exclusions:
+  - "**/secret-sauce/**"
+  - "**/proprietary/**"
+  - "**/private/**"
+  - "**/vortex-private/**"
+  - "**/algorithms/**"
+  - "**/models/**"
+  - "**/neural-networks/**" 
